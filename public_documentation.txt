@@ -1,0 +1,65 @@
+# The Bull AI Website Setup Documentation
+
+## Repository Information
+- Domain: the-bull.ai
+- Domain Registrar: Porkbun
+
+## Project Structure
+```
+├── Images/
+├── Logo/
+├── index.html
+├── CNAME
+├── .gitignore
+└── README.md
+```
+
+## Contact Form
+- Service: Formspree
+- Implementation: Integrated in index.html
+
+## GitHub Pages Setup
+1. Repository configured as private
+2. GitHub Pages enabled
+3. Custom domain configured
+4. HTTPS enforced
+
+## Files Created
+
+### index.html
+- Coming soon page
+- Logo in top-left corner
+- Full-screen coming soon image
+- Contact form integration
+
+### CNAME
+Contains domain configuration
+
+### .gitignore
+Standard web development ignores
+
+### README.md
+Basic documentation:
+- Project description
+- Setup instructions
+- Development guidelines
+- Contact information
+
+## Future Maintenance
+To make updates:
+1. Ensure you have repository access
+2. Clone repository
+3. Make changes
+4. Commit and push changes
+5. Changes will automatically deploy through GitHub Pages
+
+## Notes
+- HTTPS certificate is automatically managed by GitHub Pages
+- Contact form submissions handled securely through Formspree
+- DNS configuration managed through Porkbun
+
+## Security Notes
+- Repository access is restricted
+- Form submissions are protected by Formspree's security
+- HTTPS enforced for all traffic
+- DNS records managed through registrar's secure interface
