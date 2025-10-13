@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UBMI - Google OAuth Callback</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            text-align: center; 
+            background: #e2e4da;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 16px; 
+            max-width: 400px; 
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .loading { 
+            font-size: 24px; 
+            color: #2196F3; 
+            animation: pulse 1.5s infinite; 
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>UBMI - Google OAuth</h1>
+        <p id="message" class="success">Processing Google Drive authentication...</p>
+        <div class="loading" id="loading">●●●</div>
+    </div>
+    
+    <script>
+        console.log('=== OAUTH CALLBACK PAGE ===');
+        console.log('URL:', window.location.href);
+        
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const state = urlParams.get('state');
+        const error = urlParams.get('error');
+        
+        console.log('Authorization code:', code);
+        console.log('State:', state);
+        console.log('Error:', error);
+        
+        if (error) {
+            console.error('OAuth error:', error);
+            document.getElementById('message').innerHTML = '❌ Authentication failed: ' + error;
+            document.getElementById('message').className = 'error';
+            document.getElementById('loading').style.display = 'none';
+        } else if (code) {
+            console.log('Success! Got authorization code:', code);
+            
+            // Store the result for the mobile/desktop app to pick up
+            const authData = {
+                success: true,
+                code: code,
+                state: state,
+                message: 'Google Drive connected successfully!',
+                timestamp: Date.now()
+            };
+            
+            // Try to communicate with parent/opener window
+            try {
+                if (window.opener && !window.opener.closed) {
+                    // This is a popup - use postMessage
+                    console.log('Sending result to parent window via postMessage');
+                    window.opener.postMessage({
+                        type: 'GOOGLE_AUTH_SUCCESS',
+                        data: authData
+                    }, '*');
+                    
+                    document.getElementById('message').innerHTML = '✅ Google Drive connected successfully!<br><br>Closing popup...';
+                    setTimeout(() => {
+                        window.close();
+                    }, 2000);
+                } else {
+                    // Not a popup - try localStorage communication
+                    console.log('Storing result in localStorage');
+                    localStorage.setItem('google_auth_result', JSON.stringify(authData));
+                    
+                    // Try to determine where to redirect
+                    let redirectUrl = 'http://localhost:8082'; // Default to desktop
+                    
+                    // Check if we have state indicating mobile
+                    if (state && state.includes('mobile_')) {
+                        redirectUrl = 'http://192.168.100.7:8082';
+                    }
+                    
+                    document.getElementById('message').innerHTML = '✅ Google Drive connected successfully!<br><br>Redirecting back to UBMI...';
+                    
+                    setTimeout(() => {
+                        // Try to redirect back to the app
+                        console.log('Redirecting to:', redirectUrl);
+                        window.location.href = redirectUrl;
+                    }, 3000);
+                }
+            } catch (err) {
+                console.error('Error communicating with parent:', err);
+                document.getElementById('message').innerHTML = '✅ Authentication successful!<br><br>Please return to the UBMI app manually.';
+                document.getElementById('loading').style.display = 'none';
+            }
+        } else {
+            console.error('No authorization code or error received');
+            document.getElementById('message').innerHTML = '❌ No authorization code received';
+            document.getElementById('message').className = 'error';
+            document.getElementById('loading').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
