@@ -80,16 +80,23 @@
             try {
                 if (window.opener && !window.opener.closed) {
                     // This is a popup - use postMessage
-                    console.log('Sending result to parent window via postMessage');
+                    console.log('📤 Popup detected! Sending auth code to parent window via postMessage...');
+                    console.log('📦 Sending code:', code.substring(0, 20) + '...');
+
                     window.opener.postMessage({
                         type: 'GOOGLE_AUTH_SUCCESS',
-                        data: authData
+                        code: code  // Send code directly, not nested in data
                     }, '*');
-                    
+
+                    console.log('✅ postMessage sent successfully!');
+
                     document.getElementById('message').innerHTML = '✅ Google Drive connected successfully!<br><br>Closing popup...';
+                    document.getElementById('loading').style.display = 'none';
+
                     setTimeout(() => {
+                        console.log('Closing popup window...');
                         window.close();
-                    }, 2000);
+                    }, 1500);
                 } else {
                     // Not a popup - try localStorage communication
                     console.log('Storing result in localStorage');
