@@ -76,11 +76,12 @@
             document.getElementById('loading').style.display = 'none';
 
             // Pass ALL OAuth parameters to the app (code, state, etc.)
-            // This is critical for AuthSession to verify the OAuth flow
             const currentUrl = new URL(window.location.href);
             const allParams = currentUrl.search; // Gets ?code=...&state=...
 
-            const appDeepLink = `com.thebull.abmi://oauth-callback${allParams}`;
+            // For Expo Go development, use exp:// format with /--/ prefix
+            // For production standalone app, this would be: com.thebull.abmi://oauth-callback
+            const appDeepLink = `exp://192.168.2.105:8081/--/oauth-callback${allParams}`;
 
             console.log('🔗 Redirecting to app with all params:', appDeepLink);
 
