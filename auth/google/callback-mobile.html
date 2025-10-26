@@ -40,6 +40,21 @@
             font-size: 48px;
             margin-bottom: 20px;
         }
+        .return-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 18px;
+            border-radius: 8px;
+            margin-top: 24px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+        .return-button:active {
+            background: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -72,7 +87,7 @@
         } else if (code) {
             console.log('✅ Success! Got authorization code');
 
-            document.getElementById('message').innerHTML = '✅ Google Drive connected!<br><br>Returning to app...';
+            document.getElementById('message').innerHTML = '✅ Google Drive connected successfully!';
             document.getElementById('loading').style.display = 'none';
 
             // Pass ALL OAuth parameters to the app (code, state, etc.)
@@ -83,15 +98,16 @@
             // For production standalone app, this would be: com.thebull.abmi://oauth-callback
             const appDeepLink = `exp://192.168.2.105:8081/--/oauth-callback${allParams}`;
 
-            console.log('🔗 Redirecting to app with all params:', appDeepLink);
+            console.log('🔗 App deep link ready:', appDeepLink);
 
-            // Immediate redirect - this will trigger the app to open
-            window.location.href = appDeepLink;
+            // Create a button for user to return to app
+            const buttonHtml = `<button class="return-button" onclick="window.location.href='${appDeepLink}'">Return to The Bull</button>`;
+            document.getElementById('message').innerHTML += buttonHtml;
 
-            // Fallback message if redirect doesn't work
+            // Try automatic redirect first
             setTimeout(() => {
-                document.getElementById('message').innerHTML = '✅ Authentication successful!<br><br>Please return to The Bull app.';
-            }, 2000);
+                window.location.href = appDeepLink;
+            }, 1000);
         } else {
             console.error('No authorization code or error received');
             document.getElementById('message').innerHTML = '❌ No authorization code received';
