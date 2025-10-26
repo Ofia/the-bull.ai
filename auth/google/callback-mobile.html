@@ -75,10 +75,14 @@
             document.getElementById('message').innerHTML = '✅ Google Drive connected!<br><br>Returning to app...';
             document.getElementById('loading').style.display = 'none';
 
-            // Redirect to app using custom scheme with OAuth code
-            const appDeepLink = `com.thebull.abmi://oauth-callback?code=${encodeURIComponent(code)}`;
+            // Pass ALL OAuth parameters to the app (code, state, etc.)
+            // This is critical for AuthSession to verify the OAuth flow
+            const currentUrl = new URL(window.location.href);
+            const allParams = currentUrl.search; // Gets ?code=...&state=...
 
-            console.log('🔗 Redirecting to app:', appDeepLink);
+            const appDeepLink = `com.thebull.abmi://oauth-callback${allParams}`;
+
+            console.log('🔗 Redirecting to app with all params:', appDeepLink);
 
             // Immediate redirect - this will trigger the app to open
             window.location.href = appDeepLink;
