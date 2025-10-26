@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Bull - Google OAuth Callback (Mobile)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+            background: #e2e4da;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .loading {
+            font-size: 24px;
+            color: #2196F3;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .bull-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="bull-icon">🐂</div>
+        <h1>The Bull - ABMI</h1>
+        <p id="message" class="success">Connecting to Google Drive...</p>
+        <div class="loading" id="loading">●●●</div>
+    </div>
+
+    <script>
+        console.log('=== MOBILE OAUTH CALLBACK PAGE ===');
+        console.log('URL:', window.location.href);
+
+        // Get URL parameters from OAuth redirect
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const state = urlParams.get('state');
+        const error = urlParams.get('error');
+
+        console.log('Authorization code:', code);
+        console.log('State:', state);
+        console.log('Error:', error);
+
+        if (error) {
+            console.error('OAuth error:', error);
+            document.getElementById('message').innerHTML = '❌ Authentication failed: ' + error;
+            document.getElementById('message').className = 'error';
+            document.getElementById('loading').style.display = 'none';
+        } else if (code) {
+            console.log('✅ Success! Got authorization code');
+
+            // Build deep link to redirect back to React Native app
+            // Using the custom scheme defined in app.json: com.thebull.abmi
+            const deepLink = `com.thebull.abmi://oauth-callback?code=${encodeURIComponent(code)}`;
+
+            console.log('🔗 Deep link:', deepLink);
+
+            document.getElementById('message').innerHTML = '✅ Google Drive connected!<br><br>Returning to The Bull...';
+            document.getElementById('loading').style.display = 'none';
+
+            // Attempt to redirect back to the app via deep link
+            setTimeout(() => {
+                console.log('Redirecting to app via deep link...');
+                window.location.href = deepLink;
+            }, 1000);
+
+            // Fallback: if deep link doesn't work, show instructions
+            setTimeout(() => {
+                document.getElementById('message').innerHTML = '✅ Authentication successful!<br><br>If the app didn\'t open automatically, please return to The Bull app manually.';
+            }, 3000);
+
+        } else {
+            console.error('No authorization code or error received');
+            document.getElementById('message').innerHTML = '❌ No authorization code received';
+            document.getElementById('message').className = 'error';
+            document.getElementById('loading').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
