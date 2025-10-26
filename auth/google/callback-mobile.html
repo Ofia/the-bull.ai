@@ -72,26 +72,17 @@
         } else if (code) {
             console.log('✅ Success! Got authorization code');
 
-            // Build deep link to redirect back to React Native app
-            // Using the custom scheme defined in app.json: com.thebull.abmi
-            const deepLink = `com.thebull.abmi://oauth-callback?code=${encodeURIComponent(code)}`;
-
-            console.log('🔗 Deep link:', deepLink);
-
             document.getElementById('message').innerHTML = '✅ Google Drive connected!<br><br>Returning to The Bull...';
             document.getElementById('loading').style.display = 'none';
 
-            // Attempt to redirect back to the app via deep link
-            setTimeout(() => {
-                console.log('Redirecting to app via deep link...');
-                window.location.href = deepLink;
-            }, 1000);
+            // For Expo WebBrowser, we need to redirect to exp://callback with the code
+            // This will be caught by the WebBrowser and returned to the app
+            const expoCallback = `exp://192.168.2.105:8081/--/oauth-callback?code=${encodeURIComponent(code)}`;
 
-            // Fallback: if deep link doesn't work, show instructions
-            setTimeout(() => {
-                document.getElementById('message').innerHTML = '✅ Authentication successful!<br><br>If the app didn\'t open automatically, please return to The Bull app manually.';
-            }, 3000);
+            console.log('🔗 Expo callback:', expoCallback);
 
+            // Immediate redirect - this will close the browser and return to app
+            window.location.href = expoCallback;
         } else {
             console.error('No authorization code or error received');
             document.getElementById('message').innerHTML = '❌ No authorization code received';
