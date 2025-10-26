@@ -72,17 +72,21 @@
         } else if (code) {
             console.log('✅ Success! Got authorization code');
 
-            document.getElementById('message').innerHTML = '✅ Google Drive connected!<br><br>Returning to The Bull...';
+            document.getElementById('message').innerHTML = '✅ Google Drive connected!<br><br>Returning to app...';
             document.getElementById('loading').style.display = 'none';
 
-            // For Expo WebBrowser, we need to redirect to exp://callback with the code
-            // This will be caught by the WebBrowser and returned to the app
-            const expoCallback = `exp://192.168.2.105:8081/--/oauth-callback?code=${encodeURIComponent(code)}`;
+            // Redirect to app using custom scheme with OAuth code
+            const appDeepLink = `com.thebull.abmi://oauth-callback?code=${encodeURIComponent(code)}`;
 
-            console.log('🔗 Expo callback:', expoCallback);
+            console.log('🔗 Redirecting to app:', appDeepLink);
 
-            // Immediate redirect - this will close the browser and return to app
-            window.location.href = expoCallback;
+            // Immediate redirect - this will trigger the app to open
+            window.location.href = appDeepLink;
+
+            // Fallback message if redirect doesn't work
+            setTimeout(() => {
+                document.getElementById('message').innerHTML = '✅ Authentication successful!<br><br>Please return to The Bull app.';
+            }, 2000);
         } else {
             console.error('No authorization code or error received');
             document.getElementById('message').innerHTML = '❌ No authorization code received';
