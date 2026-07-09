@@ -619,6 +619,150 @@
     .b-overdue   { background: rgba(220,38,38,0.08);  color: #dc2626; }
     .b-confirmed { background: rgba(22,163,74,0.08);  color: #16a34a; }
 
+    /* ── CATALOG CTA ── */
+    #catalog {
+      padding: 80px 48px;
+      border-top: 1px solid var(--border);
+    }
+
+    .catalog-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .catalog-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 44px;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .catalog-header-left { flex: 1; min-width: 240px; }
+
+    .catalog-h2 {
+      font-family: var(--display);
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      line-height: 1.07;
+      color: var(--color-heading);
+      margin-bottom: 10px;
+    }
+
+    .catalog-sub {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--color-secondary);
+      line-height: 1.375;
+      letter-spacing: -0.16px;
+      max-width: 420px;
+    }
+
+    .catalog-cta-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--primary);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      align-self: flex-end;
+      transition: border-color 0.12s, background 0.12s;
+    }
+
+    .catalog-cta-link:hover { border-color: #c0c0ba; background: var(--bg2); }
+
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .catalog-card {
+      background: #fff;
+      padding: 32px 28px;
+      text-decoration: none;
+      display: block;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.15s;
+    }
+
+    .catalog-card:hover { background: #fefefe; }
+
+    .catalog-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.2s ease;
+    }
+
+    .catalog-card:hover::after { transform: scaleX(1); }
+
+    .catalog-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 18px;
+    }
+
+    .cat-live { background: rgba(22,163,74,0.08); color: #16a34a; }
+    .cat-live .cat-dot { background: #16a34a; }
+    .cat-soon { background: rgba(179,134,0,0.09); color: #b38600; }
+    .cat-soon .cat-dot { background: #b38600; animation: blink 2s infinite; }
+    .cat-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+    .catalog-name {
+      font-family: var(--display);
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--color-heading);
+      margin-bottom: 8px;
+    }
+
+    .catalog-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .catalog-arrow {
+      position: absolute;
+      bottom: 28px;
+      right: 28px;
+      font-size: 16px;
+      color: var(--color-subtle);
+      transition: transform 0.14s, color 0.14s;
+    }
+
+    .catalog-card:hover .catalog-arrow {
+      transform: translate(3px, -3px);
+      color: var(--accent);
+    }
+
     /* ── SERVICES ── */
     #services {
       background: var(--bg2);
@@ -1034,6 +1178,7 @@
     @media (max-width: 900px) {
       .service-grid { grid-template-columns: 1fr; }
       .product-grid { grid-template-columns: 1fr; }
+      .catalog-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (max-width: 700px) {
@@ -1048,6 +1193,8 @@
       .mock-sidebar { display: none; }
       .mockup-body { height: 280px; }
 
+      #catalog { padding: 56px 20px; }
+      .catalog-grid { grid-template-columns: 1fr; }
       #services { padding: 72px 20px; }
       #products { padding: 72px 20px; }
       #quote { padding: 80px 20px; }
@@ -1241,6 +1388,46 @@
       </div>
     </div>
   </div>
+
+  <!-- ── CATALOG CTA ── -->
+  <section id="catalog">
+    <div class="catalog-inner">
+      <div class="catalog-header">
+        <div class="catalog-header-left">
+          <div class="eyebrow">Products</div>
+          <h2 class="catalog-h2">Everything we build<br/>is ready to deploy.</h2>
+          <p class="catalog-sub">Four AI-native platforms, each purpose-built for a specific industry. Same philosophy throughout — structured data, zero admin, AI at every layer.</p>
+        </div>
+        <a href="#products" class="catalog-cta-link">Browse all products →</a>
+      </div>
+      <div class="catalog-grid">
+        <a href="/contracts" class="catalog-card">
+          <div class="catalog-status cat-live"><div class="cat-dot"></div>Live</div>
+          <div class="catalog-name">Contracts</div>
+          <div class="catalog-desc">AI-powered legal process management for law firms and in-house legal teams</div>
+          <span class="catalog-arrow">↗</span>
+        </a>
+        <a href="https://thebullproperties.vercel.app/" class="catalog-card" target="_blank" rel="noopener">
+          <div class="catalog-status cat-live"><div class="cat-dot"></div>Live</div>
+          <div class="catalog-name">Properties</div>
+          <div class="catalog-desc">End-to-end real estate portfolio intelligence across every property and tenant</div>
+          <span class="catalog-arrow">↗</span>
+        </a>
+        <a href="/developer" class="catalog-card">
+          <div class="catalog-status cat-soon"><div class="cat-dot"></div>Soon</div>
+          <div class="catalog-name">Developer</div>
+          <div class="catalog-desc">Operations OS for development companies — Sales, Financial, Permits, Architecture in one system</div>
+          <span class="catalog-arrow">↗</span>
+        </a>
+        <a href="/salon" class="catalog-card">
+          <div class="catalog-status cat-soon"><div class="cat-dot"></div>Soon</div>
+          <div class="catalog-name">Salon</div>
+          <div class="catalog-desc">Beauty business management — daily revenue, stylist payroll, and automatic tax calculations</div>
+          <span class="catalog-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
 
   <!-- ── SERVICES ── -->
   <section id="services">
