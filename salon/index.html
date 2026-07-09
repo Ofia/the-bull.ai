@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Bull Salon — Beauty Business Management</title>
+  <link rel="icon" type="image/png" href="../favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Display:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:             #ffffff;
+      --bg2:            #f5f5f3;
+      --border:         #d8d8d3;
+      --primary:        #1a1a1a;
+      --muted:          #8a8a85;
+      --accent:         #b38600;
+      --accent-bg:      rgba(179,134,0,0.08);
+      --sans:           'Inter', sans-serif;
+      --display:        'Inter Display', sans-serif;
+      --mono:           'JetBrains Mono', monospace;
+      --color-heading:  #1b1b1b;
+      --color-body:     #3f3f3a;
+      --color-secondary:#616159;
+      --color-tertiary: #8a8a85;
+      --color-subtle:   #b0b0aa;
+      --color-caption:  #c8c8c2;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--color-body); font-family: var(--sans); font-size: 16px; font-weight: 500; line-height: 1.375; letter-spacing: -0.01em; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: sticky; top: 0; z-index: 200; background: rgba(255,255,255,0.88); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 64px; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+    .nav-logo img { width: 30px; height: 30px; object-fit: contain; }
+    .nav-logo-text { font-size: 15px; font-weight: 700; color: var(--primary); letter-spacing: -0.02em; }
+    .nav-logo-sub { font-size: 13px; font-weight: 500; color: var(--muted); }
+    .nav-center { display: flex; align-items: center; gap: 2px; }
+    .nav-link { font-size: 14px; font-weight: 500; letter-spacing: -0.16px; color: var(--primary); text-decoration: none; padding: 8px 12px; border-radius: 7px; transition: background 0.12s; }
+    .nav-link:hover { background: var(--bg2); }
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+    .btn-outline { font-size: 14px; font-weight: 500; letter-spacing: -0.07px; color: var(--primary); background: none; text-decoration: none; padding: 0 12px; height: 36px; display: inline-flex; align-items: center; border-radius: 10px; border: 1px solid var(--border); transition: border-color 0.12s, background 0.12s; cursor: pointer; font-family: var(--sans); }
+    .btn-outline:hover { border-color: #c0c0ba; background: var(--bg2); }
+    .btn-filled { font-size: 14px; font-weight: 500; letter-spacing: -0.07px; color: #f5f5f3; background: #1a1a1a; text-decoration: none; padding: 0 12px; height: 36px; display: inline-flex; align-items: center; border-radius: 10px; transition: opacity 0.12s; cursor: pointer; border: none; font-family: var(--sans); }
+    .btn-filled:hover { opacity: 0.80; }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .nav-hamburger span { display: block; width: 22px; height: 1.5px; background: var(--primary); border-radius: 2px; transition: transform 0.2s, opacity 0.2s; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .mobile-nav { display: none; flex-direction: column; position: fixed; top: 64px; left: 0; right: 0; background: #fff; border-bottom: 1px solid var(--border); padding: 16px 20px 24px; gap: 4px; z-index: 199; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav-link { font-size: 15px; font-weight: 500; color: var(--primary); text-decoration: none; padding: 12px 8px; border-bottom: 1px solid var(--border); }
+    .mobile-nav-link:last-of-type { border-bottom: none; }
+    .mobile-nav-cta { margin-top: 12px; display: block; text-align: center; font-size: 15px; font-weight: 600; color: #fff; background: var(--primary); text-decoration: none; padding: 12px; border-radius: 10px; cursor: pointer; border: none; font-family: var(--sans); }
+
+    /* ── HERO ── */
+    #hero { min-height: 85vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 100px 48px 72px; background-image: radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px); background-size: 28px 28px; }
+    .cs-badge { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(179,134,0,0.28); border-radius: 100px; padding: 6px 16px; margin-bottom: 32px; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); }
+    .cs-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+    h1 { font-family: var(--display); font-size: clamp(44px, 6vw, 64px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.0; color: var(--color-heading); max-width: 780px; margin: 0 auto 24px; }
+    .hero-sub { font-family: var(--sans); font-size: clamp(16px, 1.8vw, 20px); font-weight: 500; color: var(--color-secondary); line-height: 1.3; letter-spacing: -0.2px; max-width: 560px; margin: 0 auto 44px; }
+    .hero-actions { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .hero-btn-black { font-size: 15px; font-weight: 500; letter-spacing: -0.07px; color: #f5f5f3; background: #1a1a1a; text-decoration: none; padding: 13px 28px; border-radius: 10px; transition: opacity 0.12s; cursor: pointer; border: none; font-family: var(--sans); }
+    .hero-btn-black:hover { opacity: 0.80; }
+    .hero-btn-ghost { font-size: 15px; font-weight: 500; letter-spacing: -0.07px; color: var(--primary); background: rgba(255,255,255,0.85); border: 1px solid var(--border); text-decoration: none; padding: 13px 28px; border-radius: 10px; backdrop-filter: blur(8px); transition: border-color 0.12s, background 0.12s; }
+    .hero-btn-ghost:hover { border-color: rgba(13,13,13,0.2); background: rgba(255,255,255,0.98); }
+
+    /* ── FEATURE STRIP ── */
+    .feat-strip { display: flex; align-items: center; justify-content: center; gap: 28px; padding: 20px 48px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); flex-wrap: wrap; background: rgba(255,255,255,0.82); backdrop-filter: blur(8px); }
+    .feat-item { display: flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .feat-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── MOCKUP ── */
+    .sal-wrap { max-width: 1080px; margin: 56px auto 0; padding: 0 48px; }
+    .sal-frame { border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06), 0 32px 80px rgba(0,0,0,0.07); }
+    .sal-chrome { background: #f3f3f1; padding: 11px 16px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--border); }
+    .sal-dot { width: 11px; height: 11px; border-radius: 50%; }
+    .sal-body { height: 500px; background: #f5f5f3; display: flex; flex-direction: column; font-family: var(--sans); overflow: hidden; }
+
+    .sal-topbar { flex-shrink: 0; height: 48px; background: #fff; border-bottom: 1px solid rgba(28,28,28,0.08); display: flex; align-items: center; justify-content: space-between; padding: 0 16px 0 20px; }
+    .sal-logo-text { font-size: 11px; letter-spacing: 0.22em; font-weight: 700; text-transform: uppercase; color: #1c1c1c; }
+    .sal-date-label { font-size: 9px; color: rgba(28,28,28,0.45); font-family: var(--mono); letter-spacing: 0.05em; }
+    .sal-avatar { width: 24px; height: 24px; border-radius: 50%; background: rgba(28,28,28,0.07); border: 1px solid rgba(28,28,28,0.15); display: flex; align-items: center; justify-content: center; font-size: 7.5px; font-weight: 700; color: #1c1c1c; flex-shrink: 0; }
+
+    .sal-main { flex: 1; display: flex; overflow: hidden; }
+
+    .sal-sidebar { width: 138px; background: #fff; border-right: 1px solid rgba(28,28,28,0.08); flex-shrink: 0; display: flex; flex-direction: column; padding: 8px 0; overflow: hidden; }
+    .sal-sb-sec { font-family: var(--mono); font-size: 7px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(28,28,28,0.32); padding: 8px 13px 3px; }
+    .sal-sb-item { padding: 6px 13px; font-size: 8.5px; color: rgba(28,28,28,0.5); display: flex; align-items: center; gap: 7px; }
+    .sal-sb-item.active { background: rgba(179,134,0,0.06); color: #1c1c1c; font-weight: 600; border-left: 2px solid #b38600; }
+    .sal-sb-item svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+    .sal-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 14px 16px; }
+
+    .sal-day-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .sal-day-title { font-size: 12px; font-weight: 700; color: #1c1c1c; }
+    .sal-day-date { font-family: var(--mono); font-size: 8px; color: rgba(28,28,28,0.4); letter-spacing: 0.08em; }
+    .sal-save-btn { font-size: 8.5px; font-weight: 600; background: #1c1c1c; color: #fff; padding: 4px 10px; border-radius: 5px; font-family: var(--mono); letter-spacing: 0.05em; }
+
+    /* Revenue metric cards */
+    .sal-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
+    .sal-metric { background: #fff; border: 1px solid rgba(28,28,28,0.09); border-radius: 8px; padding: 9px 11px; }
+    .sal-metric-lbl { font-family: var(--mono); font-size: 6.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(28,28,28,0.38); margin-bottom: 4px; }
+    .sal-metric-val { font-size: 15px; font-weight: 700; color: #1c1c1c; letter-spacing: -0.02em; }
+    .sal-metric-sub { font-size: 7px; color: rgba(28,28,28,0.38); margin-top: 2px; }
+
+    /* Revenue breakdown */
+    .sal-rev-card { background: #fff; border: 1px solid rgba(28,28,28,0.09); border-radius: 9px; padding: 10px 12px; margin-bottom: 10px; }
+    .sal-card-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .sal-card-lbl { font-family: var(--mono); font-size: 7px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(28,28,28,0.38); }
+    .sal-rev-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .sal-rev-row:last-child { margin-bottom: 0; }
+    .sal-rev-name { font-size: 8px; color: rgba(28,28,28,0.55); width: 80px; flex-shrink: 0; }
+    .sal-rev-bar-wrap { flex: 1; height: 5px; background: rgba(28,28,28,0.07); border-radius: 3px; overflow: hidden; }
+    .sal-rev-bar { height: 100%; border-radius: 3px; }
+    .sal-rev-amt { font-size: 8.5px; font-weight: 700; color: #1c1c1c; width: 36px; text-align: right; flex-shrink: 0; }
+
+    /* Payment methods */
+    .sal-pay-row { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(28,28,28,0.06); }
+    .sal-pay-chip { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 7px; text-transform: uppercase; letter-spacing: 0.07em; color: rgba(28,28,28,0.45); background: rgba(28,28,28,0.04); border-radius: 4px; padding: 3px 7px; }
+    .sal-pay-chip strong { color: #1c1c1c; font-size: 8px; }
+
+    /* Payroll section */
+    .sal-payroll-card { background: #fff; border: 1px solid rgba(28,28,28,0.09); border-radius: 9px; padding: 10px 12px; }
+    .sal-stylist-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; }
+    .sal-stylist-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(28,28,28,0.05); }
+    .sal-stylist-row:last-child { border-bottom: none; }
+    .sal-stylist-name { font-size: 8px; color: rgba(28,28,28,0.6); display: flex; align-items: center; gap: 4px; }
+    .sal-stylist-dot { width: 5px; height: 5px; border-radius: 50%; background: #16a34a; flex-shrink: 0; }
+    .sal-stylist-pay { font-size: 8.5px; font-weight: 700; color: #1c1c1c; }
+    .sal-more { font-family: var(--mono); font-size: 7px; color: rgba(28,28,28,0.32); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 5px; text-align: center; }
+
+    /* Tax footer strip */
+    .sal-tax-strip { display: flex; align-items: center; gap: 16px; margin-top: 10px; padding: 8px 12px; background: rgba(28,28,28,0.03); border-radius: 7px; border: 1px solid rgba(28,28,28,0.07); }
+    .sal-tax-item { display: flex; flex-direction: column; gap: 1px; }
+    .sal-tax-lbl { font-family: var(--mono); font-size: 6px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(28,28,28,0.35); }
+    .sal-tax-val { font-size: 8.5px; font-weight: 700; color: #1c1c1c; }
+
+    /* ── FEATURES ── */
+    #features { padding: 100px 48px; max-width: 1100px; margin: 0 auto; }
+    .eyebrow { font-family: var(--display); font-size: 12px; font-weight: 600; letter-spacing: 0.72px; text-transform: uppercase; color: var(--color-caption); margin-bottom: 16px; }
+    .section-h2 { font-family: var(--display); font-size: clamp(32px, 4.5vw, 52px); font-weight: 600; letter-spacing: -0.015em; line-height: 1.07; color: var(--color-heading); margin-bottom: 14px; max-width: 560px; }
+    .section-p { font-size: 16px; font-weight: 500; color: var(--color-secondary); line-height: 1.375; letter-spacing: -0.16px; max-width: 500px; margin-bottom: 56px; }
+    .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .feat-card { background: #fff; padding: 40px 32px; transition: background 0.15s; }
+    .feat-card:hover { background: var(--bg2); }
+    .f-num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 20px; }
+    .f-title { font-family: var(--display); font-size: 18px; font-weight: 600; letter-spacing: -0.015em; color: var(--color-heading); margin-bottom: 10px; }
+    .f-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+    /* ── AUDIENCE ── */
+    #who { background: var(--bg2); padding: 100px 48px; }
+    .who-inner { max-width: 1100px; margin: 0 auto; }
+    .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 32px 28px; transition: border-color 0.16s, box-shadow 0.16s; }
+    .card:hover { border-color: rgba(179,134,0,0.28); box-shadow: 0 4px 24px rgba(0,0,0,0.05); }
+    .card-icon { width: 38px; height: 38px; border-radius: 9px; background: var(--accent-bg); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+    .card-icon svg { width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .card-title { font-family: var(--display); font-size: 16px; font-weight: 600; letter-spacing: -0.015em; color: var(--color-heading); margin-bottom: 8px; }
+    .card-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+    /* ── NOTIFY ── */
+    #notify { padding: 100px 48px; text-align: center; background-image: radial-gradient(circle, rgba(0,0,0,0.055) 1px, transparent 1px); background-size: 22px 22px; }
+    .notify-inner { max-width: 520px; margin: 0 auto; }
+    .notify-h2 { font-family: var(--display); font-size: clamp(28px, 4vw, 44px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; color: var(--color-heading); margin-bottom: 16px; margin-top: 28px; }
+    .notify-sub { font-size: 16px; color: var(--color-secondary); line-height: 1.375; letter-spacing: -0.16px; margin-bottom: 36px; }
+    .notify-form { display: flex; gap: 8px; max-width: 420px; margin: 0 auto; }
+    .notify-input { flex: 1; background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 14px; font-family: var(--sans); color: var(--primary); outline: none; transition: border-color 0.15s; }
+    .notify-input:focus { border-color: var(--accent); }
+    .notify-btn { font-size: 14px; font-weight: 500; color: #f5f5f3; background: #1a1a1a; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-family: var(--sans); transition: opacity 0.12s; white-space: nowrap; }
+    .notify-btn:hover { opacity: 0.8; }
+    .notify-feedback { font-size: 13px; margin-top: 12px; min-height: 20px; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 36px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .footer-logo img { width: 22px; height: 22px; object-fit: contain; }
+    .footer-logo-text { font-size: 14px; font-weight: 700; color: var(--primary); letter-spacing: -0.01em; }
+    .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+    .footer-link { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.12s; }
+    .footer-link:hover { color: var(--primary); }
+    .footer-copy { font-size: 13px; color: var(--muted); }
+
+    /* ── COMING SOON MODAL ── */
+    .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(13,13,13,0.45); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-backdrop.open { display: flex; }
+    .modal { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 36px 32px 32px; width: 100%; max-width: 400px; margin: 16px; position: relative; }
+    .modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; font-size: 22px; line-height: 1; color: var(--muted); cursor: pointer; padding: 4px 6px; }
+    .modal-close:hover { color: var(--primary); }
+    .modal-cs-pill { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); background: var(--accent-bg); border: 1px solid rgba(179,134,0,0.2); border-radius: 100px; padding: 4px 12px; margin-bottom: 16px; }
+    .modal-title { font-family: var(--display); font-size: 20px; font-weight: 600; letter-spacing: -0.015em; color: var(--color-heading); margin-bottom: 8px; }
+    .modal-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+    .modal label { display: block; font-size: 12px; font-weight: 600; color: var(--color-caption); text-transform: uppercase; letter-spacing: 0.72px; margin-bottom: 6px; font-family: var(--display); }
+    .modal input { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 7px; padding: 10px 12px; font-size: 14px; font-family: var(--sans); color: var(--primary); outline: none; transition: border-color 0.15s; margin-bottom: 12px; }
+    .modal input:focus { border-color: var(--accent); }
+    .modal-send { width: 100%; background: var(--primary); color: #fff; border: none; border-radius: 7px; padding: 11px; font-size: 14px; font-weight: 600; font-family: var(--sans); cursor: pointer; transition: opacity 0.15s; }
+    .modal-send:hover { opacity: 0.82; }
+    .modal-send:disabled { opacity: 0.45; cursor: not-allowed; }
+    .modal-feedback { font-size: 13px; margin-top: 10px; }
+    .modal-feedback.success { color: #16a34a; }
+    .modal-feedback.error   { color: #dc2626; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      .feat-grid  { grid-template-columns: repeat(2, 1fr); }
+      .cards-grid { grid-template-columns: repeat(2, 1fr); }
+      .sal-metrics { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; }
+      .nav-center, .nav-right { display: none; }
+      .nav-hamburger { display: flex; }
+      #hero { padding: 80px 20px 60px; }
+      .feat-strip { padding: 16px 20px; gap: 16px; }
+      .sal-wrap { padding: 0 20px; }
+      .sal-sidebar { display: none; }
+      .sal-body { height: 320px; }
+      #features { padding: 72px 20px; }
+      #who { padding: 72px 20px; }
+      #notify { padding: 72px 20px; }
+      footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
+      .feat-grid  { grid-template-columns: 1fr; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .notify-form { flex-direction: column; }
+      .footer-links { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="/" class="nav-logo">
+      <img src="../favicon.png" alt="The Bull" />
+      <span class="nav-logo-text">the bull</span>
+      <span class="nav-logo-sub">/ Salon</span>
+    </a>
+    <div class="nav-center">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#who"      class="nav-link">Who it's for</a>
+      <a href="#notify"   class="nav-link">Get notified</a>
+    </div>
+    <div class="nav-right">
+      <button class="btn-outline" id="login-btn">Log in</button>
+      <button class="btn-filled"  id="signup-btn">Get notified</button>
+    </div>
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#features" class="mobile-nav-link">Features</a>
+    <a href="#who"      class="mobile-nav-link">Who it's for</a>
+    <button class="mobile-nav-cta" id="mob-notify-btn">Get notified</button>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <div class="cs-badge">
+      <div class="cs-dot"></div>
+      Coming Soon &nbsp;·&nbsp; Beauty Business Management
+    </div>
+    <h1>Run your salon.<br/>Not your spreadsheets.</h1>
+    <p class="hero-sub">
+      Daily revenue, weekly payroll, automatic tax calculations, and a live P&amp;L — built for beauty businesses that run on people, not formulas.
+    </p>
+    <div class="hero-actions">
+      <button class="hero-btn-black" id="hero-notify-btn">Get notified at launch →</button>
+      <a href="#features" class="hero-btn-ghost">See what we're building</a>
+    </div>
+  </section>
+
+  <!-- ── FEATURE STRIP ── -->
+  <div class="feat-strip">
+    <div class="feat-item"><div class="feat-dot" style="background:#29a8c8"></div>Daily Revenue</div>
+    <div class="feat-item"><div class="feat-dot" style="background:#2563eb"></div>Stylist Payroll</div>
+    <div class="feat-item"><div class="feat-dot" style="background:#b38600"></div>Tax Auto-calc</div>
+    <div class="feat-item"><div class="feat-dot" style="background:#16a34a"></div>Bank Deposits</div>
+    <div class="feat-item"><div class="feat-dot" style="background:#e5602a"></div>Owner Dashboard</div>
+    <div class="feat-item"><div class="feat-dot" style="background:#1c3e52"></div>Weekly Reports</div>
+  </div>
+
+  <!-- ── MOCKUP ── -->
+  <div class="sal-wrap">
+    <div class="sal-frame">
+      <div class="sal-chrome">
+        <div class="sal-dot" style="background:#ff5f57"></div>
+        <div class="sal-dot" style="background:#febc2e"></div>
+        <div class="sal-dot" style="background:#28c840"></div>
+      </div>
+      <div class="sal-body">
+
+        <!-- TopBar -->
+        <div class="sal-topbar">
+          <span class="sal-logo-text">The Bull Salon</span>
+          <span class="sal-date-label">Thursday, Jul 3, 2026</span>
+          <div class="sal-avatar">OF</div>
+        </div>
+
+        <!-- Main -->
+        <div class="sal-main">
+
+          <!-- Sidebar -->
+          <div class="sal-sidebar">
+            <div class="sal-sb-sec">Daily Ops</div>
+            <div class="sal-sb-item active">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Today
+            </div>
+            <div class="sal-sb-item">
+              <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Reports
+            </div>
+            <div class="sal-sb-item">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+              Payroll
+            </div>
+            <div class="sal-sb-item">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+              Stylists
+            </div>
+            <div class="sal-sb-item">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+              Settings
+            </div>
+          </div>
+
+          <!-- Daily ops content -->
+          <div class="sal-content">
+
+            <div class="sal-day-hdr">
+              <span class="sal-day-title">Daily Report</span>
+              <span class="sal-day-date">Thu Jul 3 · Week 27</span>
+              <span class="sal-save-btn">Save &amp; Close Day</span>
+            </div>
+
+            <!-- 3 Revenue KPIs -->
+            <div class="sal-metrics">
+              <div class="sal-metric">
+                <div class="sal-metric-lbl">Total Revenue</div>
+                <div class="sal-metric-val">$3,240</div>
+                <div class="sal-metric-sub">↑ $280 vs last Thu</div>
+              </div>
+              <div class="sal-metric">
+                <div class="sal-metric-lbl">Payroll Today</div>
+                <div class="sal-metric-val">$890</div>
+                <div class="sal-metric-sub">7 stylists active</div>
+              </div>
+              <div class="sal-metric">
+                <div class="sal-metric-lbl">To Bank (40%)</div>
+                <div class="sal-metric-val">$940</div>
+                <div class="sal-metric-sub">After payroll &amp; tax</div>
+              </div>
+            </div>
+
+            <!-- Revenue breakdown -->
+            <div class="sal-rev-card">
+              <div class="sal-card-hdr">
+                <span class="sal-card-lbl">Revenue Breakdown</span>
+              </div>
+              <div class="sal-rev-row">
+                <span class="sal-rev-name">Services</span>
+                <div class="sal-rev-bar-wrap"><div class="sal-rev-bar" style="width:57%;background:#29a8c8"></div></div>
+                <span class="sal-rev-amt">$1,840</span>
+              </div>
+              <div class="sal-rev-row">
+                <span class="sal-rev-name">Wigs / Retail</span>
+                <div class="sal-rev-bar-wrap"><div class="sal-rev-bar" style="width:34%;background:#e5602a"></div></div>
+                <span class="sal-rev-amt">$1,100</span>
+              </div>
+              <div class="sal-rev-row">
+                <span class="sal-rev-name">Repairs</span>
+                <div class="sal-rev-bar-wrap"><div class="sal-rev-bar" style="width:9%;background:#1c3e52"></div></div>
+                <span class="sal-rev-amt">$300</span>
+              </div>
+              <div class="sal-pay-row">
+                <div class="sal-pay-chip">Cash <strong>$1,820</strong></div>
+                <div class="sal-pay-chip">Credit Card <strong>$1,100</strong></div>
+                <div class="sal-pay-chip">QuickPay <strong>$320</strong></div>
+              </div>
+            </div>
+
+            <!-- Payroll section -->
+            <div class="sal-payroll-card">
+              <div class="sal-card-hdr" style="margin-bottom:8px">
+                <span class="sal-card-lbl">Stylist Payroll</span>
+              </div>
+              <div class="sal-stylist-grid">
+                <div>
+                  <div class="sal-stylist-row"><span class="sal-stylist-name"><div class="sal-stylist-dot"></div>Maria V.</span><span class="sal-stylist-pay">$120</span></div>
+                  <div class="sal-stylist-row"><span class="sal-stylist-name"><div class="sal-stylist-dot"></div>Sofia M.</span><span class="sal-stylist-pay">$95</span></div>
+                  <div class="sal-stylist-row"><span class="sal-stylist-name"><div class="sal-stylist-dot"></div>Ana R.</span><span class="sal-stylist-pay">$80</span></div>
+                </div>
+                <div>
+                  <div class="sal-stylist-row"><span class="sal-stylist-name"><div class="sal-stylist-dot"></div>Dalia K.</span><span class="sal-stylist-pay">$110</span></div>
+                  <div class="sal-stylist-row"><span class="sal-stylist-name"><div class="sal-stylist-dot"></div>Tzipora B.</span><span class="sal-stylist-pay">$95</span></div>
+                  <div class="sal-stylist-row"><span class="sal-stylist-name"><div class="sal-stylist-dot"></div>Raizy S.</span><span class="sal-stylist-pay">$90</span></div>
+                </div>
+              </div>
+              <div class="sal-more">+ 13 more stylists</div>
+            </div>
+
+            <!-- Tax strip -->
+            <div class="sal-tax-strip">
+              <div class="sal-tax-item"><div class="sal-tax-lbl">Tax Collected</div><div class="sal-tax-val">$204</div></div>
+              <div class="sal-tax-item"><div class="sal-tax-lbl">Cash Tax (8.875%)</div><div class="sal-tax-val">$162</div></div>
+              <div class="sal-tax-item"><div class="sal-tax-lbl">CC Tax (4.5%)</div><div class="sal-tax-val">$50</div></div>
+              <div class="sal-tax-item"><div class="sal-tax-lbl">Bank Deposit</div><div class="sal-tax-val">$940</div></div>
+              <div class="sal-tax-item"><div class="sal-tax-lbl">Profit After Payroll</div><div class="sal-tax-val">$2,146</div></div>
+            </div>
+
+          </div><!-- /sal-content -->
+        </div><!-- /sal-main -->
+      </div><!-- /sal-body -->
+    </div><!-- /sal-frame -->
+  </div><!-- /sal-wrap -->
+
+  <!-- ── FEATURES ── -->
+  <section id="features">
+    <div class="eyebrow">Platform</div>
+    <h2 class="section-h2">Every number,<br/>handled automatically.</h2>
+    <p class="section-p">One entry per day replaces three spreadsheets. The system calculates everything else.</p>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="f-num">01 — Daily Entry</div>
+        <div class="f-title">Revenue in seconds</div>
+        <div class="f-desc">Log services, retail, and repairs in one tap — split by cash, card, and QuickPay. No more entering the same number in three different sheets.</div>
+      </div>
+      <div class="feat-card">
+        <div class="f-num">02 — Stylist Payroll</div>
+        <div class="f-title">Every stylist, every week</div>
+        <div class="f-desc">Per-stylist daily amounts tracked, weekly summaries auto-generated. Staff changes don't break anything — add or remove stylists in seconds.</div>
+      </div>
+      <div class="feat-card">
+        <div class="f-num">03 — Smart Finance</div>
+        <div class="f-title">Tax rules, just handled</div>
+        <div class="f-desc">Cash tax (8.875%) and credit card tax (4.5%) calculated automatically. The 40% bank allocation is enforced as a rule — not a formula that breaks.</div>
+      </div>
+      <div class="feat-card">
+        <div class="f-num">04 — Owner Dashboard</div>
+        <div class="f-title">Your salon at a glance</div>
+        <div class="f-desc">Real-time P&amp;L, cash vs. card split, bank deposit totals, and monthly comparisons — all visible from a phone. No calling the front desk.</div>
+      </div>
+      <div class="feat-card">
+        <div class="f-num">05 — Bookkeeper Tools</div>
+        <div class="f-title">Reconciliation, done</div>
+        <div class="f-desc">End-of-day cash vs. credit reconciliation, deposit confirmations, and monthly P&amp;L reports — all generated automatically, no spreadsheet assembly required.</div>
+      </div>
+      <div class="feat-card">
+        <div class="f-num">06 — AI Insights</div>
+        <div class="f-title">Know what's working</div>
+        <div class="f-desc">Which services are most profitable, which days drive the most revenue, which stylists are growing. Patterns you'd never spot in a spreadsheet, surfaced automatically.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── AUDIENCE ── -->
+  <section id="who">
+    <div class="who-inner">
+      <div class="eyebrow">Audience</div>
+      <h2 class="section-h2">Built for beauty businesses<br/>that run on people.</h2>
+      <p class="section-p">Any service business with multiple providers, daily revenue, and a bookkeeper who deserves better tools.</p>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></div>
+          <div class="card-title">Salon Owners</div>
+          <div class="card-desc">One dashboard that tells you if today was a good day — cash, card, payroll, and bank balance — without calling the front desk.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+          <div class="card-title">Bookkeepers</div>
+          <div class="card-desc">Enter revenue once. Reconciliation, deposits, payroll, and monthly reports are generated for you. No more triple-entry spreadsheet chaos.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+          <div class="card-title">Salon Managers</div>
+          <div class="card-desc">Track your team's daily performance, manage payroll across 15+ stylists, and run day-end summaries without a single spreadsheet.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div>
+          <div class="card-title">Any Service Business</div>
+          <div class="card-desc">The salon model — daily revenue, multiple providers, tax rules, deposits — applies to spas, barbershops, nail studios, and beyond.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── NOTIFY ── -->
+  <section id="notify">
+    <div class="notify-inner">
+      <div class="cs-badge"><div class="cs-dot"></div>Launching 2026</div>
+      <h2 class="notify-h2">Be the first salon<br/>to run on The Bull.</h2>
+      <p class="notify-sub">Drop your email — we'll notify you the moment The Bull Salon goes live.</p>
+      <div class="notify-form">
+        <input class="notify-input" id="notify-email" type="email" placeholder="you@yoursalon.com" />
+        <button class="notify-btn" id="notify-submit">Notify me →</button>
+      </div>
+      <div class="notify-feedback" id="notify-feedback"></div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <a href="/" class="footer-logo">
+      <img src="../favicon.png" alt="The Bull" />
+      <span class="footer-logo-text">the bull salon</span>
+    </a>
+    <div class="footer-links">
+      <a href="#features" class="footer-link">Features</a>
+      <a href="#who"      class="footer-link">Who it's for</a>
+      <a href="#notify"   class="footer-link">Get notified</a>
+      <a href="/"         class="footer-link">← The Bull</a>
+    </div>
+    <div class="footer-copy">© 2026 Aldebaran Labs LLC. All rights reserved.</div>
+  </footer>
+
+  <!-- ── COMING SOON MODAL ── -->
+  <div class="modal-backdrop" id="cs-modal">
+    <div class="modal">
+      <button class="modal-close" id="cs-close">×</button>
+      <div class="modal-cs-pill"><div class="cs-dot"></div>Coming Soon · 2026</div>
+      <div class="modal-title">We're building it now</div>
+      <div class="modal-sub">The Bull Salon launches in 2026. Enter your email and we'll tell you the moment it's ready.</div>
+      <label for="cs-email">Email</label>
+      <input id="cs-email" type="email" placeholder="you@yoursalon.com" />
+      <button class="modal-send" id="cs-submit">Notify me →</button>
+      <div class="modal-feedback" id="cs-feedback"></div>
+    </div>
+  </div>
+
+  <script>
+    // Hamburger
+    var hamburger = document.getElementById('hamburger');
+    var mobileNav = document.getElementById('mobile-nav');
+    hamburger.addEventListener('click', function () { hamburger.classList.toggle('open'); mobileNav.classList.toggle('open'); });
+    mobileNav.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { hamburger.classList.remove('open'); mobileNav.classList.remove('open'); }); });
+
+    // Modal
+    var modal = document.getElementById('cs-modal');
+    function openModal() { modal.classList.add('open'); }
+    function closeModal() { modal.classList.remove('open'); }
+    document.getElementById('login-btn').addEventListener('click', openModal);
+    document.getElementById('signup-btn').addEventListener('click', openModal);
+    document.getElementById('hero-notify-btn').addEventListener('click', openModal);
+    document.getElementById('mob-notify-btn').addEventListener('click', function () { hamburger.classList.remove('open'); mobileNav.classList.remove('open'); openModal(); });
+    document.getElementById('cs-close').addEventListener('click', closeModal);
+    modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+
+    // Inline notify form
+    document.getElementById('notify-submit').addEventListener('click', async function () {
+      var email = document.getElementById('notify-email').value.trim();
+      var feedback = document.getElementById('notify-feedback');
+      if (!email || !email.includes('@')) { feedback.style.color = '#dc2626'; feedback.textContent = 'Please enter a valid email.'; return; }
+      try {
+        var res = await fetch('https://formspree.io/f/xdajykjg', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify({ email: email, product: 'The Bull Salon', _subject: 'Salon — notify me at launch' }) });
+        if (res.ok) { feedback.style.color = '#16a34a'; feedback.textContent = "You're on the list. We'll be in touch."; document.getElementById('notify-email').value = ''; }
+        else { throw new Error(); }
+      } catch (_) { feedback.style.color = '#dc2626'; feedback.textContent = 'Something went wrong. Email us at hello@the-bull.ai'; }
+    });
+
+    // Modal notify form
+    document.getElementById('cs-submit').addEventListener('click', async function () {
+      var email = document.getElementById('cs-email').value.trim();
+      var feedback = document.getElementById('cs-feedback');
+      if (!email || !email.includes('@')) { feedback.className = 'modal-feedback error'; feedback.textContent = 'Please enter a valid email.'; return; }
+      var btn = document.getElementById('cs-submit');
+      btn.disabled = true; btn.textContent = 'Sending…';
+      try {
+        var res = await fetch('https://formspree.io/f/xdajykjg', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify({ email: email, product: 'The Bull Salon', _subject: 'Salon — notify me at launch' }) });
+        if (res.ok) { feedback.className = 'modal-feedback success'; feedback.textContent = "You're on the list!"; document.getElementById('cs-email').value = ''; }
+        else { throw new Error(); }
+      } catch (_) { feedback.className = 'modal-feedback error'; feedback.textContent = 'Something went wrong.'; }
+      finally { btn.disabled = false; btn.textContent = 'Notify me →'; }
+    });
+  </script>
+
+</body>
+</html>
