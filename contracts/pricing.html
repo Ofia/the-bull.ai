@@ -444,6 +444,7 @@
           <span class="plan-price-amount">$390</span>
           <span class="plan-price-period">/ year</span>
         </div>
+        <div id="pro-save-hint" style="display:none;font-size:12px;color:#16a34a;font-weight:600;margin-top:4px;">Save $78/yr</div>
         <div class="plan-tagline">For growing legal teams tracking real workloads.</div>
         <a href="payment.html" class="plan-cta plan-cta-gold" id="pro-cta">Get started →</a>
         <div class="plan-divider"></div>
@@ -504,6 +505,7 @@
           <span class="plan-price-amount">$1290</span>
           <span class="plan-price-period">/ year</span>
         </div>
+        <div id="scale-save-hint" style="display:none;font-size:12px;color:#16a34a;font-weight:600;margin-top:4px;">Save $258/yr</div>
         <div class="plan-tagline">For larger teams running high-volume contract workloads.</div>
         <a href="payment.html?plan=scale" class="plan-cta plan-cta-outline" id="scale-cta">Get started →</a>
         <div class="plan-divider"></div>
@@ -652,9 +654,11 @@
     const priceMo     = document.getElementById('pro-price-monthly');
     const priceYr     = document.getElementById('pro-price-annual');
     const proCta      = document.getElementById('pro-cta');
-    const scalePriceMo = document.getElementById('scale-price-monthly');
-    const scalePriceYr = document.getElementById('scale-price-annual');
-    const scaleCta     = document.getElementById('scale-cta');
+    const scalePriceMo  = document.getElementById('scale-price-monthly');
+    const scalePriceYr  = document.getElementById('scale-price-annual');
+    const scaleCta      = document.getElementById('scale-cta');
+    const proSaveHint   = document.getElementById('pro-save-hint');
+    const scaleSaveHint = document.getElementById('scale-save-hint');
 
     let isAnnual = false;
 
@@ -668,9 +672,11 @@
       priceMo.style.display = isAnnual ? 'none'  : 'flex';
       priceYr.style.display = isAnnual ? 'flex'  : 'none';
       proCta.href = isAnnual ? 'payment.html?plan=annual' : 'payment.html';
-      scalePriceMo.style.display = isAnnual ? 'none' : 'flex';
-      scalePriceYr.style.display = isAnnual ? 'flex' : 'none';
+      scalePriceMo.style.display  = isAnnual ? 'none'  : 'flex';
+      scalePriceYr.style.display  = isAnnual ? 'flex'  : 'none';
       scaleCta.href = isAnnual ? 'payment.html?plan=scale-annual' : 'payment.html?plan=scale';
+      proSaveHint.style.display   = isAnnual ? 'block' : 'none';
+      scaleSaveHint.style.display = isAnnual ? 'block' : 'none';
     }
 
     track.addEventListener('click', () => setAnnual(!isAnnual));
