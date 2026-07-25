@@ -1,25 +1,37 @@
-# Website — CLAUDE.md
+# website/ — CLAUDE.md
 
-Single static landing page for The Bull Contracts platform.
+Marketing website for **The Bull** (`www.the-bull.ai`).
+Static HTML, no build step. Edit files and push — GitHub Pages deploys automatically.
 
-## File
-- `index.html` — self-contained, no build step, open directly in browser
+## Repo
+- GitHub: `https://github.com/Ofia/the-bull.ai`
+- Hosted: GitHub Pages → `www.the-bull.ai`
+- Local: `C:\Users\ofir\Desktop\The Bull Marketing\website\`
 
 ## Deploy
 ```bash
-git subtree push --prefix website public main
+# from inside The Bull Marketing\website\
+git add .
+git commit -m "..."
+git push origin main
 ```
-`public` remote → https://github.com/Ofia/the_bull_legal_website.git
-Live at → https://ofia.github.io/the_bull_legal_website/
 
-## Design
-Follows the ARCHI dark theme (see root CLAUDE.md):
-- Background: `#0d0d10`
-- Accent: `#b38600` (gold)
-- Fonts: Space Grotesk + Space Mono (Google Fonts)
-- Node colors match the app exactly (`#FFBD2E`, `#0A84FF`, `#00CA4E`, `#FF5F5A`)
+## Structure
+```
+index.html          ← homepage
+privacy.html
+favicon.png
+CNAME               ← www.the-bull.ai
+contracts/          ← /contracts product page (payment.html, pricing.html)
+properties/         ← /properties product page
+salon/              ← /salon product page (Coming Soon)
+developer/          ← /developer product page (Coming Soon)
+```
 
-## Background animation
-Canvas-based 2D node network — mimics the app's 3D NodeCluster.
-Dots drift, links appear/fade by proximity, each node has a soft glow.
-All in a `<script>` block at the bottom of `index.html`.
+## Design system
+- Background: `#ffffff` / `#f5f5f3`
+- Primary text: `#1a1a1a`
+- Muted: `#8a8a85`
+- Accent: `#1a1a1a` (dark)
+- Font: Inter + JetBrains Mono (Google Fonts)
+- Style: clean, minimal, professional SaaS
