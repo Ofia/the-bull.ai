@@ -1742,124 +1742,140 @@
 
 
   <!-- ── NODE CLUSTER ── -->
-  <script type="importmap">
-  { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
-  </script>
-  <script type="module">
-  import * as THREE from 'three';
+  <script>
+  (function() {
+    var canvas = document.getElementById('node-canvas');
+    var ctx = canvas.getContext('2d');
 
-  const canvas = document.getElementById('node-canvas');
-  const W = canvas.clientWidth || canvas.offsetWidth;
-  const H = canvas.clientHeight || canvas.offsetHeight;
+    function init() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var W = canvas.offsetWidth, H = canvas.offsetHeight;
+      canvas.width  = W * dpr;
+      canvas.height = H * dpr;
+      ctx.scale(dpr, dpr);
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-  renderer.setSize(W, H, false);
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+      var cx = W / 2, cy = H / 2;
+      var N = 700, L = 2800;
 
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0d0b18);
+      // typed arrays for speed
+      var x  = new Float32Array(N), y  = new Float32Array(N);
+      var vx = new Float32Array(N), vy = new Float32Array(N);
+      var deg = new Int32Array(N);
+      var la  = new Int32Array(L),  lb = new Int32Array(L);
 
-  const camera = new THREE.PerspectiveCamera(60, W / H, 0.1, 2000);
-  camera.position.set(0, 0, 340);
-
-  // generate data
-  const NODE_COUNT = 400, LINK_COUNT = 1100;
-  const pos = [], vel = [];
-  for (let i = 0; i < NODE_COUNT; i++) {
-    const r = 80 + Math.random() * 60;
-    const θ = Math.random() * Math.PI * 2;
-    const φ = Math.acos(2 * Math.random() - 1);
-    pos.push([r*Math.sin(φ)*Math.cos(θ), r*Math.sin(φ)*Math.sin(θ), r*Math.cos(φ)]);
-    vel.push([0,0,0]);
-  }
-  const degree = new Int32Array(NODE_COUNT);
-  const links = [];
-  for (let i = 0; i < LINK_COUNT; i++) {
-    const a = Math.floor(Math.random() * NODE_COUNT);
-    let   b = Math.floor(Math.random() * NODE_COUNT);
-    if (b === a) b = (a + 1) % NODE_COUNT;
-    links.push([a, b]);
-    degree[a]++; degree[b]++;
-  }
-
-  // settle force layout (200 iters, no rendering)
-  const REPEL = 3200, ATTRACT = 0.012, DAMP = 0.82;
-  for (let iter = 0; iter < 200; iter++) {
-    for (let i = 0; i < NODE_COUNT; i++) {
-      let fx = 0, fy = 0, fz = 0;
-      for (let j = 0; j < NODE_COUNT; j += 3) {
-        if (i === j) continue;
-        const dx = pos[i][0]-pos[j][0], dy = pos[i][1]-pos[j][1], dz = pos[i][2]-pos[j][2];
-        const d2 = dx*dx+dy*dy+dz*dz+0.01, f = REPEL/d2;
-        fx += dx*f; fy += dy*f; fz += dz*f;
+      // initial positions: clustered near center
+      for (var i = 0; i < N; i++) {
+        var r = Math.sqrt(Math.random()) * 120;
+        var a = Math.random() * Math.PI * 2;
+        x[i] = cx + Math.cos(a) * r;
+        y[i] = cy + Math.sin(a) * r;
       }
-      vel[i][0] = (vel[i][0]+fx)*DAMP; vel[i][1] = (vel[i][1]+fy)*DAMP; vel[i][2] = (vel[i][2]+fz)*DAMP;
+      for (var i = 0; i < L; i++) {
+        var a = Math.floor(Math.random() * N);
+        var b = Math.floor(Math.random() * N);
+        if (b === a) b = (a + 1) % N;
+        la[i] = a; lb[i] = b;
+        deg[a]++; deg[b]++;
+      }
+
+      // force-settle: 300 iterations
+      var REPEL = 550, SPRING_LEN = 22, SPRING_K = 0.035, CENTER_K = 0.004, DAMP = 0.88;
+      for (var iter = 0; iter < 300; iter++) {
+        // repulsion (sample every 2nd pair)
+        for (var i = 0; i < N; i++) {
+          for (var j = i + 2; j < N; j += 2) {
+            var dx = x[i]-x[j], dy = y[i]-y[j];
+            var d2 = dx*dx + dy*dy + 1;
+            var f  = REPEL / d2;
+            vx[i] += dx*f; vy[i] += dy*f;
+            vx[j] -= dx*f; vy[j] -= dy*f;
+          }
+        }
+        // spring attraction along links
+        for (var i = 0; i < L; i++) {
+          var a = la[i], b = lb[i];
+          var dx = x[b]-x[a], dy = y[b]-y[a];
+          var d  = Math.sqrt(dx*dx + dy*dy) + 0.01;
+          var f  = (d - SPRING_LEN) * SPRING_K;
+          var ux = dx/d, uy = dy/d;
+          vx[a] += ux*f; vy[a] += uy*f;
+          vx[b] -= ux*f; vy[b] -= uy*f;
+        }
+        // centering + damping + integrate
+        for (var i = 0; i < N; i++) {
+          vx[i] += (cx - x[i]) * CENTER_K;
+          vy[i] += (cy - y[i]) * CENTER_K;
+          vx[i] *= DAMP; vy[i] *= DAMP;
+          x[i]  += vx[i]; y[i]  += vy[i];
+        }
+      }
+
+      // pre-compute relative positions (centered at 0,0) and colors
+      var rx = new Float32Array(N), ry = new Float32Array(N);
+      var maxDeg = 0;
+      for (var i = 0; i < N; i++) if (deg[i] > maxDeg) maxDeg = deg[i];
+      var colors = [];
+      for (var i = 0; i < N; i++) {
+        rx[i] = x[i] - cx;
+        ry[i] = y[i] - cy;
+        var t = deg[i] / maxDeg;
+        if (t < 0.5) {
+          var u = t * 2;
+          // white → cyan (#29a8c8)
+          colors.push('rgb(' + Math.round(255 - 214*u) + ',' + Math.round(255 - 87*u) + ',' + Math.round(255 - 55*u) + ')');
+        } else {
+          var u = (t - 0.5) * 2;
+          // cyan → gold (#b38600)
+          colors.push('rgb(' + Math.round(41 + 138*u) + ',' + Math.round(168 - 34*u) + ',' + Math.round(200 - 200*u) + ')');
+        }
+      }
+
+      // animation loop — slow rotation
+      var angle = 0;
+      var sx = new Float32Array(N), sy = new Float32Array(N);
+
+      function draw() {
+        requestAnimationFrame(draw);
+        angle += 0.0006;
+        var ca = Math.cos(angle), sa = Math.sin(angle);
+
+        // rotate positions
+        for (var i = 0; i < N; i++) {
+          sx[i] = cx + rx[i]*ca - ry[i]*sa;
+          sy[i] = cy + rx[i]*sa + ry[i]*ca;
+        }
+
+        // background
+        ctx.fillStyle = '#0d0b18';
+        ctx.fillRect(0, 0, W, H);
+
+        // links — batched into one path for performance
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(150,205,255,0.13)';
+        ctx.lineWidth = 0.5;
+        for (var i = 0; i < L; i++) {
+          ctx.moveTo(sx[la[i]], sy[la[i]]);
+          ctx.lineTo(sx[lb[i]], sy[lb[i]]);
+        }
+        ctx.stroke();
+
+        // nodes with glow
+        for (var i = 0; i < N; i++) {
+          var r = 1.2 + (deg[i] / maxDeg) * 4.5;
+          ctx.shadowBlur = 7 + (deg[i] / maxDeg) * 10;
+          ctx.shadowColor = colors[i];
+          ctx.fillStyle   = colors[i];
+          ctx.beginPath();
+          ctx.arc(sx[i], sy[i], r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.shadowBlur = 0;
+      }
+      draw();
     }
-    for (const [a,b] of links) {
-      const dx=pos[b][0]-pos[a][0], dy=pos[b][1]-pos[a][1], dz=pos[b][2]-pos[a][2];
-      vel[a][0]+=dx*ATTRACT; vel[a][1]+=dy*ATTRACT; vel[a][2]+=dz*ATTRACT;
-      vel[b][0]-=dx*ATTRACT; vel[b][1]-=dy*ATTRACT; vel[b][2]-=dz*ATTRACT;
-    }
-    for (let i = 0; i < NODE_COUNT; i++) {
-      pos[i][0]+=vel[i][0]; pos[i][1]+=vel[i][1]; pos[i][2]+=vel[i][2];
-    }
-  }
 
-  // color by degree: white → cyan → gold
-  const maxDeg = Math.max(...degree);
-  const lo = new THREE.Color(0xffffff), mid = new THREE.Color(0x29a8c8), hi = new THREE.Color(0xb38600);
-  function nodeColor(i) {
-    const t = degree[i] / maxDeg;
-    if (t < 0.5) return lo.clone().lerp(mid, t*2);
-    return mid.clone().lerp(hi, (t-0.5)*2);
-  }
-
-  // node geometry (Points)
-  const npos = new Float32Array(NODE_COUNT*3), ncol = new Float32Array(NODE_COUNT*3);
-  for (let i = 0; i < NODE_COUNT; i++) {
-    npos[i*3]=pos[i][0]; npos[i*3+1]=pos[i][1]; npos[i*3+2]=pos[i][2];
-    const c = nodeColor(i); ncol[i*3]=c.r; ncol[i*3+1]=c.g; ncol[i*3+2]=c.b;
-  }
-  const nodeGeo = new THREE.BufferGeometry();
-  nodeGeo.setAttribute('position', new THREE.BufferAttribute(npos, 3));
-  nodeGeo.setAttribute('color',    new THREE.BufferAttribute(ncol, 3));
-
-  // soft glow sprite texture
-  const sc = document.createElement('canvas'); sc.width = sc.height = 64;
-  const sx = sc.getContext('2d'), sg = sx.createRadialGradient(32,32,0,32,32,32);
-  sg.addColorStop(0,   'rgba(255,255,255,1)');
-  sg.addColorStop(0.35,'rgba(255,255,255,0.55)');
-  sg.addColorStop(1,   'rgba(255,255,255,0)');
-  sx.fillStyle = sg; sx.fillRect(0,0,64,64);
-
-  scene.add(new THREE.Points(nodeGeo, new THREE.PointsMaterial({
-    map: new THREE.CanvasTexture(sc), vertexColors: true, sizeAttenuation: true,
-    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, size: 9
-  })));
-
-  // link geometry (LineSegments)
-  const lpos = new Float32Array(LINK_COUNT*6);
-  for (let i = 0; i < LINK_COUNT; i++) {
-    const [a,b] = links[i];
-    lpos[i*6]=pos[a][0]; lpos[i*6+1]=pos[a][1]; lpos[i*6+2]=pos[a][2];
-    lpos[i*6+3]=pos[b][0]; lpos[i*6+4]=pos[b][1]; lpos[i*6+5]=pos[b][2];
-  }
-  const linkGeo = new THREE.BufferGeometry();
-  linkGeo.setAttribute('position', new THREE.BufferAttribute(lpos, 3));
-  scene.add(new THREE.LineSegments(linkGeo, new THREE.LineBasicMaterial({
-    color: 0x8bbfd4, transparent: true, opacity: 0.18,
-    blending: THREE.AdditiveBlending, depthWrite: false
-  })));
-
-  // slow auto-rotation
-  let angle = 0;
-  (function render() {
-    requestAnimationFrame(render);
-    angle += 0.0015;
-    camera.position.x = Math.sin(angle) * 340;
-    camera.position.z = Math.cos(angle) * 340;
-    camera.lookAt(0, 0, 0);
-    renderer.render(scene, camera);
+    if (document.readyState === 'complete') init();
+    else window.addEventListener('load', init);
   })();
   </script>
 
