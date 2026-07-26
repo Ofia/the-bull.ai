@@ -1354,8 +1354,31 @@
 
     <!-- Right: CTAs -->
     <div class="nav-right">
-      <a href="https://the-bull-legal.vercel.app/" class="btn-outline">Sign in</a>
-      <a href="https://the-bull-legal.vercel.app/" class="btn-filled">Get started</a>
+      <div class="nav-item">
+        <button class="btn-outline" style="background:none;gap:6px;cursor:pointer;">
+          Sign in
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="nav-dropdown">
+          <a href="https://the-bull-legal.vercel.app/" class="dd-item">
+            <div class="dd-icon">⚖️</div>
+            <div class="dd-body"><strong>Contracts</strong><span>Legal process intelligence</span></div>
+          </a>
+          <a href="https://thebullproperties.vercel.app/" class="dd-item">
+            <div class="dd-icon">🏢</div>
+            <div class="dd-body"><strong>Properties</strong><span>Real estate portfolio AI</span></div>
+          </a>
+          <div class="dd-item" style="opacity:0.4;cursor:default;">
+            <div class="dd-icon">✂️</div>
+            <div class="dd-body"><strong>Salon <span class="soon-pill">Soon</span></strong><span>Beauty salon management</span></div>
+          </div>
+          <div class="dd-item" style="opacity:0.4;cursor:default;">
+            <div class="dd-icon">🏗️</div>
+            <div class="dd-body"><strong>Developer <span class="soon-pill">Soon</span></strong><span>Real estate development ops</span></div>
+          </div>
+        </div>
+      </div>
+      <a href="/contracts/pricing.html" class="btn-filled">Get started</a>
     </div>
 
     <!-- Hamburger (mobile) -->
@@ -1372,7 +1395,7 @@
     <a href="/salon" class="mobile-nav-link">The Bull Salon</a>
     <a href="#services" class="mobile-nav-link" id="mob-services">Services</a>
     <a href="#about" class="mobile-nav-link">About</a>
-    <a href="https://the-bull-legal.vercel.app/" class="mobile-nav-cta">Get started</a>
+    <a href="/contracts/pricing.html" class="mobile-nav-cta">Get started free</a>
   </div>
 
   <!-- ── HERO ── -->
@@ -1388,7 +1411,7 @@
       that need speed, precision, and zero administrative overhead.
     </p>
     <div class="hero-actions">
-      <a href="https://the-bull-legal.vercel.app/" class="hero-btn-black">Get started free</a>
+      <a href="/contracts/pricing.html" class="hero-btn-black">Get started free</a>
       <a href="#services" class="hero-btn-ghost">See what we build</a>
     </div>
   </section>
