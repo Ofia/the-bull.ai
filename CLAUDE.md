@@ -32,6 +32,6 @@ developer/          ← /developer product page (Coming Soon)
 - Background: `#ffffff` / `#f5f5f3`
 - Primary text: `#1a1a1a`
 - Muted: `#8a8a85`
-- Accent: `#1a1a1a` (dark)
+- Accent: `#b38600` (brand gold) — matches `--accent` in `index.html` and `..\Style\style_ui.md`
 - Font: Inter + JetBrains Mono (Google Fonts)
 - Style: clean, minimal, professional SaaS
