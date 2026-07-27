@@ -2082,24 +2082,41 @@
         }
       }
 
-      // mouse interaction
-      var mouseX = -9999, mouseY = -9999, mouseDown = false;
+      // node-grab drag state
+      var mouseX = 0, mouseY = 0, dragNode = -1;
       canvas.style.cursor = 'grab';
       canvas.addEventListener('mousemove', function(e) {
         var rect = canvas.getBoundingClientRect();
         mouseX = e.clientX - rect.left;
         mouseY = e.clientY - rect.top;
       });
-      canvas.addEventListener('mousedown',  function() { mouseDown = true;  canvas.style.cursor = 'grabbing'; });
-      canvas.addEventListener('mouseup',    function() { mouseDown = false; canvas.style.cursor = 'grab'; });
-      canvas.addEventListener('mouseleave', function() { mouseX = -9999; mouseDown = false; canvas.style.cursor = 'default'; });
-      canvas.addEventListener('mouseenter', function() { canvas.style.cursor = 'grab'; });
+      canvas.addEventListener('mousedown', function(e) {
+        var rect = canvas.getBoundingClientRect();
+        var mx = e.clientX - rect.left, my = e.clientY - rect.top;
+        var best = -1, bestD2 = 30 * 30; // snap within 30px
+        for (var i = 0; i < N; i++) {
+          var dx = x[i]-mx, dy = y[i]-my, d2 = dx*dx+dy*dy;
+          if (d2 < bestD2) { bestD2 = d2; best = i; }
+        }
+        dragNode = best;
+        canvas.style.cursor = dragNode >= 0 ? 'grabbing' : 'grab';
+      });
+      canvas.addEventListener('mouseup',    function() { dragNode = -1; canvas.style.cursor = 'grab'; });
+      canvas.addEventListener('mouseleave', function() { dragNode = -1; });
 
       // per-frame acceleration buffers (reused to avoid GC pressure)
       var ax = new Float32Array(N), ay = new Float32Array(N);
+      // softer live constants so the network feels fluid, not rubber-band tight
+      var LIVE_SK = 0.022, LIVE_CK = 0.012, LIVE_DAMP = 0.80;
 
       function draw() {
         requestAnimationFrame(draw);
+
+        // pin dragged node exactly to mouse — physics handles the rest
+        if (dragNode >= 0) {
+          x[dragNode] = mouseX; y[dragNode] = mouseY;
+          vx[dragNode] = 0;    vy[dragNode] = 0;
+        }
 
         // clear accelerations
         for (var i = 0; i < N; i++) { ax[i] = 0; ay[i] = 0; }
@@ -2119,31 +2136,23 @@
           var a = la[i], b = lb[i];
           var dx = x[b]-x[a], dy = y[b]-y[a];
           var d  = Math.sqrt(dx*dx + dy*dy) + 0.01;
-          var f  = (d - SPRING_LEN) * SPRING_K;
+          var f  = (d - SPRING_LEN) * LIVE_SK;
           var ux = dx/d, uy = dy/d;
           ax[a] += ux*f; ay[a] += uy*f;
           ax[b] -= ux*f; ay[b] -= uy*f;
         }
-        // centering + mouse pull + integrate
-        var MOUSE_R = 130, MOUSE_F = mouseDown ? 1.2 : 0.35;
+        // centering + integrate (skip dragged node — it's pinned)
         for (var i = 0; i < N; i++) {
-          ax[i] += (cx - x[i]) * CENTER_K;
-          ay[i] += (cy - y[i]) * CENTER_K;
-          var mdx = mouseX - x[i], mdy = mouseY - y[i];
-          var md2 = mdx*mdx + mdy*mdy;
-          if (md2 < MOUSE_R*MOUSE_R) {
-            var md = Math.sqrt(md2) + 0.01;
-            var mf = MOUSE_F * (1 - md / MOUSE_R);
-            ax[i] += (mdx/md) * mf;
-            ay[i] += (mdy/md) * mf;
-          }
-          vx[i] = (vx[i] + ax[i]) * DAMP;
-          vy[i] = (vy[i] + ay[i]) * DAMP;
+          if (i === dragNode) continue;
+          ax[i] += (cx - x[i]) * LIVE_CK;
+          ay[i] += (cy - y[i]) * LIVE_CK;
+          vx[i] = (vx[i] + ax[i]) * LIVE_DAMP;
+          vy[i] = (vy[i] + ay[i]) * LIVE_DAMP;
           x[i] += vx[i]; y[i] += vy[i];
         }
 
-        // background — lighter to blend with white mockup frame
-        ctx.fillStyle = '#1a1830';
+        // background — lighter blue-indigo to blend with white mockup frame
+        ctx.fillStyle = '#3a3870';
         ctx.fillRect(0, 0, W, H);
 
         // links
