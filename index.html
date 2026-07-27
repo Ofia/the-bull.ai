@@ -480,6 +480,80 @@
     .carousel-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); border: none; cursor: pointer; padding: 0; flex-shrink: 0; transition: background 0.18s; }
     .carousel-dot.active { background: var(--primary); }
 
+    /* hover arrows */
+    .carousel-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 20; background: rgba(255,255,255,0.88); border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transition: opacity 0.18s; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .carousel-arrow svg { width: 16px; height: 16px; stroke: var(--primary); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .carousel-arrow.prev { left: 12px; }
+    .carousel-arrow.next { right: 12px; }
+    .mockup-frame { position: relative; }
+    .mockup-frame:hover .carousel-arrow { opacity: 1; }
+    .carousel-arrow:hover { background: #fff; border-color: #c0c0ba; }
+
+    /* ── PROPERTIES 3D SLIDE ── */
+    .prop-slide { position: relative; background: #f7f7f5; }
+    #prop-three-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; }
+    .archi-topbar { position: absolute; top: 0; left: 0; right: 0; height: 54px; background: linear-gradient(180deg, rgba(247,247,245,0.97) 0%, rgba(247,247,245,0) 100%); border-bottom: 1px solid rgba(28,28,28,0.08); display: flex; align-items: center; justify-content: space-between; padding: 0 22px; z-index: 10; }
+    .archi-logo-block { display: flex; flex-direction: column; gap: 4px; }
+    .archi-logo-text { font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: #1c1c1c; }
+    .archi-toggle { display: flex; align-items: center; background: rgba(28,28,28,0.08); border: 1px solid rgba(28,28,28,0.22); border-radius: 20px; padding: 2px 3px; width: 88px; height: 20px; position: relative; overflow: hidden; }
+    .archi-toggle-pill { position: absolute; top: 2px; left: 2px; width: 40px; height: 14px; border-radius: 12px; background: rgba(28,28,28,0.14); border: 1px solid rgba(28,28,28,0.35); }
+    .archi-toggle span { position: relative; z-index: 1; width: 44px; text-align: center; font-family: 'Courier New', monospace; font-size: 8px; letter-spacing: 0.1em; }
+    .archi-toggle .t-archi { font-weight: 700; color: #1c1c1c; }
+    .archi-toggle .t-tron  { font-weight: 400; color: rgba(0,229,255,0.3); }
+    .archi-topbar-right { display: flex; align-items: center; gap: 16px; }
+    .archi-clock { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+    .archi-clock-time { font-family: 'Courier New', monospace; font-size: 11px; color: rgba(28,28,28,0.75); letter-spacing: 0.04em; }
+    .archi-clock-date { font-family: 'Courier New', monospace; font-size: 7px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(28,28,28,0.35); }
+    .archi-avatar { width: 24px; height: 24px; border-radius: 50%; background: rgba(28,28,28,0.08); border: 1px solid rgba(28,28,28,0.2); display: flex; align-items: center; justify-content: center; font-family: 'Courier New', monospace; font-size: 8px; font-weight: 700; color: #1c1c1c; }
+    .archi-viewer { position: absolute; top: 54px; left: 0; right: 280px; bottom: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .archi-panel { position: absolute; top: 54px; right: 0; bottom: 0; width: 280px; background: rgba(247,247,245,0.88); border-left: 1px solid rgba(28,28,28,0.08); display: flex; flex-direction: column; gap: 7px; padding: 10px 9px; overflow: hidden; }
+    .widget { background: rgba(28,28,28,0.03); border: 1px solid rgba(28,28,28,0.09); border-radius: 9px; padding: 9px 11px; flex-shrink: 0; }
+    .widget-title { font-family: 'Courier New', monospace; font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(28,28,28,0.45); font-weight: 600; margin-bottom: 9px; }
+    .health-row { display: flex; align-items: center; gap: 12px; }
+    .health-label { font-size: 10px; font-weight: 600; color: #2a7a4a; margin-bottom: 2px; }
+    .health-sub { font-size: 9px; color: rgba(28,28,28,0.45); }
+    .finance-amount { font-size: 18px; font-weight: 300; color: rgba(28,28,28,0.78); letter-spacing: -0.01em; }
+    .finance-up { font-size: 9px; color: #2a7a4a; margin-left: 6px; }
+    .tasks-row { display: flex; gap: 5px; }
+    .task-pill { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 4px; background: rgba(28,28,28,0.03); border: 1px solid rgba(28,28,28,0.08); border-radius: 7px; }
+    .task-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .task-count { font-size: 13px; font-weight: 600; }
+    .task-lbl { font-size: 7px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(28,28,28,0.45); }
+    .iot-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+    .iot-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .iot-label { font-size: 10px; color: rgba(28,28,28,0.65); flex: 1; }
+    .iot-count { font-size: 10px; color: rgba(28,28,28,0.35); }
+    .viewer-controls { position: absolute; top: 10px; left: 0; right: 0; display: flex; align-items: center; justify-content: center; gap: 7px; z-index: 6; pointer-events: none; }
+    .viewer-pill { background: rgba(247,247,245,0.94); border: 1px solid rgba(28,28,28,0.14); border-radius: 14px; padding: 4px 11px; font-family: 'Courier New', monospace; font-size: 8.5px; letter-spacing: 0.06em; color: rgba(28,28,28,0.75); white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+    .cutaway-track { width: 52px; height: 3px; background: rgba(28,28,28,0.14); border-radius: 2px; position: relative; }
+    .cutaway-thumb { position: absolute; right: -1px; top: -4px; width: 9px; height: 9px; background: #1c1c1c; border-radius: 50%; }
+    .viewer-sub-banner { position: absolute; top: 44px; left: 0; right: 0; display: flex; justify-content: center; z-index: 6; pointer-events: none; }
+    .viewer-sub-pill { background: rgba(247,247,245,0.94); border: 1px solid rgba(28,28,28,0.11); border-radius: 14px; padding: 4px 14px; font-family: 'Courier New', monospace; font-size: 7.5px; letter-spacing: 0.1em; color: rgba(28,28,28,0.45); text-transform: uppercase; display: flex; align-items: center; gap: 7px; }
+    .sub-pulse { width: 5px; height: 5px; border-radius: 50%; background: rgba(28,28,28,0.35); }
+    .bot-fab { position: absolute; bottom: 88px; left: 14px; z-index: 7; width: 50px; height: 50px; border-radius: 50%; background: rgba(247,247,245,0.97); border: 1px solid rgba(28,28,28,0.10); box-shadow: 0 2px 10px rgba(0,0,0,0.09); display: flex; align-items: center; justify-content: center; }
+    .iot-status-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: rgba(247,247,245,0.96); border-top: 1px solid rgba(28,28,28,0.07); display: flex; align-items: stretch; z-index: 6; }
+    .iot-status-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 8px 4px; border-right: 1px solid rgba(28,28,28,0.05); position: relative; }
+    .iot-status-item:last-child { border-right: none; }
+    .iot-status-dot { position: absolute; top: 9px; right: 9px; width: 6px; height: 6px; border-radius: 50%; }
+    .iot-status-lbl { font-family: 'Courier New', monospace; font-size: 6.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(28,28,28,0.4); }
+    .iot-status-sub { font-size: 7px; color: rgba(28,28,28,0.3); }
+    #prop-scene-loader { position: absolute; inset: 0; z-index: 8; background: #f7f7f5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; transition: opacity 0.6s ease; }
+    #prop-scene-loader.done { opacity: 0; pointer-events: none; }
+    .loader-label { font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(28,28,28,0.4); }
+    .loader-track { width: 140px; height: 2px; background: rgba(28,28,28,0.1); border-radius: 2px; overflow: hidden; }
+    .loader-bar { height: 100%; width: 0%; background: rgba(28,28,28,0.55); border-radius: 2px; transition: width 0.25s ease; }
+    .loader-pct { font-family: 'Courier New', monospace; font-size: 8px; letter-spacing: 0.1em; color: rgba(28,28,28,0.25); }
+    .weather-main { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .weather-temp { font-size: 22px; font-weight: 300; color: rgba(28,28,28,0.75); line-height: 1; }
+    .weather-detail { font-size: 8px; color: rgba(28,28,28,0.4); line-height: 1.7; }
+    .weather-forecast { display: flex; gap: 4px; padding-top: 7px; border-top: 1px solid rgba(28,28,28,0.06); }
+    .weather-day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .weather-day-lbl { font-family: 'Courier New', monospace; font-size: 6.5px; letter-spacing: 0.06em; color: rgba(28,28,28,0.35); text-transform: uppercase; }
+    .weather-day-temp { font-size: 8px; color: rgba(28,28,28,0.5); }
+    .alert-row { background: rgba(37,99,235,0.07); border: 1px solid rgba(37,99,235,0.14); border-radius: 7px; padding: 6px 8px; display: flex; align-items: center; gap: 7px; }
+    .alert-icon { width: 15px; height: 15px; border-radius: 50%; background: rgba(37,99,235,0.12); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #2563eb; font-family: serif; }
+    .alert-text { font-family: 'Courier New', monospace; font-size: 8px; letter-spacing: 0.04em; color: rgba(28,28,28,0.7); }
+
     .mockup-frame {
       border: 1px solid var(--border);
       border-radius: 16px;
@@ -1428,6 +1502,8 @@
         <div class="chrome-dot" style="background:#FFBD2E"></div>
         <div class="chrome-dot" style="background:#00CA4E"></div>
       </div>
+      <button class="carousel-arrow prev" id="carousel-prev" aria-label="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <button class="carousel-arrow next" id="carousel-next" aria-label="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
       <div class="mockup-body">
         <!-- slide 1: Core Data node cluster -->
         <div class="carousel-slide active">
@@ -1485,7 +1561,96 @@
             </div>
           </div>
         </div>
-        <!-- slide 2: Properties TRON -->
+        <!-- slide 2: Properties 3D (live mockup) -->
+        <div class="carousel-slide prop-slide">
+          <div class="archi-topbar">
+            <div class="archi-logo-block">
+              <div class="archi-logo-text">The Bull Properties</div>
+              <div class="archi-toggle">
+                <div class="archi-toggle-pill"></div>
+                <span class="t-archi">ARCHI</span>
+                <span class="t-tron">TRON</span>
+              </div>
+            </div>
+            <div class="archi-topbar-right">
+              <div class="archi-clock">
+                <div class="archi-clock-time">14:32:07</div>
+                <div class="archi-clock-date">Tue, May 13</div>
+              </div>
+              <div class="archi-avatar">OF</div>
+            </div>
+          </div>
+          <div class="archi-viewer">
+            <canvas id="prop-three-canvas"></canvas>
+            <div id="prop-scene-loader">
+              <div class="loader-label">Loading 3D model</div>
+              <div class="loader-track"><div class="loader-bar" id="prop-loader-bar"></div></div>
+              <div class="loader-pct" id="prop-loader-pct">0%</div>
+            </div>
+            <div class="viewer-controls">
+              <div class="viewer-pill">← AMERICAN HOUSE →</div>
+              <div class="viewer-pill">Jasmine Breeze <span style="opacity:0.4;font-size:7px;">▼</span></div>
+              <div class="viewer-pill viewer-cutaway">CUTAWAY <div class="cutaway-track"><div class="cutaway-thumb"></div></div> <span>100%</span></div>
+            </div>
+            <div class="viewer-sub-banner">
+              <div class="viewer-sub-pill"><div class="sub-pulse"></div>Example 3D model — upload your own in the property dashboard</div>
+            </div>
+            <div class="bot-fab">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(28,28,28,0.7)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><circle cx="8" cy="16" r="1" fill="rgba(28,28,28,0.7)" stroke="none"/><circle cx="16" cy="16" r="1" fill="rgba(28,28,28,0.7)" stroke="none"/><path d="M8 20h8"/></svg>
+            </div>
+            <div class="iot-status-bar">
+              <div class="iot-status-item"><div class="iot-status-dot" style="background:#22bb66;"></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(28,28,28,0.45)" stroke-width="1.6" stroke-linecap="round"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg><div class="iot-status-lbl">Climate</div><div class="iot-status-sub">3 devices</div></div>
+              <div class="iot-status-item"><div class="iot-status-dot" style="background:#22bb66;"></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(28,28,28,0.45)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div class="iot-status-lbl">Security</div><div class="iot-status-sub">3 devices</div></div>
+              <div class="iot-status-item"><div class="iot-status-dot" style="background:#cc9900;"></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(28,28,28,0.45)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6 8.5 4 12.5 4 15a8 8 0 0016 0c0-2.5-2-6.5-8-13z"/></svg><div class="iot-status-lbl">Water</div><div class="iot-status-sub">2 devices</div></div>
+              <div class="iot-status-item"><div class="iot-status-dot" style="background:#22bb66;"></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(28,28,28,0.45)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><div class="iot-status-lbl">Power</div><div class="iot-status-sub">5 devices</div></div>
+              <div class="iot-status-item"><div class="iot-status-dot" style="background:#22bb66;"></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(28,28,28,0.45)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0018 8 6 6 0 006 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 018.91 14"/></svg><div class="iot-status-lbl">Lighting</div><div class="iot-status-sub">12 devices</div></div>
+              <div class="iot-status-item"><div class="iot-status-dot" style="background:#22bb66;"></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(28,28,28,0.45)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1114 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg><div class="iot-status-lbl">Air Quality</div><div class="iot-status-sub">4 devices</div></div>
+            </div>
+          </div>
+          <div class="archi-panel">
+            <div class="widget">
+              <div class="widget-title">Property Health</div>
+              <div class="health-row">
+                <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" fill="none" stroke="rgba(28,28,28,0.08)" stroke-width="4"/><circle cx="24" cy="24" r="19" fill="none" stroke="#1c1c1c" stroke-width="4" stroke-dasharray="119" stroke-dashoffset="15" stroke-linecap="round" transform="rotate(-90 24 24)" opacity="0.85"/><text x="24" y="28" font-family="Courier New" font-size="11" font-weight="700" fill="#1c1c1c" text-anchor="middle">87</text></svg>
+                <div><div class="health-label">Excellent</div><div class="health-sub">Systems: 32 / 35</div><div style="font-size:9px;color:rgba(180,120,0,0.85);margin-top:3px;">3 need attention</div></div>
+              </div>
+            </div>
+            <div class="widget">
+              <div class="widget-title" style="display:flex;justify-content:space-between;align-items:center;">Weather <span style="font-size:7.5px;color:rgba(28,28,28,0.3);font-weight:400;letter-spacing:0.04em;">Cobano</span></div>
+              <div class="weather-main"><div class="weather-temp">32°</div><span style="font-size:15px;">🌤️</span><div class="weather-detail">Partly cloudy<br/>12 km/h · 60% humidity</div></div>
+              <div class="weather-forecast">
+                <div class="weather-day"><div class="weather-day-lbl">Tomorrow</div><span style="font-size:11px;">🌧️</span><div class="weather-day-temp">32°/25°</div></div>
+                <div class="weather-day"><div class="weather-day-lbl">Thu</div><span style="font-size:11px;">🌧️</span><div class="weather-day-temp">32°/25°</div></div>
+                <div class="weather-day"><div class="weather-day-lbl">Fri</div><span style="font-size:11px;">🌦️</span><div class="weather-day-temp">30°/25°</div></div>
+              </div>
+            </div>
+            <div class="widget">
+              <div class="widget-title" style="display:flex;justify-content:space-between;align-items:center;">Context Alerts <span style="font-size:7.5px;color:rgba(28,28,28,0.35);font-weight:400;">1 active</span></div>
+              <div class="alert-row"><div class="alert-icon">ℹ</div><div class="alert-text">Heat advisory — 32°C</div></div>
+            </div>
+            <div class="widget">
+              <div class="widget-title">Financial Snapshot</div>
+              <div style="font-size:9px;color:rgba(28,28,28,0.4);margin-bottom:3px;">This Month</div>
+              <div><span class="finance-amount">$24,800</span><span class="finance-up">↗ 12%</span></div>
+              <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(28,28,28,0.07);"><div style="font-size:9px;color:rgba(28,28,28,0.4);">Last Month</div><div style="font-size:13px;font-weight:300;color:rgba(28,28,28,0.5);margin-top:2px;">$22,100</div></div>
+            </div>
+            <div class="widget">
+              <div class="widget-title">Active Tasks</div>
+              <div class="tasks-row">
+                <div class="task-pill"><div class="task-dot" style="background:#1a6fcc"></div><div class="task-count" style="color:#1a6fcc">4</div><div class="task-lbl">Open</div></div>
+                <div class="task-pill"><div class="task-dot" style="background:#1a8a5a"></div><div class="task-count" style="color:#1a8a5a">2</div><div class="task-lbl">Progress</div></div>
+                <div class="task-pill"><div class="task-dot" style="background:#cc2200"></div><div class="task-count" style="color:#cc2200">1</div><div class="task-lbl">Blocked</div></div>
+              </div>
+            </div>
+            <div class="widget">
+              <div class="widget-title">IoT Devices</div>
+              <div class="iot-row"><div class="iot-dot" style="background:#22bb66"></div><div class="iot-label">Normal</div><div class="iot-count">18</div></div>
+              <div class="iot-row"><div class="iot-dot" style="background:#cc9900"></div><div class="iot-label">Attention</div><div class="iot-count">3</div></div>
+              <div class="iot-row" style="margin-bottom:0"><div class="iot-dot" style="background:#cc2222"></div><div class="iot-label">Alert</div><div class="iot-count">0</div></div>
+            </div>
+          </div>
+        </div>
+        <!-- slide 3: Properties TRON -->
         <div class="carousel-slide">
           <img src="assets/mockups/properties-tron.png" alt="Properties – 3D property view">
         </div>
@@ -1506,10 +1671,11 @@
     <!-- carousel nav dots -->
     <div class="carousel-nav">
       <button class="carousel-dot active" data-slide="0" aria-label="Core Data"></button>
-      <button class="carousel-dot" data-slide="1" aria-label="Properties"></button>
-      <button class="carousel-dot" data-slide="2" aria-label="Contracts"></button>
-      <button class="carousel-dot" data-slide="3" aria-label="Developer"></button>
-      <button class="carousel-dot" data-slide="4" aria-label="Salon"></button>
+      <button class="carousel-dot" data-slide="1" aria-label="Properties 3D"></button>
+      <button class="carousel-dot" data-slide="2" aria-label="Properties TRON"></button>
+      <button class="carousel-dot" data-slide="3" aria-label="Contracts"></button>
+      <button class="carousel-dot" data-slide="4" aria-label="Developer"></button>
+      <button class="carousel-dot" data-slide="5" aria-label="Salon"></button>
     </div>
   </div>
 
@@ -1974,7 +2140,6 @@
     var slides = document.querySelectorAll('.carousel-slide');
     var dots = document.querySelectorAll('.carousel-dot');
     var current = 0;
-    var timer;
 
     function goTo(n) {
       slides[current].classList.remove('active');
@@ -1984,18 +2149,148 @@
       dots[current].classList.add('active');
     }
 
-    function next() { goTo(current + 1); }
-
     dots.forEach(function(dot) {
-      dot.addEventListener('click', function() {
-        clearInterval(timer);
-        goTo(+dot.dataset.slide);
-        timer = setInterval(next, 5000);
-      });
+      dot.addEventListener('click', function() { goTo(+dot.dataset.slide); });
     });
 
-    timer = setInterval(next, 5000);
+    document.getElementById('carousel-prev').addEventListener('click', function() { goTo(current - 1); });
+    document.getElementById('carousel-next').addEventListener('click', function() { goTo(current + 1); });
   })();
+  </script>
+
+  <!-- Three.js for Properties 3D carousel slide -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls }   from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader }      from 'three/addons/loaders/GLTFLoader.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    const viewer = document.querySelector('.prop-slide .archi-viewer');
+    const canvas = document.getElementById('prop-three-canvas');
+    if (!canvas || !viewer) throw new Error('Properties slide not found');
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const envTexture = pmrem.fromScene(new RoomEnvironment()).texture;
+    pmrem.dispose();
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf7f7f5);
+    scene.environment = envTexture;
+
+    const camera = new THREE.PerspectiveCamera(38, 1, 0.01, 2000);
+    camera.position.set(9, 6, 9);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+    const sun = new THREE.DirectionalLight(0xfff8ee, 1.5);
+    sun.position.set(12, 20, 8);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(2048, 2048);
+    scene.add(sun);
+
+    const grid = new THREE.GridHelper(40, 40, 0x1c1c1c, 0x1c1c1c);
+    grid.material.opacity = 0.07;
+    grid.material.transparent = true;
+    scene.add(grid);
+
+    const controls = new OrbitControls(camera, canvas);
+    controls.enableDamping  = true;
+    controls.dampingFactor  = 0.06;
+    controls.enableZoom     = false;
+    controls.enablePan      = false;
+    controls.minPolarAngle  = 0.15;
+    controls.maxPolarAngle  = Math.PI / 2.1;
+    controls.autoRotate     = true;
+    controls.autoRotateSpeed = 0.6;
+    let idleTimer;
+    canvas.addEventListener('pointerdown', () => { controls.autoRotate = false; clearTimeout(idleTimer); });
+    canvas.addEventListener('pointerup',   () => { idleTimer = setTimeout(() => { controls.autoRotate = true; }, 5000); });
+
+    const loader = new GLTFLoader();
+    const loaderEl  = document.getElementById('prop-scene-loader');
+    const loaderBar = document.getElementById('prop-loader-bar');
+    const loaderPct = document.getElementById('prop-loader-pct');
+
+    loader.load('/properties/american_house_new.glb', function(gltf) {
+      const model = gltf.scene;
+      scene.add(model);
+      model.updateMatrixWorld(true);
+
+      const box0 = new THREE.Box3().setFromObject(model);
+      const size0 = box0.getSize(new THREE.Vector3());
+      if (Math.max(size0.x, size0.y, size0.z) > 1000) {
+        model.scale.setScalar(0.001);
+        model.updateMatrixWorld(true);
+      }
+
+      const box    = new THREE.Box3().setFromObject(model);
+      const center = box.getCenter(new THREE.Vector3());
+      const size   = box.getSize(new THREE.Vector3());
+      if (!isFinite(center.x) || size.length() < 0.001) return;
+
+      model.position.set(-center.x, -box.min.y, -center.z);
+      model.traverse(child => {
+        if (child.isMesh) { child.castShadow = true; child.receiveShadow = true; }
+      });
+
+      const span = Math.max(size.x, size.z, size.y);
+      const dist = span * 1.8;
+      camera.position.set(dist, dist * 0.55, dist);
+      camera.far = dist * 10;
+      camera.updateProjectionMatrix();
+      controls.target.set(0, size.y * 0.3, 0);
+      controls.update();
+
+      const gridSize = span * 3;
+      grid.scale.setScalar(gridSize / 40);
+      scene.fog = new THREE.Fog(0xf7f7f5, dist * 2, dist * 5);
+
+      const r = span * 1.2;
+      sun.shadow.camera.left = -r; sun.shadow.camera.right  = r;
+      sun.shadow.camera.top  =  r; sun.shadow.camera.bottom = -r;
+      sun.shadow.camera.far  = dist * 3;
+      sun.shadow.camera.updateProjectionMatrix();
+      sun.position.set(r, r * 1.5, r * 0.7);
+
+      loaderEl.classList.add('done');
+      setTimeout(() => loaderEl.remove(), 700);
+
+    }, function(xhr) {
+      if (xhr.total) {
+        const pct = Math.round(xhr.loaded / xhr.total * 100);
+        loaderBar.style.width = pct + '%';
+        loaderPct.textContent = pct + '%';
+      }
+    }, function(err) { console.error('GLB load error:', err); });
+
+    function resize() {
+      const w = viewer.clientWidth  || 600;
+      const h = viewer.clientHeight || 400;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    (function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    })();
   </script>
 
 </body>
