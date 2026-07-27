@@ -468,9 +468,17 @@
     /* ── APP MOCKUP ── */
     .mockup-wrap {
       max-width: 1080px;
-      margin: 72px auto 0;
+      margin: 72px auto 80px;
       padding: 0 48px;
     }
+
+    /* ── CAROUSEL ── */
+    .carousel-slide { display: none; flex: 1; overflow: hidden; }
+    .carousel-slide.active { display: flex; }
+    .carousel-slide > img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
+    .carousel-nav { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 16px; }
+    .carousel-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); border: none; cursor: pointer; padding: 0; flex-shrink: 0; transition: background 0.18s; }
+    .carousel-dot.active { background: var(--primary); }
 
     .mockup-frame {
       border: 1px solid var(--border);
@@ -1421,64 +1429,87 @@
         <div class="chrome-dot" style="background:#00CA4E"></div>
       </div>
       <div class="mockup-body">
-        <div class="mock-sidebar">
-          <div class="mock-sb-label">My Company</div>
-          <div class="mock-sb-row">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            Overview
+        <!-- slide 1: Core Data node cluster -->
+        <div class="carousel-slide active">
+          <div class="mock-sidebar">
+            <div class="mock-sb-label">My Company</div>
+            <div class="mock-sb-row">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Overview
+            </div>
+            <div class="mock-sb-row">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+              Operations
+            </div>
+            <div class="mock-sb-row">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+              Finance
+            </div>
+            <div class="mock-sb-row">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+              Legal
+            </div>
+            <div class="mock-sb-label" style="margin-top:10px;">Data</div>
+            <div class="mock-sb-row active">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.22" y1="4.22" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.78" y2="19.78"/><line x1="4.22" y1="19.78" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.78" y2="4.22"/></svg>
+              Core Data
+            </div>
           </div>
-          <div class="mock-sb-row">
-            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-            Operations
-          </div>
-          <div class="mock-sb-row">
-            <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-            Finance
-          </div>
-          <div class="mock-sb-row">
-            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
-            Legal
-          </div>
-          <div class="mock-sb-label" style="margin-top:10px;">Data</div>
-          <div class="mock-sb-row active">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.22" y1="4.22" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.78" y2="19.78"/><line x1="4.22" y1="19.78" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.78" y2="4.22"/></svg>
-            Core Data
+          <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg2);">
+            <div style="background:#fff;padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+              <span style="font-size:13px;font-weight:700;color:var(--primary);letter-spacing:-0.01em;">Core Data</span>
+              <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);">700 nodes · 2,800 links</span>
+            </div>
+            <div style="flex:1;display:flex;overflow:hidden;padding:10px;gap:10px;">
+              <div style="flex:1;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.09);">
+                <canvas id="node-canvas" style="width:100%;height:100%;display:block;"></canvas>
+              </div>
+              <div style="width:116px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;">
+                <div style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px 12px;">
+                  <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Nodes</div>
+                  <div style="font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-0.02em;">700</div>
+                </div>
+                <div style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px 12px;">
+                  <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Links</div>
+                  <div style="font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-0.02em;">2,800</div>
+                </div>
+                <div style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px 12px;">
+                  <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Clusters</div>
+                  <div style="font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-0.02em;">6</div>
+                </div>
+                <div style="background:var(--accent-bg);border:1px solid rgba(179,134,0,0.22);border-radius:9px;padding:10px 12px;">
+                  <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);margin-bottom:5px;">AI Score</div>
+                  <div style="font-size:20px;font-weight:700;color:var(--accent);letter-spacing:-0.02em;">94%</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg2);">
-          <!-- page header -->
-          <div style="background:#fff;padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
-            <span style="font-size:13px;font-weight:700;color:var(--primary);letter-spacing:-0.01em;">Core Data</span>
-            <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);">700 nodes · 2,800 links</span>
-          </div>
-          <!-- content: cluster window + widgets -->
-          <div style="flex:1;display:flex;overflow:hidden;padding:10px;gap:10px;">
-            <!-- cluster window -->
-            <div style="flex:1;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.09);">
-              <canvas id="node-canvas" style="width:100%;height:100%;display:block;"></canvas>
-            </div>
-            <!-- right widgets -->
-            <div style="width:116px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;">
-              <div style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px 12px;">
-                <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Nodes</div>
-                <div style="font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-0.02em;">700</div>
-              </div>
-              <div style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px 12px;">
-                <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Links</div>
-                <div style="font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-0.02em;">2,800</div>
-              </div>
-              <div style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px 12px;">
-                <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Clusters</div>
-                <div style="font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-0.02em;">6</div>
-              </div>
-              <div style="background:var(--accent-bg);border:1px solid rgba(179,134,0,0.22);border-radius:9px;padding:10px 12px;">
-                <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);margin-bottom:5px;">AI Score</div>
-                <div style="font-size:20px;font-weight:700;color:var(--accent);letter-spacing:-0.02em;">94%</div>
-              </div>
-            </div>
-          </div>
+        <!-- slide 2: Properties TRON -->
+        <div class="carousel-slide">
+          <img src="assets/mockups/properties-tron.png" alt="Properties – 3D property view">
+        </div>
+        <!-- slide 3: Contracts -->
+        <div class="carousel-slide">
+          <img src="assets/mockups/contracts-overview.png" alt="Contracts – dashboard overview">
+        </div>
+        <!-- slide 4: Developer -->
+        <div class="carousel-slide">
+          <img src="assets/mockups/developer-ceo.png" alt="Developer – CEO board">
+        </div>
+        <!-- slide 5: Salon -->
+        <div class="carousel-slide">
+          <img src="assets/mockups/salon-superboard.png" alt="Salon – superboard">
         </div>
       </div>
+    </div>
+    <!-- carousel nav dots -->
+    <div class="carousel-nav">
+      <button class="carousel-dot active" data-slide="0" aria-label="Core Data"></button>
+      <button class="carousel-dot" data-slide="1" aria-label="Properties"></button>
+      <button class="carousel-dot" data-slide="2" aria-label="Contracts"></button>
+      <button class="carousel-dot" data-slide="3" aria-label="Developer"></button>
+      <button class="carousel-dot" data-slide="4" aria-label="Salon"></button>
     </div>
   </div>
 
@@ -1936,6 +1967,34 @@
 
     if (document.readyState === 'complete') init();
     else window.addEventListener('load', init);
+  })();
+
+  // ── CAROUSEL ──
+  (function() {
+    var slides = document.querySelectorAll('.carousel-slide');
+    var dots = document.querySelectorAll('.carousel-dot');
+    var current = 0;
+    var timer;
+
+    function goTo(n) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = (n + slides.length) % slides.length;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+    }
+
+    function next() { goTo(current + 1); }
+
+    dots.forEach(function(dot) {
+      dot.addEventListener('click', function() {
+        clearInterval(timer);
+        goTo(+dot.dataset.slide);
+        timer = setInterval(next, 5000);
+      });
+    });
+
+    timer = setInterval(next, 5000);
   })();
   </script>
 
