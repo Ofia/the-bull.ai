@@ -1445,8 +1445,38 @@
             Core Data
           </div>
         </div>
-        <div style="flex:1;overflow:hidden;position:relative;">
-          <canvas id="node-canvas" style="width:100%;height:100%;display:block;"></canvas>
+        <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg2);">
+          <!-- page header -->
+          <div style="background:#fff;padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+            <span style="font-size:13px;font-weight:700;color:var(--primary);letter-spacing:-0.01em;">Core Data</span>
+            <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);">700 nodes · 2,800 links</span>
+          </div>
+          <!-- content: cluster window + widgets -->
+          <div style="flex:1;display:flex;overflow:hidden;padding:10px;gap:10px;">
+            <!-- cluster window -->
+            <div style="flex:1;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.09);">
+              <canvas id="node-canvas" style="width:100%;height:100%;display:block;"></canvas>
+            </div>
+            <!-- right widgets -->
+            <div style="width:116px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;">
+              <div style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px 12px;">
+                <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Nodes</div>
+                <div style="font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-0.02em;">700</div>
+              </div>
+              <div style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px 12px;">
+                <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Links</div>
+                <div style="font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-0.02em;">2,800</div>
+              </div>
+              <div style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px 12px;">
+                <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Clusters</div>
+                <div style="font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-0.02em;">6</div>
+              </div>
+              <div style="background:var(--accent-bg);border:1px solid rgba(179,134,0,0.22);border-radius:9px;padding:10px 12px;">
+                <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);margin-bottom:5px;">AI Score</div>
+                <div style="font-size:20px;font-weight:700;color:var(--accent);letter-spacing:-0.02em;">94%</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1796,12 +1826,16 @@
         x[i] = cx + Math.cos(a) * r;
         y[i] = cy + Math.sin(a) * r;
       }
+      // preferential attachment — hubs attract more links → dense core forms naturally
+      var stubs = [];
+      for (var i = 0; i < N; i++) stubs.push(i);
       for (var i = 0; i < L; i++) {
-        var a = Math.floor(Math.random() * N);
-        var b = Math.floor(Math.random() * N);
+        var a = stubs[Math.floor(Math.random() * stubs.length)];
+        var b = stubs[Math.floor(Math.random() * stubs.length)];
         if (b === a) b = (a + 1) % N;
         la[i] = a; lb[i] = b;
         deg[a]++; deg[b]++;
+        stubs.push(a); stubs.push(b);
       }
 
       // force-settle: 300 iterations
