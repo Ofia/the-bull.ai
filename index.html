@@ -1533,7 +1533,7 @@
           </div>
           <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg2);">
             <div style="background:#fff;padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
-              <span style="font-size:13px;font-weight:700;color:var(--primary);letter-spacing:-0.01em;">Core Data</span>
+              <span style="font-size:13px;font-weight:700;color:var(--primary);letter-spacing:-0.01em;">Core Data — Business Brain</span>
               <span style="font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);">700 nodes · 2,800 links</span>
             </div>
             <div style="flex:1;display:flex;overflow:hidden;padding:10px;gap:10px;">
@@ -2067,52 +2067,92 @@
         }
       }
 
-      // pre-compute relative positions (centered at 0,0) and colors
-      var rx = new Float32Array(N), ry = new Float32Array(N);
+      // colors
       var maxDeg = 0;
       for (var i = 0; i < N; i++) if (deg[i] > maxDeg) maxDeg = deg[i];
       var colors = [];
       for (var i = 0; i < N; i++) {
-        rx[i] = x[i] - cx;
-        ry[i] = y[i] - cy;
         var t = deg[i] / maxDeg;
         if (t < 0.5) {
           var u = t * 2;
-          // white → cyan (#29a8c8)
           colors.push('rgb(' + Math.round(255 - 214*u) + ',' + Math.round(255 - 87*u) + ',' + Math.round(255 - 55*u) + ')');
         } else {
           var u = (t - 0.5) * 2;
-          // cyan → gold (#b38600)
           colors.push('rgb(' + Math.round(41 + 138*u) + ',' + Math.round(168 - 34*u) + ',' + Math.round(200 - 200*u) + ')');
         }
       }
 
-      // animation loop — slow rotation
-      var angle = 0;
-      var sx = new Float32Array(N), sy = new Float32Array(N);
+      // mouse interaction
+      var mouseX = -9999, mouseY = -9999, mouseDown = false;
+      canvas.style.cursor = 'grab';
+      canvas.addEventListener('mousemove', function(e) {
+        var rect = canvas.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
+      });
+      canvas.addEventListener('mousedown',  function() { mouseDown = true;  canvas.style.cursor = 'grabbing'; });
+      canvas.addEventListener('mouseup',    function() { mouseDown = false; canvas.style.cursor = 'grab'; });
+      canvas.addEventListener('mouseleave', function() { mouseX = -9999; mouseDown = false; canvas.style.cursor = 'default'; });
+      canvas.addEventListener('mouseenter', function() { canvas.style.cursor = 'grab'; });
+
+      // per-frame acceleration buffers (reused to avoid GC pressure)
+      var ax = new Float32Array(N), ay = new Float32Array(N);
 
       function draw() {
         requestAnimationFrame(draw);
-        angle += 0.0006;
-        var ca = Math.cos(angle), sa = Math.sin(angle);
 
-        // rotate positions
+        // clear accelerations
+        for (var i = 0; i < N; i++) { ax[i] = 0; ay[i] = 0; }
+
+        // repulsion (sample every 2nd pair for speed)
         for (var i = 0; i < N; i++) {
-          sx[i] = cx + rx[i]*ca - ry[i]*sa;
-          sy[i] = cy + rx[i]*sa + ry[i]*ca;
+          for (var j = i + 2; j < N; j += 2) {
+            var dx = x[i]-x[j], dy = y[i]-y[j];
+            var d2 = dx*dx + dy*dy + 1;
+            var f  = REPEL / d2;
+            ax[i] += dx*f; ay[i] += dy*f;
+            ax[j] -= dx*f; ay[j] -= dy*f;
+          }
+        }
+        // spring attraction along links
+        for (var i = 0; i < L; i++) {
+          var a = la[i], b = lb[i];
+          var dx = x[b]-x[a], dy = y[b]-y[a];
+          var d  = Math.sqrt(dx*dx + dy*dy) + 0.01;
+          var f  = (d - SPRING_LEN) * SPRING_K;
+          var ux = dx/d, uy = dy/d;
+          ax[a] += ux*f; ay[a] += uy*f;
+          ax[b] -= ux*f; ay[b] -= uy*f;
+        }
+        // centering + mouse pull + integrate
+        var MOUSE_R = 130, MOUSE_F = mouseDown ? 1.2 : 0.35;
+        for (var i = 0; i < N; i++) {
+          ax[i] += (cx - x[i]) * CENTER_K;
+          ay[i] += (cy - y[i]) * CENTER_K;
+          var mdx = mouseX - x[i], mdy = mouseY - y[i];
+          var md2 = mdx*mdx + mdy*mdy;
+          if (md2 < MOUSE_R*MOUSE_R) {
+            var md = Math.sqrt(md2) + 0.01;
+            var mf = MOUSE_F * (1 - md / MOUSE_R);
+            ax[i] += (mdx/md) * mf;
+            ay[i] += (mdy/md) * mf;
+          }
+          vx[i] = (vx[i] + ax[i]) * DAMP;
+          vy[i] = (vy[i] + ay[i]) * DAMP;
+          x[i] += vx[i]; y[i] += vy[i];
         }
 
-        // background
-        ctx.fillStyle = '#0d0b18';
+        // background — lighter to blend with white mockup frame
+        ctx.fillStyle = '#1a1830';
         ctx.fillRect(0, 0, W, H);
 
-        // links — batched into one path for performance
+        // links
         ctx.beginPath();
         ctx.strokeStyle = 'rgba(150,205,255,0.13)';
         ctx.lineWidth = 0.5;
         for (var i = 0; i < L; i++) {
-          ctx.moveTo(sx[la[i]], sy[la[i]]);
-          ctx.lineTo(sx[lb[i]], sy[lb[i]]);
+          ctx.moveTo(x[la[i]], y[la[i]]);
+          ctx.lineTo(x[lb[i]], y[lb[i]]);
         }
         ctx.stroke();
 
@@ -2123,7 +2163,7 @@
           ctx.shadowColor = colors[i];
           ctx.fillStyle   = colors[i];
           ctx.beginPath();
-          ctx.arc(sx[i], sy[i], r, 0, Math.PI * 2);
+          ctx.arc(x[i], y[i], r, 0, Math.PI * 2);
           ctx.fill();
         }
         ctx.shadowBlur = 0;
