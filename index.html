@@ -1393,7 +1393,9 @@
 
     /* ── CHAT SECTION ── */
     #chat {
-      background: var(--bg2);
+      background: #ffffff;
+      background-image: radial-gradient(circle, #d8d8d3 1px, transparent 1px);
+      background-size: 22px 22px;
       padding: 80px 20px;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
@@ -1443,23 +1445,25 @@
       line-height: 1.58;
     }
     .chat-msg.assistant .msg-bubble {
-      background: var(--bg2);
-      border: 1px solid var(--border);
+      background: none;
+      border: none;
       color: var(--primary);
-      border-left: 3px solid var(--border);
+      padding: 2px 0;
     }
     .chat-msg.user .msg-bubble {
-      background: var(--primary);
-      color: #fff;
-      border-right: 3px solid var(--accent);
+      background: #f0f0ee;
+      color: var(--primary);
+      border: 1px solid var(--border);
     }
     .chat-msg.loading .msg-bubble { color: var(--muted); font-style: italic; }
     .chat-input-row { display: flex; gap: 10px; align-items: flex-end; }
+    .chat-input-wrap { flex: 1; position: relative; }
     #chat-input {
-      flex: 1;
+      width: 100%;
+      box-sizing: border-box;
       font-family: var(--sans);
       font-size: 0.91rem;
-      padding: 11px 16px;
+      padding: 11px 44px 11px 16px;
       border: 1px solid var(--border);
       border-radius: 8px;
       resize: none;
@@ -1487,6 +1491,19 @@
     }
     #chat-send:hover:not(:disabled) { opacity: 0.78; }
     #chat-send:disabled { opacity: 0.45; cursor: not-allowed; }
+    .chat-attach-btn {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--muted);
+      opacity: 0.45;
+      cursor: not-allowed;
+      display: flex;
+      align-items: center;
+    }
     @media (max-width: 700px) {
       #chat { padding: 60px 20px; }
       .chat-header h2 { font-size: 1.5rem; }
@@ -1631,7 +1648,12 @@
         </div>
       </div>
       <div class="chat-input-row">
-        <textarea id="chat-input" placeholder="Describe your business or ask us anything…" rows="2"></textarea>
+        <div class="chat-input-wrap">
+          <textarea id="chat-input" placeholder="Describe your business or ask us anything…" rows="2"></textarea>
+          <button class="chat-attach-btn" title="Attach file (coming soon)" disabled aria-label="Attach file">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+          </button>
+        </div>
         <button id="chat-send">Send</button>
       </div>
     </div>
