@@ -1422,18 +1422,26 @@
     }
     .chat-header p { color: var(--muted); font-size: 1rem; margin: 0; }
     #chat-thread {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      min-height: 260px;
-      max-height: 460px;
-      overflow-y: auto;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      min-height: 0;
+      max-height: 0;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       gap: 16px;
-      margin-bottom: 14px;
+      margin-bottom: 0;
       scroll-behavior: smooth;
+      opacity: 0;
+      transition: max-height 0.45s ease, opacity 0.35s ease, margin-bottom 0.45s ease;
+    }
+    #chat-thread.visible {
+      max-height: 460px;
+      overflow-y: auto;
+      opacity: 1;
+      margin-bottom: 20px;
     }
     .chat-msg { display: flex; align-items: flex-start; }
     .chat-msg.user { flex-direction: row-reverse; }
@@ -1462,10 +1470,10 @@
       width: 100%;
       box-sizing: border-box;
       font-family: var(--sans);
-      font-size: 0.91rem;
-      padding: 11px 44px 11px 16px;
+      font-size: 1rem;
+      padding: 14px 48px 14px 20px;
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
       resize: none;
       background: #fff;
       color: var(--primary);
@@ -1479,12 +1487,12 @@
       font-family: var(--sans);
       font-size: 0.88rem;
       font-weight: 600;
-      padding: 0 22px;
-      height: 44px;
+      padding: 0 26px;
+      height: 50px;
       background: var(--primary);
       color: #fff;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       white-space: nowrap;
       transition: opacity 0.15s;
@@ -1642,11 +1650,7 @@
         <h2>What can The Bull do for you?</h2>
         <p>Tell us about your business — we'll show you exactly how we can eliminate your administrative load.</p>
       </div>
-      <div id="chat-thread">
-        <div class="chat-msg assistant">
-          <div class="msg-bubble">Welcome to The Bull. Tell us about your business or ask anything — we'll show you exactly what we can do for you, from restructuring your data to wiring a full AI brain over your operations.</div>
-        </div>
-      </div>
+      <div id="chat-thread"></div>
       <div class="chat-input-row">
         <div class="chat-input-wrap">
           <textarea id="chat-input" placeholder="Describe your business or ask us anything…" rows="2"></textarea>
@@ -2168,7 +2172,8 @@
       var thread = document.getElementById('chat-thread');
       var input  = document.getElementById('chat-input');
       var sendBtn = document.getElementById('chat-send');
-      var history = []; // [{role, content}]
+      var history = [];
+      var revealed = false;
 
       function appendMsg(role, text) {
         var div = document.createElement('div');
@@ -2190,6 +2195,12 @@
         input.style.height = '';
         sendBtn.disabled = true;
         sendBtn.textContent = 'Sending…';
+
+        if (!revealed) {
+          revealed = true;
+          thread.classList.add('visible');
+          appendMsg('assistant', 'Welcome to The Bull. Tell us about your business or ask anything — we\'ll show you exactly what we can do for you, from restructuring your data to wiring a full AI brain over your operations.');
+        }
 
         appendMsg('user', text);
         history.push({ role: 'user', content: text });

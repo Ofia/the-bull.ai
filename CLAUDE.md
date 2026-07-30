@@ -26,7 +26,22 @@ contracts/          ← /contracts product page (payment.html, pricing.html)
 properties/         ← /properties product page
 salon/              ← /salon product page (Coming Soon)
 developer/          ← /developer product page (Coming Soon)
+chat-api/           ← Vercel serverless function (AI chat proxy)
+  api/chat.js       ← POST {messages} → Claude sonnet-4-6 → {reply}
+  vercel.json
 ```
+
+## Chat section (added 2026-07-29)
+
+A chat box sits between the hero and the mockups carousel in `index.html`.
+
+- **Frontend:** plain JS inside `index.html` — no framework, no extra files
+- **API:** `https://the-bull-chat-api.vercel.app/api/chat` — Vercel serverless function in `chat-api/`
+- **Vercel project:** `the-bull-chat-api` under `ofias-projects`, linked to `Ofia/the-bull.ai` repo, root directory `chat-api`
+- **Model:** `claude-sonnet-4-6`, system prompt baked into `chat-api/api/chat.js`
+- **Env var:** `ANTHROPIC_API_KEY` set in Vercel dashboard (Production only)
+- **Deploy flow:** push to `main` → GitHub Pages updates the site AND Vercel rebuilds the API
+- **CORS:** currently open (`*`) — restrict to `the-bull.ai` before launch
 
 ## Design system
 - Background: `#ffffff` / `#f5f5f3`
