@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Management Agent — The Bull</title>
+  <meta name="description" content="An autonomous AI agent that contacts every customer before delivery, confirms standing orders across WhatsApp, SMS, and voice, and syncs them directly into your ERP. Zero manual entry." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.the-bull.ai/agents/order-management/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.the-bull.ai/agents/order-management/" />
+  <meta property="og:title" content="Order Management Agent — The Bull" />
+  <meta property="og:description" content="800 customers confirmed. Zero coordinators. Autonomous order confirmation across WhatsApp, SMS, and voice — synced directly into your ERP." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Order Management Agent — The Bull" />
+  <meta name="twitter:description" content="Autonomous order confirmation and ERP sync." />
+  <link rel="icon" type="image/svg+xml" href="../../logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Display:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:             #ffffff;
+      --bg2:            #f5f5f3;
+      --border:         #d8d8d3;
+      --primary:        #1a1a1a;
+      --muted:          #8a8a85;
+      --accent:         #b38600;
+      --accent-bg:      rgba(179,134,0,0.08);
+      --sans:           'Inter', sans-serif;
+      --display:        'Inter Display', sans-serif;
+      --mono:           'JetBrains Mono', monospace;
+      --color-heading:  #1b1b1b;
+      --color-body:     #3f3f3a;
+      --color-secondary:#616159;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--color-body);
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.375;
+      letter-spacing: -0.01em;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 64px;
+    }
+
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+    .nav-logo img { width: 28px; height: 28px; object-fit: contain; }
+    .nav-logo-text { font-size: 15px; font-weight: 700; color: var(--primary); letter-spacing: -0.02em; }
+    .nav-logo-sub { font-size: 13px; font-weight: 500; color: var(--muted); }
+
+    .nav-center { display: flex; align-items: center; gap: 2px; }
+
+    .nav-link {
+      font-size: 14px; font-weight: 500; letter-spacing: -0.16px;
+      color: var(--primary); text-decoration: none; padding: 8px 12px;
+      border-radius: 7px; transition: background 0.12s;
+    }
+    .nav-link:hover { background: var(--bg2); }
+
+    .nav-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+    .btn-outline {
+      font-size: 14px; font-weight: 500; color: var(--primary); text-decoration: none;
+      padding: 0 12px; height: 36px; display: inline-flex; align-items: center;
+      border-radius: 10px; border: 1px solid var(--border); transition: border-color 0.12s, background 0.12s;
+    }
+    .btn-outline:hover { border-color: #c0c0ba; background: var(--bg2); }
+
+    .btn-filled {
+      font-size: 14px; font-weight: 500; color: #f5f5f3; background: #1a1a1a;
+      text-decoration: none; padding: 0 12px; height: 36px; display: inline-flex;
+      align-items: center; border-radius: 10px; transition: opacity 0.12s;
+    }
+    .btn-filled:hover { opacity: 0.80; }
+
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 6px;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 1.5px;
+      background: var(--primary); border-radius: 2px; transition: transform 0.2s, opacity 0.2s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-nav {
+      display: none; flex-direction: column; position: fixed;
+      top: 64px; left: 0; right: 0; background: #fff;
+      border-bottom: 1px solid var(--border); padding: 16px 20px 24px;
+      gap: 4px; z-index: 199; box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav-link {
+      font-size: 15px; font-weight: 500; color: var(--primary);
+      text-decoration: none; padding: 12px 8px; border-bottom: 1px solid var(--border);
+    }
+    .mobile-nav-link:last-of-type { border-bottom: none; }
+    .mobile-nav-cta {
+      margin-top: 12px; display: block; text-align: center;
+      font-size: 15px; font-weight: 600; color: #fff; background: var(--primary);
+      text-decoration: none; padding: 12px; border-radius: 10px;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      padding: 110px 48px 80px;
+      text-align: center;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .hero-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 500; color: var(--primary);
+      background: rgba(255,255,255,0.85); border: 1px solid var(--border);
+      border-radius: 100px; padding: 5px 14px 5px 6px; margin-bottom: 36px;
+      backdrop-filter: blur(8px);
+    }
+
+    .pill-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); animation: blink 2s infinite;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+    h1 {
+      font-family: var(--display);
+      font-size: clamp(40px, 6vw, 76px);
+      font-weight: 600; letter-spacing: -0.035em; line-height: 1.05;
+      color: var(--color-heading); margin-bottom: 24px;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px); font-weight: 400;
+      color: var(--color-secondary); max-width: 620px;
+      line-height: 1.55; margin-bottom: 40px;
+    }
+
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+    .hero-btn-black {
+      display: inline-flex; align-items: center; background: #1a1a1a; color: #f5f5f3;
+      font-size: 15px; font-weight: 600; text-decoration: none;
+      padding: 0 24px; height: 48px; border-radius: 12px; transition: opacity 0.12s;
+    }
+    .hero-btn-black:hover { opacity: 0.82; }
+
+    .hero-btn-ghost {
+      display: inline-flex; align-items: center;
+      background: transparent; color: var(--primary);
+      font-size: 15px; font-weight: 500; text-decoration: none;
+      padding: 0 24px; height: 48px; border-radius: 12px;
+      border: 1px solid var(--border); transition: background 0.12s;
+    }
+    .hero-btn-ghost:hover { background: var(--bg2); }
+
+    /* ── MOCKUP ── */
+    .mockup-wrap {
+      max-width: 1080px;
+      margin: 0 auto 100px;
+      padding: 0 48px;
+    }
+
+    .mockup-frame {
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .mockup-chrome {
+      display: flex; align-items: center; gap: 6px;
+      background: #e8e4e0; padding: 10px 14px;
+    }
+    .chrome-dot { width: 11px; height: 11px; border-radius: 50%; }
+
+    /* ── INLINE APP MOCKUP ── */
+    .om-app {
+      display: flex; flex-direction: column;
+      height: 540px; background: #f7f7f5;
+      font-family: 'Inter', sans-serif; font-size: 13px; overflow: hidden;
+    }
+
+    /* Topbar */
+    .om-topbar {
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 16px; height: 44px; flex-shrink: 0;
+      background: #ffffff; border-bottom: 1px solid #e8e4e0;
+    }
+    .om-brand { font-size: 13px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.02em; }
+    .om-breadcrumb { font-size: 12px; color: #8a8a85; }
+    .om-topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .om-cycle-badge {
+      font-size: 11px; font-weight: 600; background: rgba(179,134,0,0.10);
+      color: #b38600; padding: 3px 8px; border-radius: 5px; letter-spacing: 0.01em;
+    }
+    .om-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #1a1a1a; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.02em; flex-shrink: 0;
+    }
+
+    /* Body */
+    .om-body { display: flex; flex: 1; overflow: hidden; }
+
+    /* Sidebar */
+    .om-sidebar {
+      width: 148px; flex-shrink: 0;
+      background: #fff; border-right: 1px solid #e8e4e0;
+      display: flex; flex-direction: column; padding: 12px 0;
+    }
+    .om-sb-section {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.09em;
+      text-transform: uppercase; color: #b0b0aa; padding: 4px 14px 6px;
+    }
+    .om-sb-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 14px; font-size: 12px; font-weight: 500;
+      color: #616159; cursor: pointer; transition: background 0.1s;
+    }
+    .om-sb-item:hover { background: #f5f5f3; }
+    .om-sb-item.active { background: #f5f5f3; color: #1a1a1a; font-weight: 600; }
+    .om-sb-item.alert { color: #dc2626; }
+    .om-sb-item svg { width: 12px; height: 12px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .om-badge-red {
+      margin-left: auto; background: #dc2626; color: #fff;
+      font-size: 10px; font-weight: 700; width: 16px; height: 16px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Main */
+    .om-main { flex: 1; overflow-y: auto; padding: 20px 20px 16px; }
+
+    .om-page-hdr {
+      display: flex; align-items: baseline; gap: 8px; margin-bottom: 16px;
+    }
+    .om-page-title { font-size: 15px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.01em; }
+    .om-page-date { font-size: 11px; color: #8a8a85; }
+
+    /* Stats */
+    .om-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 18px; }
+    .om-stat {
+      background: #fff; border: 1px solid #e8e4e0; border-radius: 8px;
+      padding: 10px 12px; display: flex; flex-direction: column; gap: 2px;
+    }
+    .om-stat-val { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; color: #1a1a1a; }
+    .om-stat-lbl { font-size: 10px; font-weight: 500; color: #8a8a85; text-transform: uppercase; letter-spacing: 0.06em; }
+    .om-stat-dot { width: 6px; height: 6px; border-radius: 50%; margin-bottom: 4px; }
+
+    /* Lower 2-col layout */
+    .om-lower { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* Activity */
+    .om-panel {
+      background: #fff; border: 1px solid #e8e4e0; border-radius: 8px;
+      overflow: hidden;
+    }
+    .om-panel-hdr {
+      padding: 10px 14px 8px;
+      border-bottom: 1px solid #f0ede8;
+      font-size: 11px; font-weight: 700; color: #1a1a1a;
+      letter-spacing: 0.01em; text-transform: uppercase;
+    }
+
+    .om-activity-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 14px; border-bottom: 1px solid #f5f5f3;
+    }
+    .om-activity-item:last-child { border-bottom: none; }
+
+    .om-act-dot {
+      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 3px;
+    }
+
+    .om-act-body { flex: 1; min-width: 0; }
+    .om-act-name { font-size: 12px; font-weight: 600; color: #1a1a1a; }
+    .om-act-msg { font-size: 11px; color: #616159; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .om-act-meta { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+
+    .om-ch-badge {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.05em;
+      padding: 2px 5px; border-radius: 4px; text-transform: uppercase;
+    }
+    .ch-wa  { background: rgba(37,211,102,0.12); color: #16a34a; }
+    .ch-sms { background: rgba(59,130,246,0.12); color: #1d4ed8; }
+    .ch-vox { background: rgba(168,85,247,0.12); color: #7c3aed; }
+    .ch-sys { background: rgba(100,100,100,0.08); color: #8a8a85; }
+
+    .om-ts { font-size: 10px; color: #b0b0aa; }
+
+    /* Interventions */
+    .om-alert-card {
+      margin: 8px 12px; border-radius: 6px;
+      border: 1px solid #fee2e2; background: #fff8f8;
+      padding: 10px 12px;
+    }
+    .om-alert-name { font-size: 12px; font-weight: 600; color: #dc2626; margin-bottom: 2px; }
+    .om-alert-reason { font-size: 11px; color: #9a3030; }
+    .om-alert-chs { font-size: 10px; color: #b0b0aa; margin-top: 4px; }
+
+    .om-alert-card.blue { border-color: #bfdbfe; background: #eff6ff; }
+    .om-alert-card.blue .om-alert-name { color: #1d4ed8; }
+    .om-alert-card.blue .om-alert-reason { color: #1e3a8a; }
+    .om-alert-card.blue .om-alert-chs { color: #93c5fd; }
+
+    /* ── SECTIONS ── */
+    .eyebrow {
+      font-family: var(--mono); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+    }
+
+    .section-h2 {
+      font-family: var(--display); font-size: clamp(28px, 4vw, 46px);
+      font-weight: 600; letter-spacing: -0.025em; line-height: 1.1;
+      color: var(--color-heading); margin-bottom: 16px;
+    }
+
+    .section-p {
+      font-size: 18px; font-weight: 400; color: var(--color-secondary);
+      max-width: 560px; line-height: 1.6; margin-bottom: 56px;
+    }
+
+    /* ── HOW IT WORKS ── */
+    #how { padding: 100px 48px; background: var(--bg2); }
+    #how > * { max-width: 1000px; margin-left: auto; margin-right: auto; }
+    #how .section-p { margin-left: auto; margin-right: auto; }
+
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2px; max-width: 1000px; margin: 0 auto;
+      background: var(--border); border-radius: 14px; overflow: hidden;
+    }
+    .step-card { background: var(--bg2); padding: 36px 32px; }
+    .step-num {
+      font-family: var(--mono); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+    }
+    .step-title { font-size: 18px; font-weight: 600; color: var(--color-heading); letter-spacing: -0.01em; margin-bottom: 10px; }
+    .step-desc { font-size: 14px; color: var(--color-secondary); line-height: 1.6; }
+
+    /* ── FEATURES ── */
+    #features { padding: 100px 48px; }
+    #features > * { max-width: 1000px; margin-left: auto; margin-right: auto; }
+    #features .section-p { margin-left: auto; margin-right: auto; }
+
+    .feature-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 24px; max-width: 1000px; margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--bg2); border-radius: 14px; padding: 36px 32px;
+      border: 1px solid transparent; transition: border-color 0.15s;
+    }
+    .feature-card:hover { border-color: var(--border); }
+
+    .feature-icon {
+      width: 44px; height: 44px; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+    }
+    .feature-icon svg {
+      width: 20px; height: 20px; stroke: var(--accent); fill: none;
+      stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .feature-title { font-size: 17px; font-weight: 600; color: var(--color-heading); letter-spacing: -0.01em; margin-bottom: 10px; }
+    .feature-desc { font-size: 14px; color: var(--color-secondary); line-height: 1.65; }
+
+    /* ── CHANNEL STRIP ── */
+    #channels {
+      padding: 64px 48px; background: #0d0d0d;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
+
+    .ch-strip { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 32px; }
+
+    .ch-pill {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 20px; border-radius: 100px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      font-size: 14px; font-weight: 500; color: rgba(240,237,230,0.75);
+    }
+    .ch-pill-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    #channels .section-h2 { color: #f0ede6; margin-bottom: 10px; }
+    #channels .section-p  { color: rgba(240,237,230,0.50); margin-bottom: 0; }
+
+    /* ── CTA ── */
+    #cta { padding: 100px 48px; text-align: center; }
+    .cta-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    .cta-btn-black {
+      display: inline-flex; align-items: center; background: #1a1a1a; color: #f5f5f3;
+      font-size: 15px; font-weight: 600; text-decoration: none;
+      padding: 0 28px; height: 48px; border-radius: 12px; transition: opacity 0.12s;
+    }
+    .cta-btn-black:hover { opacity: 0.82; }
+
+    .cta-btn-ghost {
+      display: inline-flex; align-items: center; background: transparent; color: var(--primary);
+      font-size: 15px; font-weight: 500; text-decoration: none;
+      padding: 0 24px; height: 48px; border-radius: 12px;
+      border: 1px solid var(--border); transition: background 0.12s;
+    }
+    .cta-btn-ghost:hover { background: var(--bg2); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 36px 48px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .footer-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .footer-logo img { width: 22px; height: 22px; object-fit: contain; }
+    .footer-logo-text { font-size: 14px; font-weight: 700; color: var(--primary); letter-spacing: -0.01em; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-link { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.12s; }
+    .footer-link:hover { color: var(--primary); }
+    .footer-copy { font-size: 13px; color: var(--muted); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .steps-grid { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .om-stats { grid-template-columns: repeat(3, 1fr); }
+      .om-lower { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; }
+      .nav-center, .nav-right { display: none; }
+      .nav-hamburger { display: flex; }
+      #hero { padding: 80px 20px 60px; }
+      .mockup-wrap { padding: 0 20px; }
+      .om-app { height: 420px; }
+      .om-stats { grid-template-columns: repeat(2, 1fr); }
+      .om-lower { grid-template-columns: 1fr; }
+      #how, #features, #cta, #channels { padding: 72px 20px; }
+      footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
+      .footer-links { flex-wrap: wrap; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="/" class="nav-logo">
+      <img src="../../logo.svg" alt="The Bull" />
+      <span class="nav-logo-text">the bull</span>
+      <span class="nav-logo-sub" style="margin-left:4px;padding-left:10px;border-left:1px solid var(--border);">/ Order Management</span>
+    </a>
+
+    <div class="nav-center">
+      <a href="#how"      class="nav-link">How it works</a>
+      <a href="#features" class="nav-link">Features</a>
+      <a href="/"         class="nav-link">← All products</a>
+    </div>
+
+    <div class="nav-right">
+      <a href="mailto:ofir08@gmail.com" class="btn-outline">Contact</a>
+      <a href="mailto:ofir08@gmail.com?subject=Order Management Agent — Request access" class="btn-filled">Request access</a>
+    </div>
+
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#how"      class="mobile-nav-link">How it works</a>
+    <a href="#features" class="mobile-nav-link">Features</a>
+    <a href="/"         class="mobile-nav-link">← All products</a>
+    <a href="mailto:ofir08@gmail.com?subject=Order Management Agent — Request access" class="mobile-nav-cta">Request access</a>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <div class="hero-pill">
+      <div class="pill-dot"></div>
+      AI Agent · Order Coordination
+    </div>
+    <h1>800 customers confirmed.<br/>Zero coordinators.</h1>
+    <p class="hero-sub">
+      The Order Management Agent contacts every customer before delivery day, confirms
+      their standing order across WhatsApp, SMS, and voice, and syncs it directly into
+      your ERP — all without a human in the loop.
+    </p>
+    <div class="hero-actions">
+      <a href="mailto:ofir08@gmail.com?subject=Order Management Agent — Request access" class="hero-btn-black">Request access →</a>
+      <a href="#how" class="hero-btn-ghost">See how it works</a>
+    </div>
+  </section>
+
+  <!-- ── MOCKUP ── -->
+  <div class="mockup-wrap">
+    <div class="mockup-frame">
+      <div class="mockup-chrome">
+        <div class="chrome-dot" style="background:#FF5F5A"></div>
+        <div class="chrome-dot" style="background:#FFBD2E"></div>
+        <div class="chrome-dot" style="background:#00CA4E"></div>
+      </div>
+
+      <!-- Inline Order Management Dashboard -->
+      <div class="om-app">
+
+        <!-- Topbar -->
+        <div class="om-topbar">
+          <span class="om-brand">The Bull</span>
+          <span class="om-breadcrumb">/ Order Management</span>
+          <div class="om-topbar-right">
+            <span class="om-cycle-badge">Cycle: Wednesday</span>
+            <div class="om-avatar">OF</div>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="om-body">
+
+          <!-- Sidebar -->
+          <div class="om-sidebar">
+            <div class="om-sb-section">Workspace</div>
+            <div class="om-sb-item active">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Dashboard
+            </div>
+            <div class="om-sb-item">
+              <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              Orders
+            </div>
+            <div class="om-sb-item">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              Customers
+            </div>
+            <div class="om-sb-item alert">
+              <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Interventions
+              <span class="om-badge-red">4</span>
+            </div>
+          </div>
+
+          <!-- Main content -->
+          <div class="om-main">
+
+            <div class="om-page-hdr">
+              <span class="om-page-title">Dashboard</span>
+              <span class="om-page-date">Wednesday, July 30 · 09:14</span>
+            </div>
+
+            <!-- Stats -->
+            <div class="om-stats">
+              <div class="om-stat">
+                <div class="om-stat-dot" style="background:#16a34a"></div>
+                <div class="om-stat-val">312</div>
+                <div class="om-stat-lbl">Confirmed</div>
+              </div>
+              <div class="om-stat">
+                <div class="om-stat-dot" style="background:#b38600"></div>
+                <div class="om-stat-val">89</div>
+                <div class="om-stat-lbl">Waiting</div>
+              </div>
+              <div class="om-stat">
+                <div class="om-stat-dot" style="background:#dc2626"></div>
+                <div class="om-stat-val">4</div>
+                <div class="om-stat-lbl">Escalated</div>
+              </div>
+              <div class="om-stat">
+                <div class="om-stat-dot" style="background:#8a8a85"></div>
+                <div class="om-stat-val">287</div>
+                <div class="om-stat-lbl">Paid</div>
+              </div>
+              <div class="om-stat">
+                <div class="om-stat-dot" style="background:#ea580c"></div>
+                <div class="om-stat-val">12</div>
+                <div class="om-stat-lbl">Overdue</div>
+              </div>
+            </div>
+
+            <!-- Lower area -->
+            <div class="om-lower">
+
+              <!-- Activity feed -->
+              <div class="om-panel">
+                <div class="om-panel-hdr">Live Activity</div>
+
+                <div class="om-activity-item">
+                  <div class="om-act-dot" style="background:#16a34a"></div>
+                  <div class="om-act-body">
+                    <div class="om-act-name">Cohen Pizzeria</div>
+                    <div class="om-act-msg">Order confirmed: 8 kg Mozzarella ✓</div>
+                    <div class="om-act-meta">
+                      <span class="om-ch-badge ch-wa">WA</span>
+                      <span class="om-ts">09:12</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="om-activity-item">
+                  <div class="om-act-dot" style="background:#b38600"></div>
+                  <div class="om-act-body">
+                    <div class="om-act-name">Levy Deli</div>
+                    <div class="om-act-msg">No reply after 4h — SMS sent</div>
+                    <div class="om-act-meta">
+                      <span class="om-ch-badge ch-sms">SMS</span>
+                      <span class="om-ts">09:07</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="om-activity-item">
+                  <div class="om-act-dot" style="background:#7c3aed"></div>
+                  <div class="om-act-body">
+                    <div class="om-act-name">Gold Catering</div>
+                    <div class="om-act-msg">No SMS reply — voice call initiated</div>
+                    <div class="om-act-meta">
+                      <span class="om-ch-badge ch-vox">Voice</span>
+                      <span class="om-ts">08:51</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="om-activity-item">
+                  <div class="om-act-dot" style="background:#16a34a"></div>
+                  <div class="om-act-body">
+                    <div class="om-act-name">Shapiro Mini Market</div>
+                    <div class="om-act-msg">Modification: +2 kg Ricotta requested</div>
+                    <div class="om-act-meta">
+                      <span class="om-ch-badge ch-wa">WA</span>
+                      <span class="om-ts">08:44</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Interventions -->
+              <div class="om-panel">
+                <div class="om-panel-hdr">Needs Attention · 4</div>
+
+                <div class="om-alert-card" style="margin-top:12px;">
+                  <div class="om-alert-name">Mizrahi Shawarma</div>
+                  <div class="om-alert-reason">All 3 channels failed — no response</div>
+                  <div class="om-alert-chs">WA · SMS · Voice — all sent</div>
+                </div>
+
+                <div class="om-alert-card blue">
+                  <div class="om-alert-name">Ben David Bakery</div>
+                  <div class="om-alert-reason">Customer asked: "Is Gouda available?"</div>
+                  <div class="om-alert-chs">WA — question reply</div>
+                </div>
+
+              </div>
+
+            </div>
+          </div><!-- /om-main -->
+        </div><!-- /om-body -->
+      </div><!-- /om-app -->
+    </div>
+  </div>
+
+  <!-- ── CHANNEL STRIP ── -->
+  <section id="channels">
+    <div class="eyebrow" style="color:rgba(179,134,0,0.8)">Outreach channels</div>
+    <h2 class="section-h2">Three tries before it asks for help.</h2>
+    <p class="section-p">The agent escalates automatically — only the hard cases reach a human.</p>
+    <div class="ch-strip">
+      <div class="ch-pill">
+        <div class="ch-pill-dot" style="background:#25d366"></div>
+        WhatsApp first
+      </div>
+      <div class="ch-pill">
+        <div class="ch-pill-dot" style="background:#3b82f6"></div>
+        SMS after 4 hours
+      </div>
+      <div class="ch-pill">
+        <div class="ch-pill-dot" style="background:#a855f7"></div>
+        Voice call after 8 hours
+      </div>
+      <div class="ch-pill">
+        <div class="ch-pill-dot" style="background:#dc2626"></div>
+        Human escalation — last resort
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section id="how">
+    <div class="eyebrow">Process</div>
+    <h2 class="section-h2">Contact. Classify. Sync.</h2>
+    <p class="section-p">The full order cycle runs autonomously. Your team sees a clean dashboard — not a phone queue.</p>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01 — Contact</div>
+        <div class="step-title">Agent reaches every customer</div>
+        <div class="step-desc">Before each delivery day, the agent sends a personalized message to every customer in the cycle — pre-filled with their standing order — and waits for a reply.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02 — Classify</div>
+        <div class="step-title">AI reads every reply</div>
+        <div class="step-desc">Each inbound message is processed by Claude, which returns a structured intent: confirm, decline, modify, or question. The order state updates instantly. No manual triage.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03 — Sync</div>
+        <div class="step-title">Confirmed orders enter ERP</div>
+        <div class="step-desc">Confirmed orders are pushed to Priority ERP via OData API the moment they're classified. No copy-paste, no manual entry. Overdue accounts are flagged automatically.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ── -->
+  <section id="features">
+    <div class="eyebrow">Capabilities</div>
+    <h2 class="section-h2">Built to run a full order<br/>cycle without supervision.</h2>
+    <p class="section-p">Every feature came from watching a real coordinator spend their day on the phone.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        </div>
+        <div class="feature-title">Multi-channel Outreach</div>
+        <div class="feature-desc">WhatsApp → SMS → Voice, with automatic escalation after each timeout. Each message is personalized with the customer's standing order, in Hebrew or English.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="feature-title">AI Reply Classification</div>
+        <div class="feature-desc">Claude reads every inbound message and returns structured intent: confirm, decline, modify, or question. The order state updates instantly. Ambiguous replies go to a human, clear ones don't.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="feature-title">ERP Sync</div>
+        <div class="feature-desc">Confirmed orders land in Priority ERP via OData API in real time. The local database is a coordination cache — Priority is the source of truth.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <div class="feature-title">Immutable Audit Trail</div>
+        <div class="feature-desc">Every agent action, customer reply, and state transition is appended to a log — nothing is ever updated or deleted. Full compliance history available on demand.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section id="cta">
+    <div class="eyebrow">Get access</div>
+    <h2 class="section-h2">Ready to take your<br/>coordinators off the phones?</h2>
+    <p class="section-p" style="margin:0 auto 44px;">The Order Management Agent is deployed as a custom engagement, scoped to your ERP, channels, and customer base.</p>
+    <div class="cta-actions">
+      <a href="mailto:ofir08@gmail.com?subject=Order Management Agent — Request access" class="cta-btn-black">Request access →</a>
+      <a href="/services" class="cta-btn-ghost">See how we work</a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <a href="/" class="footer-logo">
+      <img src="../../logo.svg" alt="The Bull" />
+      <span class="footer-logo-text">the bull · order management</span>
+    </a>
+    <div class="footer-links">
+      <a href="#how" class="footer-link">How it works</a>
+      <a href="#features" class="footer-link">Features</a>
+      <a href="/agents/business-brain" class="footer-link">Business Brain</a>
+      <a href="/" class="footer-link">← The Bull</a>
+    </div>
+    <div class="footer-copy">© 2026 Aldebaran Labs LLC. All rights reserved.</div>
+  </footer>
+
+  <script>
+    var hamburger = document.getElementById('hamburger');
+    var mobileNav = document.getElementById('mobile-nav');
+    hamburger.addEventListener('click', function() {
+      hamburger.classList.toggle('open');
+      mobileNav.classList.toggle('open');
+    });
+  </script>
+</body>
+</html>

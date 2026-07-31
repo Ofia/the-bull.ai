@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Brain — The Bull</title>
+  <meta name="description" content="Business Brain is an always-on AI agent that reads your company data, builds a living knowledge graph, and answers questions about your business grounded in your real numbers. By Aldebaran Labs." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.the-bull.ai/agents/business-brain/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.the-bull.ai/agents/business-brain/" />
+  <meta property="og:title" content="Business Brain — The Bull" />
+  <meta property="og:description" content="An always-on AI agent that reads your data, builds a living knowledge graph, and answers business questions grounded in your real numbers." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Business Brain — The Bull" />
+  <meta name="twitter:description" content="Your company's AI memory. Always on, always grounded." />
+  <link rel="icon" type="image/svg+xml" href="../../logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Display:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:             #ffffff;
+      --bg2:            #f5f5f3;
+      --border:         #d8d8d3;
+      --primary:        #1a1a1a;
+      --muted:          #8a8a85;
+      --accent:         #b38600;
+      --accent-bg:      rgba(179,134,0,0.08);
+      --sans:           'Inter', sans-serif;
+      --display:        'Inter Display', sans-serif;
+      --mono:           'JetBrains Mono', monospace;
+      --color-heading:  #1b1b1b;
+      --color-body:     #3f3f3a;
+      --color-secondary:#616159;
+      --color-tertiary: #8a8a85;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--color-body);
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.375;
+      letter-spacing: -0.01em;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 64px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .nav-logo img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+
+    .nav-logo-text  { font-size: 15px; font-weight: 700; color: var(--primary); letter-spacing: -0.02em; }
+    .nav-logo-sub   { font-size: 13px; font-weight: 500; color: var(--muted); }
+
+    .nav-center { display: flex; align-items: center; gap: 2px; }
+
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.16px;
+      color: var(--primary);
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 7px;
+      transition: background 0.12s;
+    }
+
+    .nav-link:hover { background: var(--bg2); }
+
+    .nav-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+    .btn-outline {
+      font-size: 14px; font-weight: 500; color: var(--primary); text-decoration: none;
+      padding: 0 12px; height: 36px; display: inline-flex; align-items: center;
+      border-radius: 10px; border: 1px solid var(--border); transition: border-color 0.12s, background 0.12s;
+    }
+    .btn-outline:hover { border-color: #c0c0ba; background: var(--bg2); }
+
+    .btn-filled {
+      font-size: 14px; font-weight: 500; color: #f5f5f3; background: #1a1a1a;
+      text-decoration: none; padding: 0 12px; height: 36px; display: inline-flex;
+      align-items: center; border-radius: 10px; transition: opacity 0.12s;
+    }
+    .btn-filled:hover { opacity: 0.80; }
+
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 6px;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 1.5px;
+      background: var(--primary); border-radius: 2px; transition: transform 0.2s, opacity 0.2s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-nav {
+      display: none; flex-direction: column; position: fixed;
+      top: 64px; left: 0; right: 0; background: #fff;
+      border-bottom: 1px solid var(--border); padding: 16px 20px 24px;
+      gap: 4px; z-index: 199; box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav-link {
+      font-size: 15px; font-weight: 500; color: var(--primary);
+      text-decoration: none; padding: 12px 8px; border-bottom: 1px solid var(--border);
+    }
+    .mobile-nav-link:last-of-type { border-bottom: none; }
+    .mobile-nav-cta {
+      margin-top: 12px; display: block; text-align: center;
+      font-size: 15px; font-weight: 600; color: #fff; background: var(--primary);
+      text-decoration: none; padding: 12px; border-radius: 10px;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      padding: 110px 48px 80px;
+      text-align: center;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .hero-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 500; color: var(--primary);
+      background: rgba(255,255,255,0.85); border: 1px solid var(--border);
+      border-radius: 100px; padding: 5px 14px 5px 6px; margin-bottom: 36px;
+      backdrop-filter: blur(8px);
+    }
+
+    .pill-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); animation: blink 2s infinite;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+    h1 {
+      font-family: var(--display);
+      font-size: clamp(40px, 6vw, 76px);
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      line-height: 1.05;
+      color: var(--color-heading);
+      margin-bottom: 24px;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 400;
+      color: var(--color-secondary);
+      max-width: 600px;
+      line-height: 1.55;
+      margin-bottom: 40px;
+    }
+
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+    .hero-btn-black {
+      display: inline-flex; align-items: center;
+      background: #1a1a1a; color: #f5f5f3;
+      font-size: 15px; font-weight: 600; text-decoration: none;
+      padding: 0 24px; height: 48px; border-radius: 12px; transition: opacity 0.12s;
+    }
+    .hero-btn-black:hover { opacity: 0.82; }
+
+    .hero-btn-ghost {
+      display: inline-flex; align-items: center;
+      background: transparent; color: var(--primary);
+      font-size: 15px; font-weight: 500; text-decoration: none;
+      padding: 0 24px; height: 48px; border-radius: 12px;
+      border: 1px solid var(--border); transition: background 0.12s;
+    }
+    .hero-btn-ghost:hover { background: var(--bg2); }
+
+    /* ── MOCKUP ── */
+    .mockup-wrap {
+      max-width: 1080px;
+      margin: 0 auto 100px;
+      padding: 0 48px;
+    }
+
+    .mockup-frame {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .mockup-chrome {
+      display: flex; align-items: center; gap: 6px;
+      background: #1e1c18; padding: 10px 14px; flex-shrink: 0;
+    }
+
+    .chrome-dot { width: 11px; height: 11px; border-radius: 50%; }
+
+    .mockup-body { height: 540px; overflow: hidden; }
+
+    .mockup-body iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    /* ── SECTIONS ── */
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 14px;
+    }
+
+    .section-h2 {
+      font-family: var(--display);
+      font-size: clamp(28px, 4vw, 46px);
+      font-weight: 600; letter-spacing: -0.025em; line-height: 1.1;
+      color: var(--color-heading); margin-bottom: 16px;
+    }
+
+    .section-p {
+      font-size: 18px; font-weight: 400; color: var(--color-secondary);
+      max-width: 560px; line-height: 1.6; margin-bottom: 56px;
+    }
+
+    /* ── HOW IT WORKS ── */
+    #how {
+      padding: 100px 48px;
+      background: var(--bg2);
+    }
+
+    #how > * { max-width: 1000px; margin-left: auto; margin-right: auto; }
+    #how .section-p { margin-left: auto; margin-right: auto; }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      max-width: 1000px;
+      margin: 0 auto;
+      background: var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .step-card {
+      background: var(--bg2);
+      padding: 36px 32px;
+    }
+
+    .step-num {
+      font-family: var(--mono);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 16px;
+    }
+
+    .step-title {
+      font-size: 18px; font-weight: 600;
+      color: var(--color-heading); letter-spacing: -0.01em;
+      margin-bottom: 10px;
+    }
+
+    .step-desc { font-size: 14px; color: var(--color-secondary); line-height: 1.6; }
+
+    /* ── FEATURES ── */
+    #features { padding: 100px 48px; }
+    #features > * { max-width: 1000px; margin-left: auto; margin-right: auto; }
+    #features .section-p { margin-left: auto; margin-right: auto; }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--bg2);
+      border-radius: 14px;
+      padding: 36px 32px;
+      border: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+
+    .feature-card:hover { border-color: var(--border); }
+
+    .feature-icon {
+      width: 44px; height: 44px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .feature-icon svg {
+      width: 20px; height: 20px;
+      stroke: var(--accent); fill: none;
+      stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .feature-title {
+      font-size: 17px; font-weight: 600;
+      color: var(--color-heading); letter-spacing: -0.01em;
+      margin-bottom: 10px;
+    }
+
+    .feature-desc { font-size: 14px; color: var(--color-secondary); line-height: 1.65; }
+
+    /* ── CTA ── */
+    #cta {
+      padding: 100px 48px;
+      background: #0d0d0d;
+      text-align: center;
+    }
+
+    #cta .eyebrow { color: rgba(179,134,0,0.9); }
+
+    #cta .section-h2 { color: #f0ede6; margin-bottom: 16px; }
+
+    .cta-sub {
+      font-size: 18px; font-weight: 400;
+      color: rgba(240,237,230,0.55);
+      max-width: 500px; margin: 0 auto 44px;
+      line-height: 1.6;
+    }
+
+    .cta-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    .cta-btn-white {
+      display: inline-flex; align-items: center;
+      background: #f0ede6; color: #0d0d0d;
+      font-size: 15px; font-weight: 600; text-decoration: none;
+      padding: 0 28px; height: 48px; border-radius: 12px; transition: opacity 0.12s;
+    }
+    .cta-btn-white:hover { opacity: 0.88; }
+
+    .cta-btn-ghost {
+      display: inline-flex; align-items: center;
+      background: transparent; color: rgba(240,237,230,0.7);
+      font-size: 15px; font-weight: 500; text-decoration: none;
+      padding: 0 24px; height: 48px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15); transition: border-color 0.12s;
+    }
+    .cta-btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: rgba(240,237,230,0.9); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 48px;
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+
+    .footer-logo {
+      display: flex; align-items: center; gap: 8px; text-decoration: none;
+    }
+
+    .footer-logo img { width: 22px; height: 22px; object-fit: contain; }
+
+    .footer-logo-text {
+      font-size: 14px; font-weight: 700;
+      color: var(--primary); letter-spacing: -0.01em;
+    }
+
+    .footer-links { display: flex; gap: 24px; }
+
+    .footer-link {
+      font-size: 13px; color: var(--muted);
+      text-decoration: none; transition: color 0.12s;
+    }
+    .footer-link:hover { color: var(--primary); }
+
+    .footer-copy { font-size: 13px; color: var(--muted); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .steps-grid { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; }
+      .nav-center, .nav-right { display: none; }
+      .nav-hamburger { display: flex; }
+      #hero { padding: 80px 20px 60px; }
+      .mockup-wrap { padding: 0 20px; }
+      .mockup-body { height: 320px; }
+      #how, #features, #cta { padding: 72px 20px; }
+      footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
+      .footer-links { flex-wrap: wrap; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="/" class="nav-logo">
+      <img src="../../logo.svg" alt="The Bull" />
+      <span class="nav-logo-text">the bull</span>
+      <span class="nav-logo-sub" style="margin-left:4px;padding-left:10px;border-left:1px solid var(--border);">/ Business Brain</span>
+    </a>
+
+    <div class="nav-center">
+      <a href="#how"      class="nav-link">How it works</a>
+      <a href="#features" class="nav-link">Features</a>
+      <a href="/"         class="nav-link">← All products</a>
+    </div>
+
+    <div class="nav-right">
+      <a href="mailto:ofir08@gmail.com" class="btn-outline">Contact</a>
+      <a href="mailto:ofir08@gmail.com?subject=Business Brain — Request access" class="btn-filled">Request access</a>
+    </div>
+
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#how"      class="mobile-nav-link">How it works</a>
+    <a href="#features" class="mobile-nav-link">Features</a>
+    <a href="/"         class="mobile-nav-link">← All products</a>
+    <a href="mailto:ofir08@gmail.com?subject=Business Brain — Request access" class="mobile-nav-cta">Request access</a>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <div class="hero-pill">
+      <div class="pill-dot"></div>
+      AI Agent · Company Knowledge
+    </div>
+    <h1>Your company<br/>thinks for itself.</h1>
+    <p class="hero-sub">
+      Business Brain is an always-on AI agent that reads your data, builds a living knowledge graph,
+      and answers questions about your business grounded in your real numbers — not generic advice.
+    </p>
+    <div class="hero-actions">
+      <a href="mailto:ofir08@gmail.com?subject=Business Brain — Request access" class="hero-btn-black">Request access →</a>
+      <a href="#how" class="hero-btn-ghost">See how it works</a>
+    </div>
+  </section>
+
+  <!-- ── MOCKUP ── -->
+  <div class="mockup-wrap">
+    <div class="mockup-frame">
+      <div class="mockup-chrome">
+        <div class="chrome-dot" style="background:#FF5F5A"></div>
+        <div class="chrome-dot" style="background:#FFBD2E"></div>
+        <div class="chrome-dot" style="background:#00CA4E"></div>
+      </div>
+      <div class="mockup-body">
+        <iframe src="/brain/" title="Business Brain — Live Demo" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section id="how">
+    <div class="eyebrow">Process</div>
+    <h2 class="section-h2">Data in.<br/>Intelligence out.</h2>
+    <p class="section-p">Three steps. No data team required. The Brain handles the rest.</p>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01 — Connect</div>
+        <div class="step-title">Link your data sources</div>
+        <div class="step-desc">Point Business Brain at your databases, documents, and tools. It ingests them in real time and begins building the knowledge graph immediately.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02 — Build</div>
+        <div class="step-title">The Brain maps everything</div>
+        <div class="step-desc">AI extracts entities, relationships, and patterns across your data. Scheduled analysis runs automatically — weekly summaries, anomaly detection, trend reports — without being asked.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03 — Ask</div>
+        <div class="step-title">Query in plain language</div>
+        <div class="step-desc">Ask anything about your company. Every answer is retrieved from your actual data — not a language model's general knowledge. If the answer isn't in your data, the Brain says so.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ── -->
+  <section id="features">
+    <div class="eyebrow">Capabilities</div>
+    <h2 class="section-h2">Built to know your business<br/>better than any spreadsheet.</h2>
+    <p class="section-p">Every feature exists because someone spent too many hours hunting for an answer that should have been instant.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/></svg>
+        </div>
+        <div class="feature-title">Living Knowledge Graph</div>
+        <div class="feature-desc">Every entity and relationship in your business is mapped and updated continuously as new data arrives. The graph never goes stale.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="feature-title">Scheduled Analysis</div>
+        <div class="feature-desc">The Brain runs its own analysis on a schedule — weekly summaries, anomaly detection, KPI drift alerts — and surfaces findings proactively. No prompt required.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="feature-title">Grounded RAG Queries</div>
+        <div class="feature-desc">Every answer is retrieved from your actual data using vector search and re-ranking. No hallucinations. Answers cite the source records they came from.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="feature-title">Embed Anywhere</div>
+        <div class="feature-desc">Business Brain can be embedded into any Bull product or accessed as a standalone tool. One brain — accessible from every system your team already uses.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section id="cta">
+    <div class="eyebrow">Get access</div>
+    <h2 class="section-h2">Ready to give your<br/>company a memory?</h2>
+    <p class="cta-sub">Business Brain is deployed as a custom engagement. Reach out to scope what it would look like for your team.</p>
+    <div class="cta-actions">
+      <a href="mailto:ofir08@gmail.com?subject=Business Brain — Request access" class="cta-btn-white">Request access →</a>
+      <a href="/services" class="cta-btn-ghost">See how we work</a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <a href="/" class="footer-logo">
+      <img src="../../logo.svg" alt="The Bull" />
+      <span class="footer-logo-text">the bull · business brain</span>
+    </a>
+    <div class="footer-links">
+      <a href="#how" class="footer-link">How it works</a>
+      <a href="#features" class="footer-link">Features</a>
+      <a href="/agents/order-management" class="footer-link">Order Management Agent</a>
+      <a href="/" class="footer-link">← The Bull</a>
+    </div>
+    <div class="footer-copy">© 2026 Aldebaran Labs LLC. All rights reserved.</div>
+  </footer>
+
+  <script>
+    var hamburger = document.getElementById('hamburger');
+    var mobileNav = document.getElementById('mobile-nav');
+    hamburger.addEventListener('click', function() {
+      hamburger.classList.toggle('open');
+      mobileNav.classList.toggle('open');
+    });
+  </script>
+</body>
+</html>
