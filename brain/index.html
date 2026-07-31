@@ -67,10 +67,11 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
 .lc { margin-left: auto; color: var(--text-3); font-family: 'JetBrains Mono', monospace; font-size: 10px; }
 
 /* CANVAS */
-#cwrap { flex: 1; position: relative; overflow: hidden; }
+#cwrap { flex: 1; position: relative; overflow: hidden; perspective: 1200px; perspective-origin: center center; }
 #gc { width: 100%; height: 100%;
   background: var(--canvas) radial-gradient(circle, rgba(255,255,255,0.045) 1px, transparent 1px);
-  background-size: 24px 24px; }
+  background-size: 24px 24px;
+  transform-style: preserve-3d; }
 
 /* STABILIZING */
 #stab { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
@@ -393,7 +394,7 @@ function renderGraph() {
       maxVelocity: 50, minVelocity: 0.75,
     },
     layout: { hierarchical: { enabled: false }, improvedLayout: false },
-    interaction: { hover: true, tooltipDelay: 150, zoomView: true, navigationButtons: false },
+    interaction: { hover: true, tooltipDelay: 150, dragView: false, zoomView: true, navigationButtons: false },
   });
 
   const stab = document.getElementById('stab');
@@ -401,6 +402,26 @@ function renderGraph() {
   net.on('stabilizationIterationsDone', () => { stab.style.display = 'none'; });
   net.on('stabilized', () => { stab.style.display = 'none'; });
   net.on('click', ({ nodes }) => { if (nodes.length) showDetail(nodes[0]); else closeDetail(); });
+
+  // 3D orbit — background drag rotates the cluster; node drag handled by vis as normal
+  const _gc = document.getElementById('gc');
+  let _rx = 0, _ry = 0, _orbiting = false, _lx = 0, _ly = 0;
+  net.on('dragStart', p => {
+    if (p.nodes.length === 0) {
+      _orbiting = true;
+      _lx = p.event.center.x;
+      _ly = p.event.center.y;
+      _gc.style.cursor = 'grabbing';
+    }
+  });
+  window.addEventListener('mousemove', e => {
+    if (!_orbiting) return;
+    _ry = Math.max(-50, Math.min(50, _ry + (e.clientX - _lx) * 0.22));
+    _rx = Math.max(-35, Math.min(35, _rx - (e.clientY - _ly) * 0.22));
+    _lx = e.clientX; _ly = e.clientY;
+    _gc.style.transform = `rotateX(${_rx}deg) rotateY(${_ry}deg)`;
+  });
+  net.on('dragEnd', () => { _orbiting = false; _gc.style.cursor = ''; });
 }
 
 // ── layout switching ─────────────────────────────────────────────────────────
