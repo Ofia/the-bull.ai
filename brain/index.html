@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Business Brain — Aldebaran Labs</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Display:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+<script src="https://unpkg.com/3d-force-graph@1.73.4/dist/3d-force-graph.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -67,11 +67,8 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
 .lc { margin-left: auto; color: var(--text-3); font-family: 'JetBrains Mono', monospace; font-size: 10px; }
 
 /* CANVAS */
-#cwrap { flex: 1; position: relative; overflow: hidden; perspective: 1200px; perspective-origin: center center; }
-#gc { width: 100%; height: 100%;
-  background: var(--canvas) radial-gradient(circle, rgba(255,255,255,0.045) 1px, transparent 1px);
-  background-size: 24px 24px;
-  transform-style: preserve-3d; }
+#cwrap { flex: 1; position: relative; overflow: hidden; }
+#gc { width: 100%; height: 100%; }
 
 /* STABILIZING */
 #stab { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
@@ -290,56 +287,23 @@ const RAW_EDGES = [
   {from:'CLAUDE.md', to:'docs/overview.md', type:'imports'},
 ];
 
-// ── vis helpers ──────────────────────────────────────────────────────────────
-function toVisNode(n) {
-  const c = GC[n.group] || GC.other;
-  const big = n.isDir;
-  return {
-    id: n.id, title: n.id,
-    label: n.label.length > 22 ? n.label.slice(0,20)+'…' : n.label,
-    size: big ? 14 : 6,
-    font: { size: big ? 11 : 9, color: big ? '#e2e8f0' : '#94a3b8', face: 'Inter, sans-serif' },
-    color: { background: c.bg, border: c.border,
-             highlight: { background: c.border, border: '#fff' },
-             hover: { background: c.border, border: '#fff' } },
-    shadow: { enabled: true, color: c.border + '55', size: big ? 12 : 6, x: 0, y: 0 },
-    borderWidth: big ? 2 : 1.5,
-    shape: 'dot',
-  };
-}
+// ── state ─────────────────────────────────────────────────────────────────────
+let graph, nodeMap = {}, hiddenTypes = new Set(), selectedNodeId = null;
+nodeMap = Object.fromEntries(RAW_NODES.map(n => [n.id, n]));
+const getColor = n => n.id === selectedNodeId ? '#ffffff' : (GC[n.group] || GC.other).border;
 
-function toVisEdge(e, i) {
-  if (e.type === 'contains') {
-    return { id: i, from: e.from, to: e.to,
-      color: { inherit: 'from', opacity: 0.28 }, width: 0.7,
-      arrows: { to: { enabled: false } },
-      smooth: { enabled: true, type: 'continuous', roundness: 0.12 } };
-  }
-  return { id: i, from: e.from, to: e.to,
-    color: { inherit: 'from', opacity: 0.85 }, width: 1.8, selectionWidth: 3,
-    arrows: { to: { enabled: true, scaleFactor: 0.4 } },
-    smooth: { enabled: true, type: 'continuous', roundness: 0.3 } };
-}
-
-// ── state ────────────────────────────────────────────────────────────────────
-let net, dsN, dsE, nodeMap = {}, hiddenTypes = new Set();
-const allNodes = RAW_NODES;
-const allEdges = RAW_EDGES;
-nodeMap = Object.fromEntries(allNodes.map(n => [n.id, n]));
-
-// ── sidebar ──────────────────────────────────────────────────────────────────
+// ── sidebar ───────────────────────────────────────────────────────────────────
 function buildSidebar() {
-  renderList(allNodes);
+  renderList(RAW_NODES);
   document.getElementById('fsearch').addEventListener('input', e => {
     const q = e.target.value.toLowerCase();
-    renderList(q ? allNodes.filter(n => n.label.toLowerCase().includes(q)) : allNodes);
+    renderList(q ? RAW_NODES.filter(n => n.label.toLowerCase().includes(q)) : RAW_NODES);
   });
 }
-
 function renderList(nodes) {
   const list = document.getElementById('flist');
   const frag = document.createDocumentFragment();
-  nodes.slice(0, 300).forEach(n => {
+  nodes.slice(0,300).forEach(n => {
     const c = GC[n.group] || GC.other;
     const el = document.createElement('div');
     el.className = 'fi';
@@ -351,80 +315,68 @@ function renderList(nodes) {
   list.innerHTML = '';
   list.appendChild(frag);
 }
-
 function buildLegend() {
-  const types = [...new Set(allNodes.map(n => n.group))].sort();
+  const types = [...new Set(RAW_NODES.map(n => n.group))].sort();
   const leg = document.getElementById('legend');
   leg.innerHTML = '';
   types.forEach(type => {
     const c = GC[type] || GC.other;
-    const count = allNodes.filter(n => n.group === type).length;
-    const row = document.createElement('div');
-    row.className = 'li';
-    const pill = document.createElement('button');
-    pill.className = 'pill';
-    pill.textContent = `${ICONS[type] || '•'} ${type}`;
+    const count = RAW_NODES.filter(n => n.group === type).length;
+    const row = document.createElement('div'); row.className = 'li';
+    const pill = document.createElement('button'); pill.className = 'pill';
+    pill.textContent = `${ICONS[type]||'•'} ${type}`;
     pill.style.cssText = `color:${c.text};border-color:${c.border};background:${c.bg}`;
     pill.addEventListener('click', () => {
       hiddenTypes.has(type) ? hiddenTypes.delete(type) : hiddenTypes.add(type);
       pill.classList.toggle('off');
       applyFilters();
     });
-    const cnt = document.createElement('span');
-    cnt.className = 'lc';
-    cnt.textContent = count;
-    row.appendChild(pill);
-    row.appendChild(cnt);
-    leg.appendChild(row);
+    const cnt = document.createElement('span'); cnt.className = 'lc'; cnt.textContent = count;
+    row.appendChild(pill); row.appendChild(cnt); leg.appendChild(row);
   });
 }
 
-// ── graph ────────────────────────────────────────────────────────────────────
+// ── graph ─────────────────────────────────────────────────────────────────────
 function renderGraph() {
-  dsN = new vis.DataSet(allNodes.map(toVisNode));
-  dsE = new vis.DataSet(allEdges.map(toVisEdge));
-  net = new vis.Network(document.getElementById('gc'), { nodes: dsN, edges: dsE }, {
-    physics: {
-      enabled: true, solver: 'forceAtlas2Based',
-      forceAtlas2Based: {
-        gravitationalConstant: -55, centralGravity: 0.005,
-        springLength: 140, springConstant: 0.05, damping: 0.4, avoidOverlap: 0.3,
-      },
-      stabilization: { enabled: true, iterations: 200, updateInterval: 25 },
-      maxVelocity: 50, minVelocity: 0.75,
-    },
-    layout: { hierarchical: { enabled: false }, improvedLayout: false },
-    interaction: { hover: true, tooltipDelay: 150, dragView: false, zoomView: true, navigationButtons: false },
-  });
-
+  const gc = document.getElementById('gc');
   const stab = document.getElementById('stab');
   stab.style.display = 'flex';
-  net.on('stabilizationIterationsDone', () => { stab.style.display = 'none'; });
-  net.on('stabilized', () => { stab.style.display = 'none'; });
-  net.on('click', ({ nodes }) => { if (nodes.length) showDetail(nodes[0]); else closeDetail(); });
 
-  // 3D orbit — background drag rotates the cluster; node drag handled by vis as normal
-  const _gc = document.getElementById('gc');
-  let _rx = 0, _ry = 0, _orbiting = false, _lx = 0, _ly = 0;
-  net.on('dragStart', p => {
-    if (p.nodes.length === 0) {
-      _orbiting = true;
-      _lx = p.event.center.x;
-      _ly = p.event.center.y;
-      _gc.style.cursor = 'grabbing';
-    }
-  });
-  window.addEventListener('mousemove', e => {
-    if (!_orbiting) return;
-    _ry = Math.max(-50, Math.min(50, _ry + (e.clientX - _lx) * 0.22));
-    _rx = Math.max(-35, Math.min(35, _rx - (e.clientY - _ly) * 0.22));
-    _lx = e.clientX; _ly = e.clientY;
-    _gc.style.transform = `rotateX(${_rx}deg) rotateY(${_ry}deg)`;
-  });
-  net.on('dragEnd', () => { _orbiting = false; _gc.style.cursor = ''; });
+  graph = ForceGraph3D()(gc)
+    .width(gc.offsetWidth).height(gc.offsetHeight)
+    .backgroundColor('#0d0d10')
+    .graphData({
+      nodes: RAW_NODES.map(n => ({...n})),
+      links: RAW_EDGES.map(e => ({ source: e.from, target: e.to, type: e.type }))
+    })
+    .nodeLabel(n => n.id)
+    .nodeVal(n => n.isDir ? 8 : 2)
+    .nodeColor(getColor)
+    .nodeOpacity(0.9)
+    .nodeResolution(16)
+    .linkColor(l => l.type === 'imports' ? 'rgba(179,134,0,0.9)' : 'rgba(120,100,220,0.22)')
+    .linkWidth(l => l.type === 'imports' ? 1.5 : 0.5)
+    .linkDirectionalArrowLength(l => l.type === 'imports' ? 5 : 0)
+    .linkDirectionalArrowRelPos(1)
+    .linkCurvature(0.15)
+    .enableNodeDrag(true)
+    .onNodeClick(node => {
+      selectedNodeId = node.id;
+      graph.nodeColor(getColor);
+      showDetail(node.id);
+    })
+    .onBackgroundClick(() => {
+      selectedNodeId = null;
+      graph.nodeColor(getColor);
+      closeDetail();
+    })
+    .onEngineStop(() => { stab.style.display = 'none'; });
+
+  new ResizeObserver(() => graph.width(gc.offsetWidth).height(gc.offsetHeight)).observe(gc);
+  document.getElementById('stats').textContent = `${RAW_NODES.length} nodes · ${RAW_EDGES.length} edges`;
 }
 
-// ── layout switching ─────────────────────────────────────────────────────────
+// ── layout switching ──────────────────────────────────────────────────────────
 function setupLayoutBtns() {
   document.querySelectorAll('.lbtn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -434,58 +386,40 @@ function setupLayoutBtns() {
     });
   });
 }
-
 function switchLayout(mode) {
-  if (!net) return;
-  const stab = document.getElementById('stab');
-  stab.style.display = 'flex';
-  if (mode === 'force') {
-    net.setOptions({
-      physics: { enabled: true, solver: 'forceAtlas2Based',
-        forceAtlas2Based: { gravitationalConstant:-55, centralGravity:0.005, springLength:140, springConstant:0.05, damping:0.4, avoidOverlap:0.3 },
-        stabilization: { enabled:true, iterations:200, updateInterval:25 },
-        maxVelocity:50, minVelocity:0.75 },
-      layout: { hierarchical: { enabled: false }, improvedLayout: false },
-    });
-  } else if (mode === 'hierarchy') {
-    net.setOptions({ physics:{ enabled:false }, layout:{ hierarchical:{ enabled:true, direction:'UD', sortMethod:'hubsize', levelSeparation:130, nodeSpacing:90 } } });
-    setTimeout(() => { stab.style.display = 'none'; }, 600);
-  } else {
-    net.setOptions({ physics:{ enabled:false }, layout:{ hierarchical:{ enabled:false } } });
-    const byLevel = {};
-    allNodes.forEach(n => { const l = n.level||0; (byLevel[l]=byLevel[l]||[]).push(n.id); });
-    Object.entries(byLevel).forEach(([lvl, ids]) => {
-      const r = (parseInt(lvl)+1)*200;
-      ids.forEach((id,i) => {
-        const a = (2*Math.PI*i)/ids.length - Math.PI/2;
-        dsN.update([{ id, x: Math.cos(a)*r, y: Math.sin(a)*r }]);
-      });
-    });
-    net.fit({ animation:{ duration:500, easingFunction:'easeInOutQuad' } });
-    setTimeout(() => { stab.style.display = 'none'; }, 600);
-  }
+  if (!graph) return;
+  document.getElementById('stab').style.display = 'flex';
+  graph.dagMode(mode === 'force' ? null : mode === 'hierarchy' ? 'td' : 'radialout');
+  graph.d3ReheatSimulation();
 }
 
-// ── filters ──────────────────────────────────────────────────────────────────
+// ── filters ───────────────────────────────────────────────────────────────────
 function applyFilters() {
-  dsN.update(allNodes.map(n => ({ id:n.id, hidden:hiddenTypes.has(n.group) })));
-  dsE.update(allEdges.map((e,i) => ({ id:i, hidden:hiddenTypes.has(nodeMap[e.from]?.group)||hiddenTypes.has(nodeMap[e.to]?.group) })));
+  graph.nodeVisibility(n => !hiddenTypes.has(n.group));
+  graph.linkVisibility(l => {
+    const sid = typeof l.source === 'object' ? l.source.id : l.source;
+    const tid = typeof l.target === 'object' ? l.target.id : l.target;
+    return !hiddenTypes.has(nodeMap[sid]?.group) && !hiddenTypes.has(nodeMap[tid]?.group);
+  });
 }
 
-// ── detail panel ─────────────────────────────────────────────────────────────
+// ── detail panel ──────────────────────────────────────────────────────────────
 function focusNode(id) {
-  if (!net) return;
-  net.focus(id, { scale:1.8, animation:{ duration:500, easingFunction:'easeInOutQuad' } });
-  net.selectNodes([id]);
+  if (!graph) return;
+  const node = graph.graphData().nodes.find(n => n.id === id);
+  if (!node) return;
+  graph.cameraPosition({ x: node.x, y: node.y, z: (node.z||0) + 160 }, node, 600);
+  selectedNodeId = id;
+  graph.nodeColor(getColor);
   showDetail(id);
 }
-
+// ── detail panel ──────────────────────────────────────────────────────────────
 function showDetail(id) {
   const n = nodeMap[id];
   if (!n) return;
   const c = GC[n.group] || GC.other;
-  const outE = allEdges.filter(e => e.from === id);
-  const inE  = allEdges.filter(e => e.to   === id);
+  const outE = RAW_EDGES.filter(e => e.from === id);
+  const inE  = RAW_EDGES.filter(e => e.to   === id);
   document.getElementById('dn').textContent = n.label;
   document.getElementById('dn').style.color = c.text;
   const makeLinks = (edges, dir) => {
@@ -513,10 +447,13 @@ function showDetail(id) {
 
 function closeDetail() {
   document.getElementById('dp').classList.remove('open');
-  net?.unselectAll();
 }
 
-document.getElementById('dc').addEventListener('click', closeDetail);
+document.getElementById('dc').addEventListener('click', () => {
+  selectedNodeId = null;
+  graph?.nodeColor(getColor);
+  closeDetail();
+});
 
 buildSidebar();
 buildLegend();
