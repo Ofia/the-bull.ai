@@ -288,17 +288,57 @@ const RAW_EDGES = [
   {from:'CLAUDE.md', to:'docs/overview.md', type:'imports'},
 ];
 
+// Invisible center anchor — all level-0 nodes pull toward it, making it the hub
+RAW_NODES.push({id:'__ROOT__', label:'', group:'other', level:-1, isDir:true, __hidden:true});
+RAW_NODES.filter(n => n.level === 0).forEach(n => RAW_EDGES.push({from:'__ROOT__', to:n.id, type:'root'}));
+
+// 120 deterministic cross-edges — stitches all subtrees into one connected web
+;(()=>{
+  const r=(s=>{let v=s%2147483647;return()=>{v=v*16807%2147483647;return(v-1)/2147483646}})(7919);
+  const ids = RAW_NODES.filter(n=>!n.__hidden).map(n=>n.id);
+  for(let i=0;i<120;i++){
+    const a=ids[Math.floor(r()*ids.length)], b=ids[Math.floor(r()*ids.length)];
+    if(a!==b) RAW_EDGES.push({from:a, to:b, type:'semantic'});
+  }
+})();
+
 // ── state ─────────────────────────────────────────────────────────────────────
 let graph, nodeMap = {}, hiddenTypes = new Set(), selectedNodeId = null;
 nodeMap = Object.fromEntries(RAW_NODES.map(n => [n.id, n]));
+
+// ── node sprite renderer ──────────────────────────────────────────────────────
+const _sm = {};
+function nodeSprite(node) {
+  if (node.__hidden) {
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({transparent:true,opacity:0}));
+    s.scale.set(1,1,1);
+    return s;
+  }
+  const hex = (GC[node.group]||GC.other).border;
+  if (!_sm[hex]) {
+    const cv = document.createElement('canvas'); cv.width = cv.height = 32;
+    const cx = cv.getContext('2d'), n = parseInt(hex.slice(1),16);
+    const rv=(n>>16)&255, gv=(n>>8)&255, bv=n&255;
+    const gr = cx.createRadialGradient(16,16,0,16,16,16);
+    gr.addColorStop(0,   `rgba(${rv},${gv},${bv},1)`);
+    gr.addColorStop(0.35,`rgba(${rv},${gv},${bv},0.6)`);
+    gr.addColorStop(1,   `rgba(${rv},${gv},${bv},0)`);
+    cx.fillStyle = gr; cx.fillRect(0,0,32,32);
+    _sm[hex] = new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),transparent:true,depthWrite:false});
+  }
+  const sp = new THREE.Sprite(_sm[hex]);
+  sp.scale.set(node.isDir?12:6, node.isDir?12:6, 1);
+  return sp;
+}
 const getColor = n => n.id === selectedNodeId ? '#ffffff' : (GC[n.group] || GC.other).border;
 
 // ── sidebar ───────────────────────────────────────────────────────────────────
+const VISIBLE_NODES = RAW_NODES.filter(n => !n.__hidden);
 function buildSidebar() {
-  renderList(RAW_NODES);
+  renderList(VISIBLE_NODES);
   document.getElementById('fsearch').addEventListener('input', e => {
     const q = e.target.value.toLowerCase();
-    renderList(q ? RAW_NODES.filter(n => n.label.toLowerCase().includes(q)) : RAW_NODES);
+    renderList(q ? VISIBLE_NODES.filter(n => n.label.toLowerCase().includes(q)) : VISIBLE_NODES);
   });
 }
 function renderList(nodes) {
@@ -317,12 +357,12 @@ function renderList(nodes) {
   list.appendChild(frag);
 }
 function buildLegend() {
-  const types = [...new Set(RAW_NODES.map(n => n.group))].sort();
+  const types = [...new Set(VISIBLE_NODES.map(n => n.group))].sort();
   const leg = document.getElementById('legend');
   leg.innerHTML = '';
   types.forEach(type => {
     const c = GC[type] || GC.other;
-    const count = RAW_NODES.filter(n => n.group === type).length;
+    const count = VISIBLE_NODES.filter(n => n.group === type).length;
     const row = document.createElement('div'); row.className = 'li';
     const pill = document.createElement('button'); pill.className = 'pill';
     pill.textContent = `${ICONS[type]||'•'} ${type}`;
@@ -355,40 +395,45 @@ function renderGraph() {
       nodes: RAW_NODES.map(n => ({...n})),
       links: RAW_EDGES.map(e => ({ source: e.from, target: e.to, type: e.type }))
     })
-    .nodeLabel(n => n.id)
-    .nodeVal(n => n.isDir ? 4 : 1.5)
-    .nodeColor(getColor)
-    .nodeOpacity(1.0)
-    .nodeResolution(16)
+    .nodeLabel(n => n.__hidden ? '' : n.id)
+    .nodeThreeObject(nodeSprite)
+    .nodeThreeObjectExtend(false)
     .linkColor(l => {
-      if (l.type === 'imports') return 'rgba(179,134,0,0.98)';
+      if (l.type === 'imports') return 'rgba(179,134,0,0.9)';
+      if (l.type === 'root')    return 'rgba(255,255,255,0.06)';
+      if (l.type === 'semantic') return 'rgba(120,140,220,0.15)';
       const sid = typeof l.source === 'object' ? l.source.id : l.source;
-      return hexToRgba((GC[nodeMap[sid]?.group] || GC.other).border, 0.82);
+      return hexToRgba((GC[nodeMap[sid]?.group] || GC.other).border, 0.2);
     })
-    .linkWidth(l => l.type === 'imports' ? 2.5 : 1.5)
+    .linkWidth(l => l.type === 'imports' ? 1.5 : 0.4)
     .linkDirectionalArrowLength(l => l.type === 'imports' ? 5 : 0)
     .linkDirectionalArrowRelPos(1)
     .linkCurvature(l => l.type === 'imports' ? 0.5 : 0.35)
     .enableNodeDrag(true)
     .onNodeClick(node => {
+      if (node.__hidden) return;
       selectedNodeId = node.id;
-      graph.nodeColor(getColor);
       showDetail(node.id);
     })
     .onBackgroundClick(() => {
       selectedNodeId = null;
-      graph.nodeColor(getColor);
       closeDetail();
     })
     .onEngineStop(() => { stab.style.display = 'none'; });
 
-  // dense but distinct: nodes stay separate, edges visible between them
-  graph.d3Force('charge').strength(-25);
-  graph.d3Force('link').distance(12).strength(2);
-  graph.d3Force('center').strength(0.6);
+  // Pin root anchor at origin so all subtrees orbit the center
+  const rootNode = graph.graphData().nodes.find(n => n.id === '__ROOT__');
+  if (rootNode) { rootNode.fx = 0; rootNode.fy = 0; rootNode.fz = 0; }
+
+  // Weak repulsion + very short links + strong center → one cohesive blob
+  graph.d3Force('charge').strength(-6);
+  graph.d3Force('link').distance(l => l.type==='root' ? 8 : 4).strength(l => l.type==='root' ? 2.5 : 1.2);
+  graph.d3Force('center').strength(2.0);
 
   new ResizeObserver(() => graph.width(gc.offsetWidth).height(gc.offsetHeight)).observe(gc);
-  document.getElementById('stats').textContent = `${RAW_NODES.length} nodes · ${RAW_EDGES.length} edges`;
+  const visibleNodes = RAW_NODES.filter(n => !n.__hidden).length;
+  const visibleEdges = RAW_EDGES.filter(e => e.type !== 'root').length;
+  document.getElementById('stats').textContent = `${visibleNodes} nodes · ${visibleEdges} edges`;
 }
 
 // ── layout switching ──────────────────────────────────────────────────────────
