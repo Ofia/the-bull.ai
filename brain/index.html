@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Business Brain — Aldebaran Labs</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Display:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/three@0.165.0/build/three.min.js"></script>
 <script src="https://unpkg.com/3d-force-graph@1.73.4/dist/3d-force-graph.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -352,8 +353,16 @@ function renderGraph() {
     .nodeLabel(n => n.id)
     .nodeVal(n => n.isDir ? 8 : 2)
     .nodeColor(getColor)
-    .nodeOpacity(0.9)
+    .nodeOpacity(1.0)
     .nodeResolution(16)
+    .nodeThreeObject(n => {
+      const c = GC[n.group] || GC.other;
+      const r = n.isDir ? 20 : 10;
+      const geo = new THREE.SphereGeometry(r, 12, 12);
+      const mat = new THREE.MeshBasicMaterial({ color: c.border, transparent: true, opacity: 0.12, depthWrite: false });
+      return new THREE.Mesh(geo, mat);
+    })
+    .nodeThreeObjectExtend(true)
     .linkColor(l => l.type === 'imports' ? 'rgba(179,134,0,0.95)' : 'rgba(140,110,255,0.55)')
     .linkWidth(l => l.type === 'imports' ? 2 : 1)
     .linkDirectionalArrowLength(l => l.type === 'imports' ? 5 : 0)
@@ -371,6 +380,10 @@ function renderGraph() {
       closeDetail();
     })
     .onEngineStop(() => { stab.style.display = 'none'; });
+
+  // tighter cluster: less repulsion, shorter spring rest length
+  graph.d3Force('charge').strength(-40);
+  graph.d3Force('link').distance(20);
 
   new ResizeObserver(() => graph.width(gc.offsetWidth).height(gc.offsetHeight)).observe(gc);
   document.getElementById('stats').textContent = `${RAW_NODES.length} nodes · ${RAW_EDGES.length} edges`;
