@@ -337,6 +337,11 @@ function buildLegend() {
   });
 }
 
+function hexToRgba(hex, a) {
+  const n = parseInt(hex.replace('#',''), 16);
+  return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`;
+}
+
 // ── graph ─────────────────────────────────────────────────────────────────────
 function renderGraph() {
   const gc = document.getElementById('gc');
@@ -357,17 +362,28 @@ function renderGraph() {
     .nodeResolution(16)
     .nodeThreeObject(n => {
       const c = GC[n.group] || GC.other;
-      const r = n.isDir ? 20 : 10;
-      const geo = new THREE.SphereGeometry(r, 12, 12);
-      const mat = new THREE.MeshBasicMaterial({ color: c.border, transparent: true, opacity: 0.12, depthWrite: false });
-      return new THREE.Mesh(geo, mat);
+      const r = n.isDir ? 14 : 7;
+      const grp = new THREE.Group();
+      grp.add(new THREE.Mesh(
+        new THREE.SphereGeometry(r * 1.8, 12, 12),
+        new THREE.MeshBasicMaterial({ color: c.border, transparent: true, opacity: 0.22, depthWrite: false })
+      ));
+      grp.add(new THREE.Mesh(
+        new THREE.SphereGeometry(r * 3.5, 12, 12),
+        new THREE.MeshBasicMaterial({ color: c.border, transparent: true, opacity: 0.07, depthWrite: false })
+      ));
+      return grp;
     })
     .nodeThreeObjectExtend(true)
-    .linkColor(l => l.type === 'imports' ? 'rgba(179,134,0,0.95)' : 'rgba(140,110,255,0.55)')
-    .linkWidth(l => l.type === 'imports' ? 2 : 1)
+    .linkColor(l => {
+      if (l.type === 'imports') return 'rgba(179,134,0,0.98)';
+      const sid = typeof l.source === 'object' ? l.source.id : l.source;
+      return hexToRgba((GC[nodeMap[sid]?.group] || GC.other).border, 0.82);
+    })
+    .linkWidth(l => l.type === 'imports' ? 2.5 : 1.5)
     .linkDirectionalArrowLength(l => l.type === 'imports' ? 5 : 0)
     .linkDirectionalArrowRelPos(1)
-    .linkCurvature(l => l.type === 'imports' ? 0.35 : 0.2)
+    .linkCurvature(l => l.type === 'imports' ? 0.5 : 0.35)
     .enableNodeDrag(true)
     .onNodeClick(node => {
       selectedNodeId = node.id;
@@ -381,9 +397,10 @@ function renderGraph() {
     })
     .onEngineStop(() => { stab.style.display = 'none'; });
 
-  // tighter cluster: less repulsion, shorter spring rest length
-  graph.d3Force('charge').strength(-40);
-  graph.d3Force('link').distance(20);
+  // collapse into one dense blob
+  graph.d3Force('charge').strength(-8);
+  graph.d3Force('link').distance(8).strength(3);
+  graph.d3Force('center').strength(1);
 
   new ResizeObserver(() => graph.width(gc.offsetWidth).height(gc.offsetHeight)).observe(gc);
   document.getElementById('stats').textContent = `${RAW_NODES.length} nodes · ${RAW_EDGES.length} edges`;
