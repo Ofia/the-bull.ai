@@ -66,38 +66,6 @@
     }
 
     /* ── ANNOUNCEMENT BAR ── */
-    #announce {
-      background: #0d0d0d;
-      color: #fff;
-      text-align: center;
-      padding: 10px 48px;
-      font-size: 13px;
-      font-weight: 500;
-      position: relative;
-    }
-
-    #announce a {
-      color: inherit;
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
-    #announce-close {
-      position: absolute;
-      right: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.55);
-      cursor: pointer;
-      font-size: 20px;
-      line-height: 1;
-      padding: 4px 8px;
-    }
-
-    #announce-close:hover { color: #fff; }
-
     /* ── NAV ── */
     nav {
       position: sticky;
@@ -1529,13 +1497,6 @@
 </head>
 <body>
 
-  <!-- ── ANNOUNCEMENT BAR ── -->
-  <div id="announce">
-    The Bull Contracts is now live — AI-powered legal process management.
-    <a href="/contracts">Try it free →</a>
-    <button id="announce-close" aria-label="Dismiss">×</button>
-  </div>
-
   <!-- ── NAV ── -->
   <nav>
 
@@ -2071,10 +2032,7 @@
   </div>
 
   <script>
-    // Dismiss announcement bar
-    document.getElementById('announce-close').addEventListener('click', function () {
-      document.getElementById('announce').style.display = 'none';
-    });
+
 
     // Mobile hamburger toggle
     const hamburger  = document.getElementById('hamburger');
