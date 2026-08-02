@@ -1,0 +1,744 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Bull Developer â€” Live Mockup</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:"Inter","Helvetica Neue",Arial,system-ui,sans-serif;
+  background:#f5f4f0;
+  display:flex;
+  min-height:100vh;
+  font-size:14px;
+  color:#1a1a1a;
+}
+
+/* â”€â”€ SIDEBAR â”€â”€ */
+.sidebar{
+  width:220px;flex-shrink:0;
+  background:#f5f5f3;
+  border-right:1px solid #d8d8d3;
+  display:flex;flex-direction:column;
+  height:100vh;position:sticky;top:0;
+}
+
+.brand{
+  padding:16px 16px 14px;
+  border-bottom:1px solid #d8d8d3;
+  display:flex;align-items:center;gap:10px;
+  flex-shrink:0;
+}
+
+.brand-mark{height:18px;width:auto;flex-shrink:0}
+
+.brand-name{font-size:14px;font-weight:700;color:#1a1a1a;line-height:1.1}
+
+.brand-tag{
+  font-family:"JetBrains Mono","Consolas",monospace;
+  font-size:10px;font-weight:600;letter-spacing:0.72px;
+  text-transform:uppercase;color:#9e9d98;margin-top:1px;
+}
+
+.nav{flex:1;overflow-y:auto;padding:16px 10px;display:flex;flex-direction:column}
+
+.nav-item{
+  display:flex;align-items:center;gap:9px;
+  padding:6px 10px;border-radius:7px;
+  font-size:14px;font-weight:500;color:#1a1a1a;
+  cursor:pointer;text-decoration:none;
+  margin-bottom:2px;transition:background 120ms;
+}
+
+.nav-item.active{
+  background:#1a1a1a;color:#fff;font-weight:600;
+}
+
+.nav-item:not(.active):hover{background:rgba(28,28,28,0.04)}
+
+.nav-icon{width:16px;height:16px;flex-shrink:0;display:flex}
+
+.nav-divider{height:1px;background:#d8d8d3;margin:6px 0}
+
+.profile{
+  border-top:1px solid #d8d8d3;
+  padding:10px 10px 14px;flex-shrink:0;
+}
+
+.profile-btn{
+  display:flex;align-items:center;gap:9px;
+  padding:7px 10px;border-radius:7px;cursor:pointer;
+}
+
+.avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:#1a1a1a;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:700;
+  color:#fff;flex-shrink:0;
+}
+
+.profile-name{font-size:13px;font-weight:500;color:#1a1a1a}
+
+/* â”€â”€ MAIN â”€â”€ */
+.main{
+  flex:1;
+  background:#fff;
+  background-image:radial-gradient(circle, #c4c4be 1px, transparent 1px);
+  background-size:24px 24px;
+  padding:28px 48px;
+  overflow-y:auto;
+}
+
+.content{max-width:1140px;margin:0 auto}
+
+/* Greeting */
+.greeting-h{
+  font-size:26px;font-weight:800;color:#1a1a1a;
+  letter-spacing:-0.02em;margin-bottom:4px;line-height:1.2;
+}
+
+.greeting-sub{font-size:13px;color:#9e9d98;margin-bottom:26px}
+
+/* Section label */
+.slabel{
+  font-family:"JetBrains Mono","Consolas",monospace;
+  font-size:8.5px;font-weight:700;letter-spacing:0.14em;
+  text-transform:uppercase;color:#9e9d98;margin-bottom:12px;
+}
+
+/* â”€â”€ CLOCK + WEATHER â”€â”€ */
+.cw-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px;
+}
+
+.card{
+  background:#fff;border:1px solid #d8d8d3;
+  border-radius:10px;padding:14px 16px;
+}
+
+.clock-inner{display:flex;align-items:center;gap:16px}
+
+.clock-time{
+  font-size:22px;font-weight:700;color:#1a1a1a;
+  letter-spacing:-0.02em;line-height:1.1;
+}
+
+.clock-date{font-size:11px;color:#9e9d98;margin-top:4px}
+
+.weather-val{
+  font-size:36px;font-weight:700;color:#1a1a1a;
+  letter-spacing:-0.03em;line-height:1;
+}
+
+.weather-desc{font-size:12px;color:#9e9d98;margin-top:6px}
+
+/* â”€â”€ KPI ROW â”€â”€ */
+.kpi-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px;
+}
+
+.kpi{
+  background:#fff;border-radius:10px;padding:13px 15px;
+  border:1px solid transparent;
+}
+
+.kpi-label{
+  font-family:"JetBrains Mono","Consolas",monospace;
+  font-size:8.5px;letter-spacing:0.11em;text-transform:uppercase;
+  color:#9e9d98;margin-bottom:5px;
+}
+
+.kpi-val{
+  font-size:28px;font-weight:700;letter-spacing:-0.02em;line-height:1;
+  margin-bottom:3px;
+}
+
+.kpi-sub{font-size:10px;color:#9e9d98}
+
+/* â”€â”€ MAIN GRID â”€â”€ */
+.main-grid{
+  display:grid;grid-template-columns:1fr 320px;gap:14px;align-items:start;
+}
+
+/* Unit Board */
+.unit-board{margin-bottom:12px}
+
+.project-row{margin-bottom:18px}
+.project-name{
+  font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:8px;
+  display:flex;align-items:center;gap:8px;
+}
+.project-loc{font-size:11px;color:#9e9d98;font-weight:400}
+.project-count{
+  font-family:"JetBrains Mono","Consolas",monospace;
+  font-size:9px;font-weight:600;padding:2px 7px;
+  border-radius:100px;background:rgba(0,0,0,0.06);color:#9e9d98;
+  letter-spacing:0.06em;
+}
+
+.units-wrap{display:flex;gap:8px;flex-wrap:wrap}
+
+.unit-card{
+  border:1px solid #d8d8d3;border-radius:8px;
+  padding:10px;display:inline-flex;flex-direction:column;
+  gap:4px;min-width:76px;
+}
+
+.unit-code{
+  font-family:"JetBrains Mono","Consolas",monospace;
+  font-size:12px;font-weight:700;color:#1a1a1a;
+}
+
+.unit-status{font-size:10px;font-weight:600}
+
+.progress-bar{width:100%;height:3px;background:#d8d8d3;border-radius:2px;margin-top:2px}
+.progress-fill{height:100%;border-radius:2px;background:#1a1a1a;transition:width 400ms}
+
+.unit-client{
+  font-size:10px;color:#6b6b67;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* Pending */
+.pending-item{
+  background:#fff;border:1px solid #d8d8d3;
+  border-radius:8px;padding:11px;
+  display:flex;align-items:flex-start;
+  justify-content:space-between;gap:10px;
+  margin-bottom:7px;
+}
+
+.p-info-code{font-size:12px;font-weight:600;color:#1a1a1a;margin-bottom:2px}
+.p-info-code span{font-weight:400;color:#9e9d98}
+.p-status{
+  font-family:"JetBrains Mono","Consolas",monospace;
+  font-size:9px;letter-spacing:0.07em;text-transform:uppercase;
+}
+
+.p-actions{display:flex;gap:5px;flex-shrink:0}
+
+.btn-primary{
+  padding:4px 9px;background:#1a1a1a;color:#fff;
+  border:none;border-radius:7px;font-size:10px;
+  font-weight:600;cursor:pointer;
+}
+
+.btn-ghost{
+  padding:4px 9px;background:transparent;
+  color:#9e9d98;border:1px solid #d8d8d3;
+  border-radius:7px;font-size:10px;cursor:pointer;
+}
+
+.btn-danger{
+  padding:4px 9px;background:rgba(220,38,38,0.06);
+  color:#b91c1c;border:1px solid rgba(220,38,38,0.20);
+  border-radius:7px;font-size:10px;font-weight:600;cursor:pointer;
+}
+
+/* â”€â”€ RIGHT COLUMN â”€â”€ */
+.right-col{display:flex;flex-direction:column;gap:12px}
+
+/* Pie chart */
+.pie-wrap{display:flex;align-items:center;gap:16px}
+
+.pie-legend{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+
+.pie-legend-item{display:flex;align-items:center;gap:7px}
+
+.pie-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+
+.pie-legend-name{font-size:11px;color:#6b6b67;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pie-legend-n{font-size:11px;color:#1a1a1a;font-weight:600;margin-left:auto;flex-shrink:0}
+
+/* Revenue chart */
+.revenue-bars{
+  display:flex;align-items:flex-end;gap:5px;height:60px;
+  margin-top:12px;
+}
+
+.rev-bar-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
+.rev-bar{width:100%;border-radius:3px 3px 0 0;min-height:4px;transition:height 400ms}
+.rev-mo{font-size:9px;color:#9e9d98;font-family:"JetBrains Mono","Consolas",monospace}
+
+/* Follow-ups */
+.fu-item{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:8px;border:1px solid #d8d8d3;
+  border-radius:7px;cursor:pointer;
+  background:#fff;margin-bottom:6px;
+}
+
+.fu-dot{width:7px;height:7px;border-radius:50%;margin-top:3px;flex-shrink:0}
+.fu-name{font-size:11px;font-weight:600;color:#1a1a1a;margin-bottom:1px}
+.fu-sub{font-size:10px;color:#9e9d98}
+
+/* â”€â”€ FAB â”€â”€ */
+.fab{
+  position:fixed;bottom:24px;right:24px;
+  width:52px;height:52px;border-radius:50%;
+  background:#1a1a1a;border:none;color:#fff;
+  cursor:pointer;z-index:200;
+  box-shadow:0 4px 24px rgba(0,0,0,0.18);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 0.2s ease;
+}
+
+.fab:hover{transform:scale(1.08)}
+
+/* Revenue summary card */
+.rev-summary{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:4px;
+}
+
+.rev-total{font-size:20px;font-weight:700;color:#1a1a1a;letter-spacing:-0.02em}
+.rev-label{font-size:10px;color:#9e9d98}
+.rev-change{
+  font-size:11px;font-weight:600;color:#15803d;
+  background:rgba(22,163,74,0.10);padding:2px 7px;
+  border-radius:100px;
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="brand">
+    <img src="/icon.svg" class="brand-mark" alt="The Bull">
+    <div>
+      <div class="brand-name">The Bull</div>
+      <div class="brand-tag">Developer</div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <!-- CEO Overview â€” ACTIVE -->
+    <a class="nav-item active">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
+      CEO Overview
+    </a>
+    <a class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
+      Finances
+    </a>
+    <a class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+      Acquisition
+    </a>
+    <a class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg></span>
+      Permits
+    </a>
+    <a class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V5h14v16"/><path d="M5 9h14M5 13h14"/><rect x="8" y="10" width="2.5" height="2.5"/><rect x="13.5" y="10" width="2.5" height="2.5"/><path d="M10 21v-5h4v5"/></svg></span>
+      Architecture
+    </a>
+    <a class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></span>
+      Sales
+    </a>
+    <a class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+      Customer Service
+    </a>
+    <div class="nav-divider"></div>
+    <a class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
+      Clients
+    </a>
+    <a class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+      Employees
+    </a>
+    <a class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg></span>
+      Voice Agent
+    </a>
+    <div class="nav-divider"></div>
+    <a class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="10" ry="4"/><path d="M2 12c0 2.21 4.48 4 10 4s10-1.79 10-4"/><path d="M2 12v4c0 2.21 4.48 4 10 4s10-1.79 10-4v-4"/></svg></span>
+      Core Data
+    </a>
+  </div>
+
+  <div class="profile">
+    <div class="profile-btn">
+      <div class="avatar">OF</div>
+      <span class="profile-name">ofir</span>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+<div class="content">
+
+  <!-- Greeting -->
+  <h1 class="greeting-h" id="greeting">Good morning, Ofir</h1>
+  <p class="greeting-sub">Here's your Urbania developer overview.</p>
+
+  <!-- Clock + Weather -->
+  <div class="cw-grid">
+    <div class="card">
+      <div class="slabel">Clock</div>
+      <div class="clock-inner">
+        <svg id="clockSvg" viewBox="0 0 100 100" width="80" height="80" style="flex-shrink:0">
+          <circle cx="50" cy="50" r="46" fill="white" stroke="#d8d8d3" stroke-width="2"/>
+          <!-- tick marks -->
+          <g id="ticks"></g>
+          <!-- hands -->
+          <line id="hourHand" x1="50" y1="50" x2="50" y2="25" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+          <line id="minHand" x1="50" y1="50" x2="50" y2="17" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+          <line id="secHand" x1="50" y1="50" x2="50" y2="13" stroke="#d4a017" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="50" cy="50" r="3" fill="#1a1a1a"/>
+        </svg>
+        <div>
+          <div class="clock-time" id="clockTime">11:42 AM</div>
+          <div class="clock-date" id="clockDate">Saturday, August 1, 2026</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="slabel">Weather</div>
+      <div class="weather-val">24Â°</div>
+      <div class="weather-desc">Partly Cloudy Â· San JosÃ©, CR</div>
+    </div>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="kpi-row">
+    <div class="kpi" style="border-color:rgba(22,163,74,0.28)">
+      <div class="kpi-label">Available Units</div>
+      <div class="kpi-val" style="color:#15803d">4</div>
+      <div class="kpi-sub">Ready to sell</div>
+    </div>
+    <div class="kpi" style="border-color:rgba(37,99,235,0.28)">
+      <div class="kpi-label">In Progress</div>
+      <div class="kpi-val" style="color:#1d4ed8">11</div>
+      <div class="kpi-sub">Active contracts</div>
+    </div>
+    <div class="kpi" style="border-color:rgba(229,96,42,0.28)">
+      <div class="kpi-label">Needs Attention</div>
+      <div class="kpi-val" style="color:#b84200">3</div>
+      <div class="kpi-sub">Action required</div>
+    </div>
+    <div class="kpi" style="border-color:rgba(220,38,38,0.28)">
+      <div class="kpi-label">Follow-ups Today</div>
+      <div class="kpi-val" style="color:#b91c1c">6</div>
+      <div class="kpi-sub">Review today</div>
+    </div>
+  </div>
+
+  <!-- Main Grid -->
+  <div class="main-grid">
+
+    <!-- LEFT: Unit Board + Pending -->
+    <div>
+      <div class="card unit-board">
+        <div class="slabel">Unit Board</div>
+
+        <!-- Project 1 -->
+        <div class="project-row">
+          <div class="project-name">
+            Residencial Las Palmas
+            <span class="project-loc">San JosÃ©</span>
+            <span class="project-count">8 units</span>
+          </div>
+          <div class="units-wrap">
+            <div class="unit-card">
+              <div class="unit-code">LP-01</div>
+              <div class="unit-status" style="color:#15803d">Available</div>
+              <div><div class="progress-bar"><div class="progress-fill" style="width:30%;background:#15803d"></div></div><div style="font-size:9px;color:#9e9d98;margin-top:2px">Foundation</div></div>
+            </div>
+            <div class="unit-card">
+              <div class="unit-code">LP-02</div>
+              <div class="unit-status" style="color:#1d4ed8">Reserved</div>
+              <div><div class="progress-bar"><div class="progress-fill" style="width:55%;background:#1d4ed8"></div></div><div style="font-size:9px;color:#9e9d98;margin-top:2px">Framing</div></div>
+              <div class="unit-client">C. RodrÃ­guez</div>
+            </div>
+            <div class="unit-card">
+              <div class="unit-code">LP-03</div>
+              <div class="unit-status" style="color:#b84200">Under Contract</div>
+              <div><div class="progress-bar"><div class="progress-fill" style="width:82%;background:#b84200"></div></div><div style="font-size:9px;color:#9e9d98;margin-top:2px">Finishing</div></div>
+              <div class="unit-client">M. GarcÃ­a</div>
+            </div>
+            <div class="unit-card">
+              <div class="unit-code">LP-04</div>
+              <div class="unit-status" style="color:#15803d">Available</div>
+              <div><div class="progress-bar"><div class="progress-fill" style="width:15%;background:#15803d"></div></div><div style="font-size:9px;color:#9e9d98;margin-top:2px">Planning</div></div>
+            </div>
+            <div class="unit-card">
+              <div class="unit-code">LP-05</div>
+              <div class="unit-status" style="color:#1d4ed8">Reserved</div>
+              <div><div class="progress-bar"><div class="progress-fill" style="width:62%;background:#1d4ed8"></div></div><div style="font-size:9px;color:#9e9d98;margin-top:2px">Structure</div></div>
+              <div class="unit-client">R. VÃ¡squez</div>
+            </div>
+            <div class="unit-card">
+              <div class="unit-code">LP-07</div>
+              <div class="unit-status" style="color:#6b6b67">Transferred</div>
+              <div><div class="progress-bar"><div class="progress-fill" style="width:100%;background:#6b6b67"></div></div><div style="font-size:9px;color:#9e9d98;margin-top:2px">Complete</div></div>
+              <div class="unit-client">A. Mora</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="project-row">
+          <div class="project-name">
+            Torres del Sol
+            <span class="project-loc">Heredia</span>
+            <span class="project-count">12 units</span>
+          </div>
+          <div class="units-wrap">
+            <div class="unit-card">
+              <div class="unit-code">TS-A01</div>
+              <div class="unit-status" style="color:#b84200">Under Contract</div>
+              <div><div class="progress-bar"><div class="progress-fill" style="width:60%;background:#b84200"></div></div><div style="font-size:9px;color:#9e9d98;margin-top:2px">Structure</div></div>
+              <div class="unit-client">J. SolÃ­s</div>
+            </div>
+            <div class="unit-card">
+              <div class="unit-code">TS-A02</div>
+              <div class="unit-status" style="color:#1d4ed8">Reserved</div>
+              <div><div class="progress-bar"><div class="progress-fill" style="width:42%;background:#1d4ed8"></div></div><div style="font-size:9px;color:#9e9d98;margin-top:2px">Framing</div></div>
+              <div class="unit-client">P. Herrera</div>
+            </div>
+            <div class="unit-card">
+              <div class="unit-code">TS-A03</div>
+              <div class="unit-status" style="color:#15803d">Available</div>
+              <div><div class="progress-bar"><div class="progress-fill" style="width:22%;background:#15803d"></div></div><div style="font-size:9px;color:#9e9d98;margin-top:2px">Foundation</div></div>
+            </div>
+            <div class="unit-card">
+              <div class="unit-code">TS-B01</div>
+              <div class="unit-status" style="color:#15803d">Available</div>
+              <div><div class="progress-bar"><div class="progress-fill" style="width:22%;background:#15803d"></div></div><div style="font-size:9px;color:#9e9d98;margin-top:2px">Foundation</div></div>
+            </div>
+            <div style="display:flex;align-items:center;padding:10px;border:1px dashed #d8d8d3;border-radius:8px;color:#9e9d98;font-size:11px">+ 8 more units</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pending -->
+      <div class="card">
+        <div class="slabel">Pending</div>
+        <div class="pending-item">
+          <div>
+            <div class="p-info-code">LP-03 Â· <span>Permit Review</span></div>
+            <div class="p-status" style="color:#b84200">Awaiting Review</div>
+          </div>
+          <div class="p-actions">
+            <button class="btn-primary">Approve</button>
+            <button class="btn-ghost">Escalate</button>
+          </div>
+        </div>
+        <div class="pending-item">
+          <div>
+            <div class="p-info-code">TS-A02 Â· <span>Payment Collection</span></div>
+            <div class="p-status" style="color:#1d4ed8">New Task</div>
+          </div>
+          <div class="p-actions">
+            <button class="btn-primary">Process</button>
+            <button class="btn-ghost">Defer</button>
+          </div>
+        </div>
+        <div class="pending-item">
+          <div>
+            <div class="p-info-code">LP-06 Â· <span>Client Sign-off</span></div>
+            <div class="p-status" style="color:#b84200">Awaiting Human</div>
+          </div>
+          <div class="p-actions">
+            <button class="btn-primary">Confirm</button>
+            <button class="btn-danger">Reject</button>
+            <button class="btn-ghost">Go to dept â†’</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-col">
+
+      <!-- Active Projects Pie -->
+      <div class="card">
+        <div class="slabel">Active Projects</div>
+        <div class="pie-wrap">
+          <div style="flex-shrink:0">
+            <svg viewBox="0 0 42 42" width="100" height="100">
+              <!-- Las Palmas: 8/25 = 32% of circumference=100 â†’ dasharray 32 68, offset 25 -->
+              <circle cx="21" cy="21" r="15.9155" fill="none" stroke="#3cb4c8" stroke-width="8"
+                stroke-dasharray="32 68" stroke-dashoffset="25"/>
+              <!-- Torres del Sol: 12/25 = 48%, offset = 25-32 = -7 â†’ 93 -->
+              <circle cx="21" cy="21" r="15.9155" fill="none" stroke="#d4a017" stroke-width="8"
+                stroke-dasharray="48 52" stroke-dashoffset="93"/>
+              <!-- Villas Montecarlo: 5/25 = 20%, offset = 93-48 = 45 -->
+              <circle cx="21" cy="21" r="15.9155" fill="none" stroke="#1e3a6e" stroke-width="8"
+                stroke-dasharray="20 80" stroke-dashoffset="45"/>
+              <circle cx="21" cy="21" r="10" fill="#fff"/>
+              <text x="21" y="20.5" text-anchor="middle" dominant-baseline="middle" font-size="6" font-weight="700" fill="#1a1a1a">25</text>
+              <text x="21" y="26" text-anchor="middle" dominant-baseline="middle" font-size="3.5" fill="#9e9d98">units</text>
+            </svg>
+          </div>
+          <div class="pie-legend">
+            <div class="pie-legend-item">
+              <div class="pie-dot" style="background:#3cb4c8"></div>
+              <span class="pie-legend-name">Las Palmas</span>
+              <span class="pie-legend-n">8</span>
+            </div>
+            <div class="pie-legend-item">
+              <div class="pie-dot" style="background:#d4a017"></div>
+              <span class="pie-legend-name">Torres del Sol</span>
+              <span class="pie-legend-n">12</span>
+            </div>
+            <div class="pie-legend-item">
+              <div class="pie-dot" style="background:#1e3a6e"></div>
+              <span class="pie-legend-name">Villas Montecarlo</span>
+              <span class="pie-legend-n">5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Revenue -->
+      <div class="card">
+        <div class="slabel">Monthly Revenue (â‚¡M)</div>
+        <div class="rev-summary">
+          <div>
+            <div class="rev-total">â‚¡142M</div>
+            <div class="rev-label">August 2026</div>
+          </div>
+          <div class="rev-change">â†‘ 18%</div>
+        </div>
+        <div class="revenue-bars">
+          <div class="rev-bar-wrap">
+            <div class="rev-bar" style="height:38px;background:#d8d8d3"></div>
+            <div class="rev-mo">Mar</div>
+          </div>
+          <div class="rev-bar-wrap">
+            <div class="rev-bar" style="height:52px;background:#d8d8d3"></div>
+            <div class="rev-mo">Apr</div>
+          </div>
+          <div class="rev-bar-wrap">
+            <div class="rev-bar" style="height:44px;background:#d8d8d3"></div>
+            <div class="rev-mo">May</div>
+          </div>
+          <div class="rev-bar-wrap">
+            <div class="rev-bar" style="height:65px;background:#d8d8d3"></div>
+            <div class="rev-mo">Jun</div>
+          </div>
+          <div class="rev-bar-wrap">
+            <div class="rev-bar" style="height:58px;background:#d8d8d3"></div>
+            <div class="rev-mo">Jul</div>
+          </div>
+          <div class="rev-bar-wrap">
+            <div class="rev-bar" style="height:60px;background:#1a1a1a"></div>
+            <div class="rev-mo" style="color:#1a1a1a;font-weight:700">Aug</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Follow-ups -->
+      <div class="card">
+        <div class="slabel">Today's Follow-ups</div>
+        <div class="fu-item">
+          <div class="fu-dot" style="background:#1d4ed8"></div>
+          <div>
+            <div class="fu-name">MarÃ­a GarcÃ­a</div>
+            <div class="fu-sub">Assignee: Carlos Mora Â· LP-03</div>
+          </div>
+        </div>
+        <div class="fu-item">
+          <div class="fu-dot" style="background:#b84200"></div>
+          <div>
+            <div class="fu-name">Roberto VÃ¡squez</div>
+            <div class="fu-sub">Assignee: Sofia Arce Â· LP-05</div>
+          </div>
+        </div>
+        <div class="fu-item">
+          <div class="fu-dot" style="background:#15803d"></div>
+          <div>
+            <div class="fu-name">Ana SolÃ­s</div>
+            <div class="fu-sub">Assignee: Luis PÃ©rez Â· TS-A01</div>
+          </div>
+        </div>
+        <div class="fu-item">
+          <div class="fu-dot" style="background:#b91c1c"></div>
+          <div>
+            <div class="fu-name">Pedro Herrera</div>
+            <div class="fu-sub">Assignee: Carlos Mora Â· TS-A02</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- FAB -->
+<button class="fab" title="Toro â€” Agente Urbania">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="7" width="18" height="13" rx="3"/>
+    <path d="M8 7V5a4 4 0 0 1 8 0v2"/>
+    <circle cx="9" cy="13" r="1" fill="currentColor" stroke="none"/>
+    <circle cx="15" cy="13" r="1" fill="currentColor" stroke="none"/>
+  </svg>
+</button>
+
+<script>
+// Tick marks
+const ticksG = document.getElementById('ticks');
+for(let i=0;i<12;i++){
+  const a=(i*30-90)*Math.PI/180;
+  const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1', 50+38*Math.cos(a));
+  line.setAttribute('y1', 50+38*Math.sin(a));
+  line.setAttribute('x2', 50+44*Math.cos(a));
+  line.setAttribute('y2', 50+44*Math.sin(a));
+  line.setAttribute('stroke','#d8d8d3');
+  line.setAttribute('stroke-width','1.5');
+  ticksG.appendChild(line);
+}
+
+function updateClock(){
+  const now=new Date();
+  const s=now.getSeconds(), m=now.getMinutes(), h=now.getHours()%12;
+  const secDeg=s*6, minDeg=m*6+s*0.1, hourDeg=h*30+m*0.5;
+
+  function setHand(id,deg,len){
+    const r=(deg-90)*Math.PI/180;
+    const el=document.getElementById(id);
+    el.setAttribute('x2', 50+len*Math.cos(r));
+    el.setAttribute('y2', 50+len*Math.sin(r));
+  }
+
+  setHand('hourHand', hourDeg, 27);
+  setHand('minHand', minDeg, 36);
+  setHand('secHand', secDeg, 40);
+
+  // Digital time
+  const ampm=now.getHours()<12?'AM':'PM';
+  const hh=now.getHours()%12||12;
+  const mm=String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('clockTime').textContent=`${hh}:${mm} ${ampm}`;
+
+  // Date
+  const dateStr=now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  document.getElementById('clockDate').textContent=dateStr;
+
+  // Greeting
+  const firstName='Ofir';
+  let greet;
+  if(now.getHours()<12) greet=`Good morning, ${firstName}`;
+  else if(now.getHours()<18) greet=`Good afternoon, ${firstName}`;
+  else greet=`Good evening, ${firstName}`;
+  document.getElementById('greeting').textContent=greet;
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+</script>
+</body>
+</html>
+
