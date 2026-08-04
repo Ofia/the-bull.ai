@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service — The Bull</title>
+  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Display:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:             #ffffff;
+      --bg2:            #f5f5f3;
+      --border:         #d8d8d3;
+      --primary:        #1a1a1a;
+      --muted:          #8a8a85;
+      --accent:         #b38600;
+      --sans:           'Inter', sans-serif;
+      --display:        'Inter Display', sans-serif;
+      --mono:           'JetBrains Mono', monospace;
+      --color-heading:  #1b1b1b;
+      --color-body:     #3f3f3a;
+      --color-secondary:#616159;
+      --color-tertiary: #8a8a85;
+      --color-subtle:   #b0b0aa;
+      --color-caption:  #c8c8c2;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--color-body); font-family: var(--sans); font-size: 16px; font-weight: 500; line-height: 1.375; letter-spacing: -0.01em; overflow-x: hidden; }
+
+    nav {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 64px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { height: 18px; width: auto; object-fit: contain; }
+    .nav-logo-text { font-size: 15px; font-weight: 700; color: var(--primary); letter-spacing: -0.02em; }
+    .nav-back { font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; transition: color 0.12s; }
+    .nav-back:hover { color: var(--primary); }
+
+    .doc-wrap { max-width: 720px; margin: 0 auto; padding: 80px 48px 120px; }
+
+    .doc-eyebrow {
+      font-family: var(--display);
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.72px; text-transform: uppercase;
+      color: var(--color-caption); margin-bottom: 16px;
+    }
+
+    .doc-title {
+      font-family: var(--display);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 600; letter-spacing: -0.02em;
+      line-height: 1.07; color: var(--color-heading); margin-bottom: 12px;
+    }
+
+    .doc-meta {
+      font-size: 13px; color: var(--muted);
+      margin-bottom: 56px; padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .doc-section { margin-bottom: 48px; }
+
+    .doc-section h2 {
+      font-family: var(--display);
+      font-size: 18px; font-weight: 600;
+      letter-spacing: -0.015em;
+      margin-bottom: 14px; color: var(--color-heading);
+    }
+
+    .doc-section p {
+      font-size: 15px; font-weight: 500;
+      color: var(--color-body);
+      line-height: 1.6; letter-spacing: -0.16px; margin-bottom: 12px;
+    }
+
+    .doc-section ul { margin: 0 0 12px 0; padding-left: 20px; }
+
+    .doc-section ul li {
+      font-size: 15px; font-weight: 500;
+      color: var(--color-body);
+      line-height: 1.6; letter-spacing: -0.16px; margin-bottom: 6px;
+    }
+
+    .doc-section a { color: var(--accent); text-decoration: none; }
+    .doc-section a:hover { text-decoration: underline; }
+
+    .doc-highlight {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 16px 20px; margin: 20px 0;
+      font-size: 14px; color: rgba(13,13,13,0.75); line-height: 1.7;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .footer-logo img { height: 18px; width: auto; object-fit: contain; }
+    .footer-logo-text { font-size: 14px; font-weight: 700; color: var(--primary); letter-spacing: -0.01em; }
+    .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+    .footer-link { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.12s; }
+    .footer-link:hover { color: var(--primary); }
+    .footer-copy { font-size: 13px; color: var(--muted); }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; }
+      .doc-wrap { padding: 56px 20px 80px; }
+      footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">
+      <img src="/icon.svg" alt="The Bull" />
+      <span class="nav-logo-text">The Bull</span>
+    </a>
+    <a href="/" class="nav-back">← Back to home</a>
+  </nav>
+
+  <main>
+    <div class="doc-wrap">
+
+      <div class="doc-eyebrow">Legal</div>
+      <h1 class="doc-title">Terms of Service</h1>
+      <div class="doc-meta">Effective date: August 3, 2026 &nbsp;·&nbsp; Aldebaran Labs LLC</div>
+
+      <div class="doc-section">
+        <h2>1. Acceptance of terms</h2>
+        <p>By accessing or using any product or service offered by Aldebaran Labs LLC under The Bull brand (collectively, the "Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree, do not use the Service.</p>
+        <p>If you are using the Service on behalf of an organization, you represent that you have authority to bind that organization to these Terms, and "you" refers to that organization.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>2. Description of service</h2>
+        <p>The Bull is a suite of AI-powered business software products operated by Aldebaran Labs LLC ("we", "us", "our"), including:</p>
+        <ul>
+          <li><strong>The Bull Contracts</strong> — AI-assisted legal process management: contract ingestion, obligation tracking, deadline alerts, and automated reminders.</li>
+          <li><strong>The Bull Properties</strong> — AI-powered real estate portfolio intelligence and analytics.</li>
+          <li>Additional products announced at <a href="https://www.the-bull.ai">www.the-bull.ai</a> from time to time.</li>
+        </ul>
+        <p>We reserve the right to modify, suspend, or discontinue any part of the Service at any time with reasonable notice.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>3. Accounts and access</h2>
+        <ul>
+          <li>You must provide accurate registration information and keep it up to date.</li>
+          <li>You are responsible for maintaining the confidentiality of your credentials and for all activity that occurs under your account.</li>
+          <li>You must notify us immediately at <a href="mailto:hello@the-bull.ai">hello@the-bull.ai</a> if you suspect unauthorized access to your account.</li>
+          <li>You may not share account credentials or allow multiple individuals to use a single seat without a multi-user subscription.</li>
+        </ul>
+      </div>
+
+      <div class="doc-section">
+        <h2>4. Acceptable use</h2>
+        <p>You agree not to:</p>
+        <ul>
+          <li>Use the Service for any unlawful purpose or in violation of any applicable law or regulation.</li>
+          <li>Upload content that infringes intellectual property rights, contains malware, or violates the rights of any third party.</li>
+          <li>Attempt to gain unauthorized access to any part of the Service or its infrastructure.</li>
+          <li>Reverse-engineer, decompile, or disassemble any part of the Service.</li>
+          <li>Use the Service to generate output that is fraudulent, defamatory, or that impersonates another person or entity.</li>
+          <li>Resell, sublicense, or provide access to the Service to third parties without our prior written consent.</li>
+          <li>Scrape or systematically extract data from the Service in ways not permitted by these Terms.</li>
+        </ul>
+      </div>
+
+      <div class="doc-section">
+        <h2>5. Content you upload</h2>
+        <p>You retain all rights to the documents and data you upload to the Service ("Your Content"). By uploading, you grant Aldebaran Labs LLC a limited, non-exclusive license to process Your Content solely to provide the Service to you.</p>
+        <div class="doc-highlight">
+          We do not use Your Content to train AI models, sell data, or share it with third parties beyond the sub-processors listed in our <a href="/privacy.html">Privacy Policy</a> and strictly necessary to deliver the Service.
+        </div>
+        <p>You represent that you have all rights necessary to upload Your Content and that doing so does not violate any confidentiality obligation or third-party right.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>6. AI-generated output</h2>
+        <p>The Service uses large language models (including Anthropic's Claude API) to generate analysis, summaries, alerts, and other outputs. You acknowledge that:</p>
+        <ul>
+          <li>AI-generated output may contain errors or inaccuracies and should not be relied upon as legal, financial, or professional advice without independent verification.</li>
+          <li>You are solely responsible for decisions made based on AI-generated output.</li>
+          <li>We do not guarantee that AI output is complete, accurate, or fit for any particular purpose.</li>
+        </ul>
+      </div>
+
+      <div class="doc-section">
+        <h2>7. Google services integration</h2>
+        <p>Certain features of the Service may integrate with Google services (such as Google Sign-In or Google Drive). Use of those features is also subject to Google's Terms of Service and Privacy Policy. We access only the Google account data you explicitly authorize, and solely to provide the functionality you requested.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>8. Subscriptions and payment</h2>
+        <ul>
+          <li>Access to certain features requires a paid subscription. Fees are billed in advance on a monthly or annual basis.</li>
+          <li>All fees are non-refundable except as required by applicable law.</li>
+          <li>We may change pricing with at least 30 days' written notice. Continued use after the effective date constitutes acceptance of the new pricing.</li>
+          <li>Failure to pay may result in suspension or termination of your account.</li>
+        </ul>
+      </div>
+
+      <div class="doc-section">
+        <h2>9. Intellectual property</h2>
+        <p>The Service, including all software, designs, text, and AI models operated by us, is owned by Aldebaran Labs LLC and protected by intellectual property law. These Terms do not grant you any ownership interest in the Service.</p>
+        <p>Feedback or suggestions you provide about the Service may be used by us without restriction or compensation.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>10. Disclaimer of warranties</h2>
+        <p>THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED OR ERROR-FREE.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>11. Limitation of liability</h2>
+        <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, ALDEBARAN LABS LLC SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING FROM YOUR USE OF THE SERVICE. OUR TOTAL LIABILITY SHALL NOT EXCEED THE GREATER OF (A) THE AMOUNT YOU PAID US IN THE 12 MONTHS PRECEDING THE CLAIM, OR (B) $100 USD.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>12. Indemnification</h2>
+        <p>You agree to indemnify and hold harmless Aldebaran Labs LLC and its affiliates from any claims, damages, and expenses (including reasonable legal fees) arising from your use of the Service, Your Content, or your violation of these Terms.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>13. Termination</h2>
+        <p>You may cancel your account at any time by contacting <a href="mailto:hello@the-bull.ai">hello@the-bull.ai</a>. Access continues through the end of your current billing period.</p>
+        <p>We may suspend or terminate your account immediately if you violate these Terms or if required by law. Sections 9–12 and 15 survive termination.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>14. Changes to these terms</h2>
+        <p>We may update these Terms from time to time. Material changes will be communicated by email to active subscribers at least 14 days before taking effect. Continued use after the effective date constitutes acceptance. The effective date at the top of this page will always reflect the current version.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>15. Governing law and disputes</h2>
+        <p>These Terms are governed by the laws of the State of New York, without regard to conflict-of-law principles. Any dispute shall be resolved exclusively in the state or federal courts located in New York County, New York.</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>16. Contact</h2>
+        <p>Questions about these Terms? Contact us at <a href="mailto:hello@the-bull.ai">hello@the-bull.ai</a>.</p>
+        <p>Aldebaran Labs LLC &nbsp;·&nbsp; New York, NY</p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <a href="/" class="footer-logo">
+      <img src="/icon.svg" alt="The Bull" />
+      <span class="footer-logo-text">The Bull</span>
+    </a>
+    <div class="footer-links">
+      <a href="/contracts" class="footer-link">Contracts</a>
+      <a href="/properties" class="footer-link">Properties</a>
+      <a href="/privacy.html" class="footer-link">Privacy Policy</a>
+      <a href="/terms.html" class="footer-link">Terms of Service</a>
+    </div>
+    <div class="footer-copy">© 2026 Aldebaran Labs LLC. All rights reserved.</div>
+  </footer>
+
+</body>
+</html>
