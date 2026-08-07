@@ -1,111 +1,73 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Business Brain — Aldebaran Labs</title>
+<title>Business Brain — The Bull</title>
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Display:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/three@0.134.0/build/three.min.js"></script>
-<script src="https://unpkg.com/3d-force-graph@1.73.4/dist/3d-force-graph.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #0f0e0c; --surface: #161310; --surface2: #1e1a14;
-  --border: #2c271f; --text: #f0ebe3; --text-2: #9a8e7e;
-  --text-3: #5c5248; --brand: #b38600; --brand-bg: rgba(179,134,0,0.10);
-  --canvas: #0d0d10;
+  --bg: #050508; --sb: #06060b; --border: #13132a;
+  --text: #c8c8e0; --text2: #5a5a90; --text3: #2a2a50;
+  --brand: #b38600; --brand-bg: rgba(179,134,0,0.13);
 }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text);
-  font-family: 'Inter', -apple-system, system-ui, sans-serif;
-  font-weight: 500; letter-spacing: -0.01em; line-height: 1.375; }
+  font-family: 'Inter', -apple-system, sans-serif; font-weight: 500; letter-spacing: -0.01em; }
 #app { display: flex; flex-direction: column; height: 100vh; }
 
-/* TOPBAR */
-#topbar { display: flex; align-items: center; gap: 14px;
-  padding: 0 18px; height: 52px; flex-shrink: 0;
-  background: var(--bg); border-bottom: 1px solid var(--border); }
-.brand { display: flex; align-items: center; gap: 8px; white-space: nowrap; user-select: none; }
-.brand-logo { height: 20px; width: auto; display: block; color: var(--text); flex-shrink: 0; }
-.brand-text { display: flex; align-items: baseline; gap: 5px; }
-.brand-name { font-family: 'Inter', system-ui, sans-serif; font-size: 14px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
-.brand-sub { font-family: 'Inter Display', 'Inter', system-ui, sans-serif; font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.072em; }
-#layout-sw { display: flex; gap: 4px; margin-left: auto; }
-.lbtn { background: var(--surface2); border: 1px solid var(--border); color: var(--text-2);
-  font-family: 'Inter', system-ui, sans-serif; font-size: 11px; font-weight: 500; letter-spacing: -0.01em;
-  padding: 5px 12px; border-radius: 6px; cursor: pointer; transition: all 0.12s; }
-.lbtn:hover { border-color: var(--text-2); color: var(--text); }
-.lbtn.active { background: var(--brand); border-color: var(--brand); color: #0f0e0c; font-weight: 600; }
-#stats { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); }
+/* TOP BAR */
+#topbar { display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 48px;
+  flex-shrink: 0; background: var(--bg); border-bottom: 1px solid var(--border); }
+.brand { display: flex; align-items: center; gap: 7px; user-select: none; }
+.brand-logo { height: 18px; width: auto; color: var(--text); flex-shrink: 0; }
+.brand-name { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+.brand-sep { font-size: 10px; color: var(--text3); }
+.brand-sub { font-size: 9px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .09em; }
+#sw { display: flex; gap: 5px; margin-left: auto; }
+.lbtn { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; padding: 4px 13px;
+  border-radius: 20px; cursor: pointer; border: 1px solid var(--border); background: transparent;
+  color: var(--text2); display: flex; align-items: center; gap: 5px; transition: all .12s; }
+.lbtn .dot { width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid var(--text3); display: inline-block; }
+.lbtn:hover { color: var(--text); border-color: #3a3a70; }
+.lbtn.active { background: var(--brand); border-color: var(--brand); color: #100c00; font-weight: 600; }
+.lbtn.active .dot { background: #100c00; border-color: #100c00; }
+#stats { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text3); white-space: nowrap; }
 
 /* BODY */
 #body { display: flex; flex: 1; overflow: hidden; }
 
 /* SIDEBAR */
-#sidebar { width: 230px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border);
-  display: flex; flex-direction: column; overflow: hidden; }
-.sh { padding: 10px 14px 6px; font-family: 'Inter Display', 'Inter', system-ui, sans-serif;
-  font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.072em; }
-#fsearch { margin: 0 10px 8px; padding: 6px 10px; background: var(--surface2);
-  border: 1px solid var(--border); border-radius: 6px; color: var(--text);
-  font-family: 'Inter', system-ui, sans-serif; font-size: 12px; font-weight: 500;
-  letter-spacing: -0.01em; outline: none; width: calc(100% - 20px); }
-#fsearch:focus { border-color: var(--brand); }
-#fsearch::placeholder { color: var(--text-3); }
+#sidebar { width: 224px; flex-shrink: 0; background: var(--sb);
+  border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.sh { padding: 10px 14px 5px; font-size: 9px; font-weight: 600; color: var(--text3);
+  text-transform: uppercase; letter-spacing: .1em; }
+#fsearch { margin: 0 10px 7px; padding: 5px 10px; background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border); border-radius: 5px; color: var(--text2);
+  font-family: 'Inter', sans-serif; font-size: 11px; outline: none; width: calc(100% - 20px); }
+#fsearch::placeholder { color: var(--text3); }
+#fsearch:focus { border-color: rgba(179,134,0,.35); }
 #flist { flex: 1; overflow-y: auto; padding: 2px 0; }
-.fi { padding: 4px 12px; font-family: 'Inter', system-ui, sans-serif; font-size: 13px;
-  font-weight: 500; letter-spacing: -0.01em; cursor: pointer; color: var(--text-2);
-  display: flex; align-items: center; gap: 6px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.1s; }
-.fi:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.fi { padding: 3px 10px; font-size: 11.5px; cursor: pointer; color: var(--text2);
+  display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fi:hover { color: var(--text); }
 .fi.hi { background: var(--brand-bg); color: var(--brand); }
-.fd { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-#legend { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
+.fi .fd { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+#legend { padding: 8px 10px 10px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
 .li { display: flex; align-items: center; gap: 7px; }
-.pill { font-family: 'Inter', system-ui, sans-serif; font-size: 10px; font-weight: 500;
-  letter-spacing: -0.01em; padding: 3px 9px; border-radius: 10px; cursor: pointer;
-  border: 1px solid; transition: opacity 0.15s; user-select: none; width: 108px; }
-.pill.off { opacity: 0.3; }
-.lc { margin-left: auto; color: var(--text-3); font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+.pill { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 500;
+  padding: 2px 8px; border-radius: 10px; border: 1px solid; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 3px; transition: opacity .15s;
+  min-width: 100px; }
+.pill.off { opacity: .25; }
+.lc { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text3); margin-left: auto; }
 
 /* CANVAS */
 #cwrap { flex: 1; position: relative; overflow: hidden; }
-#gc { width: 100%; height: 100%; }
-
-/* STABILIZING */
-#stab { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
-  background: rgba(15,14,12,0.92); border: 1px solid var(--border);
-  padding: 7px 14px; border-radius: 20px; font-family: 'Inter', system-ui, sans-serif;
-  font-size: 11px; letter-spacing: -0.01em; color: var(--text-3);
-  display: flex; align-items: center; gap: 8px; z-index: 5; pointer-events: none; }
-.pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--brand); animation: p 1s infinite; }
-@keyframes p { 0%,100%{opacity:1}50%{opacity:.25} }
-
-/* DETAIL PANEL */
-#dp { width: 255px; flex-shrink: 0; background: var(--surface); border-left: 1px solid var(--border);
-  overflow-y: auto; display: none; flex-direction: column; }
-#dp.open { display: flex; }
-#dh { padding: 14px 14px 12px; border-bottom: 1px solid var(--border);
-  display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-#dn { font-family: 'Inter Display', 'Inter', system-ui, sans-serif; font-size: 13px; font-weight: 600;
-  word-break: break-all; line-height: 1.3; letter-spacing: -0.016em; }
-#dc { background: none; border: none; color: var(--text-3); font-size: 20px; cursor: pointer;
-  flex-shrink: 0; line-height: 1; padding: 0 2px; }
-#dc:hover { color: var(--text); }
-#db { padding: 12px 14px; flex: 1; }
-.ds { margin-bottom: 14px; }
-.dl { font-family: 'Inter Display', 'Inter', system-ui, sans-serif; font-size: 10px; font-weight: 600;
-  color: var(--text-3); text-transform: uppercase; letter-spacing: 0.072em; margin-bottom: 6px; }
-.dv { font-family: 'Inter', system-ui, sans-serif; font-size: 12px; letter-spacing: -0.01em; color: var(--text); }
-.dpath { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-2); word-break: break-all; }
-.lk { display: flex; align-items: center; gap: 5px; font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; padding: 3px 6px; margin: 0 -6px; border-radius: 4px;
-  color: var(--text-2); cursor: pointer; transition: background 0.1s; }
-.lk:hover { background: rgba(255,255,255,0.04); color: var(--text); }
-.la { font-size: 10px; }
-.more { font-size: 10px; color: var(--text-3); padding: 3px 0; font-family: 'Inter', system-ui, sans-serif; }
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+canvas { display: block; width: 100%; height: 100%; }
 </style>
 </head>
 <body>
@@ -115,17 +77,15 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
       <svg class="brand-logo" xmlns="http://www.w3.org/2000/svg" viewBox="90 100 881 363" fill="currentColor">
         <path d="M402.038391,421.965393 C409.741882,430.760284 417.972656,438.528931 427.677887,445.549744 C424.351471,447.382996 423.185760,445.739349 421.916687,444.931549 C397.647491,429.483673 380.361603,407.786804 366.746643,382.879486 C359.030090,368.762756 353.620178,353.713287 350.315826,338.008850 C349.263733,333.008789 346.784943,331.538666 342.266632,331.151733 C324.361084,329.618286 306.474701,327.863342 288.574493,326.265564 C265.707123,324.224396 242.833359,322.255341 219.962265,320.256287 C215.823257,319.894531 211.681488,319.562347 207.545883,319.165436 C206.111389,319.027771 204.502975,319.085876 203.516891,316.070526 C251.475540,318.459564 298.960022,320.825012 346.712341,323.203766 C347.529572,317.914215 346.820953,313.543182 345.822479,309.205963 C345.244110,306.693665 343.047241,306.549774 341.068268,306.409790 C321.141510,305.000427 301.206329,303.707916 281.283569,302.245209 C261.032501,300.758362 240.796783,299.063507 220.546844,297.560425 C204.446945,296.365417 188.330887,295.388000 172.230789,294.195282 C151.151215,292.633698 130.080002,290.959198 109.006500,289.316406 C107.890305,289.229401 106.627388,289.404510 105.659042,287.717804 C107.537880,285.879578 110.011246,286.011993 112.321358,286.067017 C177.803848,287.625946 243.296173,286.314636 308.782196,286.758942 C319.614502,286.832458 330.449402,286.652405 341.279755,286.813141 C344.969543,286.867859 346.557800,285.765015 346.965149,281.841064 C350.298981,249.726120 360.956940,220.306427 379.869568,194.001602 C401.146240,164.408691 428.790283,142.913223 462.487610,129.171310 C484.193512,120.319557 506.962585,115.825699 530.245483,116.154732 C586.137878,116.944588 633.146667,138.022125 670.249084,180.242416 C693.520569,206.723984 707.366760,237.630478 713.040100,272.303650 C713.630371,275.911072 714.008240,279.562103 714.290527,283.207947 C714.484924,285.718353 715.693237,286.777985 718.117920,286.742218 C719.950378,286.715149 721.783936,286.781708 723.617004,286.780457 C793.280212,286.732941 862.943420,286.698059 932.606567,286.604218 C938.598877,286.596161 944.589355,286.125031 950.583374,286.016663 C952.443726,285.983063 954.632263,285.508911 955.855774,287.694092 C955.262939,289.465332 953.768066,289.243225 952.504944,289.338470 C930.759033,290.978882 909.007019,292.539948 887.265076,294.231506 C863.701111,296.064819 840.154175,298.120117 816.585083,299.882324 C795.668030,301.446259 774.730896,302.742096 753.802551,304.154694 C742.843628,304.894379 731.889893,305.731201 720.922852,306.320038 C716.384644,306.563751 714.293823,308.523285 714.350098,313.121643 C714.386169,316.073944 713.919312,319.032349 713.585022,323.124939 C761.652771,320.736694 809.303955,318.369110 857.637390,315.967651 C856.414124,318.911469 854.718140,319.005463 853.133301,319.140717 C828.596924,321.234924 804.053162,323.245514 779.522156,325.400726 C758.468689,327.250427 737.439026,329.380798 716.375549,331.101288 C711.853333,331.470612 711.550964,334.462555 710.930298,337.500092 C706.541504,358.976837 698.193542,378.825470 686.217773,397.127991 C673.484924,416.587585 657.793884,433.180084 638.050964,445.721436 C637.493591,446.075500 636.897278,446.383759 636.285339,446.629120 C636.005676,446.741241 635.643738,446.648224 635.144958,446.648224 C633.988525,444.508698 635.836731,443.715881 637.006897,442.804718 C661.898560,423.422882 678.906067,398.408447 689.795288,369.017273 C693.564697,358.843536 696.217346,348.372131 697.945068,337.668304 C698.147522,336.413849 698.708069,335.061523 697.593262,333.551025 C691.466431,332.340668 685.208374,333.970856 678.999512,334.472809 C649.471375,336.860046 619.976318,339.658600 590.471619,342.333466 C587.363037,342.615234 584.905273,343.853577 582.980713,346.593689 C579.633423,351.359589 575.932129,355.880188 572.300110,360.440613 C571.321228,361.669708 570.747742,363.471893 568.713806,363.610046 C567.228577,362.610718 567.808899,361.264038 568.137207,360.043793 C570.385864,351.684204 572.733459,343.350708 574.914917,334.973816 C575.638062,332.196777 576.962830,330.769470 580.025085,330.589233 C592.987793,329.826294 605.931335,328.730927 618.895691,328.004303 C643.996094,326.597412 669.101685,325.266144 694.215637,324.137512 C698.406494,323.949188 700.466736,322.627563 700.259094,318.360138 C700.243164,318.032776 700.347046,317.700653 700.383911,317.369476 C701.424805,308.030426 700.916931,307.806061 691.712463,308.568390 C671.476196,310.244446 651.212158,311.588348 630.957214,313.036072 C606.380249,314.792816 581.798157,316.478851 557.224304,318.277771 C549.692688,318.829132 549.647522,319.228210 548.289124,327.682922 C542.985168,360.695770 537.568787,393.690552 532.147827,426.684448 C531.866211,428.398682 532.053223,430.380371 530.331604,431.670654 C528.093750,430.888184 528.230408,428.851654 527.925537,427.140472 C524.689697,408.978394 521.497986,390.808411 518.280212,372.643097 C515.466919,356.761475 512.448364,340.912659 509.932373,324.984283 C509.222229,320.488312 507.346222,318.586456 502.999268,318.292664 C489.210358,317.360779 475.430511,316.294952 461.647491,315.276215 C439.735046,313.656586 417.824402,312.012665 395.910004,310.419800 C384.323273,309.577606 372.730286,308.821472 360.908752,308.010620 C359.964050,312.756836 361.296753,317.161377 361.413239,321.584167 C361.471588,323.800995 363.493073,323.858978 365.174652,323.972321 C373.815155,324.554779 382.449066,325.318237 391.099426,325.656097 C420.717590,326.812805 450.298767,328.568390 479.870422,330.563354 C483.519135,330.809540 485.279297,332.114838 486.187683,335.475647 C488.691193,344.737732 491.344635,353.959229 493.945587,363.221222 C491.014801,364.278381 490.437286,362.305328 489.521637,361.139343 C485.816895,356.421692 482.062958,351.732788 478.593689,346.844086 C476.689850,344.161316 474.298981,342.723389 471.159943,342.441315 C455.414093,341.026428 439.710876,339.205109 423.926514,338.131592 C406.494476,336.946014 389.088043,335.303070 371.702911,333.539642 C362.193848,332.575134 362.043274,332.548859 363.840027,341.828888 C369.628662,371.726105 382.249451,398.354980 402.038391,421.965393 M592.874756,148.685745 C572.840820,140.732742 552.105408,136.668350 530.491943,136.924530 C475.420563,137.577255 431.157074,160.479630 396.710358,202.659363 C378.569855,224.872299 368.032654,250.850403 362.944580,279.061646 C361.631348,286.342865 361.792725,286.779388 369.159058,286.780334 C477.102936,286.794189 585.046814,286.805054 692.990662,286.787842 C694.921814,286.787537 696.992493,287.297699 699.248169,285.547546 C689.147644,220.690903 653.508240,175.515182 592.874756,148.685745 z"/>
       </svg>
-      <div class="brand-text">
-        <span class="brand-name">The Bull</span>
-        <span class="brand-sub">· Business Brain</span>
-      </div>
+      <span class="brand-name">The Bull</span>
+      <span class="brand-sep"> · </span>
+      <span class="brand-sub">Business Brain</span>
     </div>
-    <div id="layout-sw">
-      <button class="lbtn active" data-l="force">⟳ Force</button>
-      <button class="lbtn" data-l="hierarchy">⌥ Hierarchy</button>
-      <button class="lbtn" data-l="radial">◎ Radial</button>
+    <div id="sw">
+      <button class="lbtn" id="btn-nexus"><span class="dot"></span>Nexus</button>
+      <button class="lbtn active" id="btn-galaxy">+ Galaxy</button>
     </div>
-    <div id="stats">60 nodes · 49 edges</div>
+    <div id="stats">76 nodes · 75 edges · Aldebaran Labs</div>
   </header>
   <div id="body">
     <aside id="sidebar">
@@ -134,392 +94,338 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
       <div id="flist"></div>
       <div id="legend"></div>
     </aside>
-    <main id="cwrap">
-      <div id="gc"></div>
-      <div id="stab"><div class="pulse"></div>Layout optimizing…</div>
-    </main>
-    <aside id="dp">
-      <div id="dh"><div id="dn">—</div><button id="dc">×</button></div>
-      <div id="db"></div>
-    </aside>
+    <main id="cwrap"><canvas id="gc"></canvas></main>
   </div>
 </div>
 <script>
-const GC = {
-  folder:   { bg:'#3b0764', border:'#7c3aed', text:'#a78bfa' },
-  python:   { bg:'#1e1b4b', border:'#4338ca', text:'#818cf8' },
-  markdown: { bg:'#022c22', border:'#047857', text:'#34d399' },
-  config:   { bg:'#431407', border:'#c2410c', text:'#fb923c' },
-  other:    { bg:'#111827', border:'#374151', text:'#6b7280' },
+// ── Type config ────────────────────────────────────────────────────────────────
+const TC = {
+  class:    { dot:'#9966ff', border:'#6644cc', bg:'rgba(100,60,220,.12)', icon:'• '  },
+  folder:   { dot:'#f5a020', border:'#c07810', bg:'rgba(245,160,32,.12)', icon:'📁 ' },
+  function: { dot:'#22d4aa', border:'#10a080', bg:'rgba(34,212,170,.10)', icon:'ƒ '  },
+  markdown: { dot:'#22c55e', border:'#10943e', bg:'rgba(34,197,94,.10)',  icon:'📄 ' },
+  other:    { dot:'#8080b0', border:'#505090', bg:'rgba(128,128,176,.08)',icon:'• '  },
+  python:   { dot:'#4488ff', border:'#2860cc', bg:'rgba(68,136,255,.10)', icon:'🐍 ' },
 };
-const ICONS = { folder:'📁', python:'🐍', markdown:'📄', config:'⚙️', other:'📎' };
-const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
-// ── Aldebaran Labs data ──────────────────────────────────────────────────────
-const RAW_NODES = [
+// ── Node data ─────────────────────────────────────────────────────────────────
+// lv = indent level in sidebar; isGod = central galaxy node
+const NODES = [
   // root files
-  {id:'AGENTS.md',   label:'AGENTS.md',   group:'markdown', level:0, isDir:false},
-  {id:'CLAUDE.md',   label:'CLAUDE.md',   group:'markdown', level:0, isDir:false},
-  // top-level folders
-  {id:'Security',    label:'Security',    group:'folder',   level:0, isDir:true},
-  {id:'operations',  label:'operations',  group:'folder',   level:0, isDir:true},
-  {id:'legal',       label:'legal',       group:'folder',   level:0, isDir:true},
-  {id:'meetings',    label:'meetings',    group:'folder',   level:0, isDir:true},
-  {id:'clients',     label:'clients',     group:'folder',   level:0, isDir:true},
-  {id:'docs',        label:'docs',        group:'folder',   level:0, isDir:true},
-  {id:'index',       label:'index',       group:'folder',   level:0, isDir:true},
-  {id:'templates',   label:'templates',   group:'folder',   level:0, isDir:true},
-  {id:'financial',   label:'financial',   group:'folder',   level:0, isDir:true},
-  {id:'memory',      label:'memory',      group:'folder',   level:0, isDir:true},
-  // Security children
-  {id:'Security/checks',          label:'checks',             group:'folder',   level:1, isDir:true},
-  {id:'Security/audit.py',        label:'audit.py',           group:'python',   level:1, isDir:false},
-  {id:'Security/report.py',       label:'report.py',          group:'python',   level:1, isDir:false},
-  {id:'Security/__init__.py',     label:'__init__.py',        group:'python',   level:1, isDir:false},
-  {id:'Security/tests.py',        label:'tests.py',           group:'python',   level:1, isDir:false},
-  {id:'Security/auth.py',         label:'auth.py',            group:'python',   level:1, isDir:false},
-  {id:'Security/idor.py',         label:'idor.py',            group:'python',   level:1, isDir:false},
-  {id:'Security/backups.py',      label:'backups.py',         group:'python',   level:1, isDir:false},
-  {id:'Security/payments.py',     label:'payments.py',        group:'python',   level:1, isDir:false},
-  {id:'Security/secrets.py',      label:'secrets.py',         group:'python',   level:1, isDir:false},
-  {id:'Security/error_tracking.py',label:'error_tracking.py',group:'python',   level:1, isDir:false},
-  // checks children
-  {id:'Security/checks/1-secrets.md',      label:'1-secrets.md',      group:'markdown', level:2, isDir:false},
-  {id:'Security/checks/2-auth.md',         label:'2-auth.md',         group:'markdown', level:2, isDir:false},
-  {id:'Security/checks/3-idor.md',         label:'3-idor.md',         group:'markdown', level:2, isDir:false},
-  {id:'Security/checks/4-error-tracking.md',label:'4-error-tracking.md',group:'markdown',level:2,isDir:false},
-  {id:'Security/checks/5-backups.md',      label:'5-backups.md',      group:'markdown', level:2, isDir:false},
-  // operations children
-  {id:'operations/projects_tasks.md', label:'projects_tasks.md', group:'markdown', level:1, isDir:false},
-  {id:'operations/AGENTS.md',         label:'AGENTS.md',         group:'markdown', level:1, isDir:false},
-  {id:'operations/CLAUDE.md',         label:'CLAUDE.md',         group:'markdown', level:1, isDir:false},
-  {id:'operations/_template.md',      label:'_template.md',      group:'markdown', level:1, isDir:false},
-  // legal children
-  {id:'legal/IRS',                  label:'IRS',                  group:'folder',   level:1, isDir:true},
-  {id:'legal/PSP',                  label:'PSP',                  group:'folder',   level:1, isDir:true},
-  {id:'legal/Utility Bills',        label:'Utility Bills',        group:'folder',   level:1, isDir:true},
-  {id:'legal/Incorporation Documents',label:'Incorporation Documents',group:'folder',level:1,isDir:true},
-  {id:'legal/index.md',             label:'index.md',             group:'markdown', level:1, isDir:false},
-  {id:'legal/_template.md',         label:'_template.md',         group:'markdown', level:1, isDir:false},
-  {id:'legal/Aldebaran_Labs_Off.pdf',label:'Aldebaran_Labs_Off...',group:'other',  level:1, isDir:false},
-  {id:'legal/AldbebaranLabsLLC9009.pdf',label:'AldbebaranLabsLLC9009...',group:'other',level:1,isDir:false},
-  {id:'legal/stripe_backup_code.txt',label:'stripe_backup_code.txt',group:'other', level:1, isDir:false},
-  {id:'legal/Free Basic Operating.doc',label:'Free Basic Operating...',group:'other',level:1,isDir:false},
-  {id:'legal/Initial Resolutions.doc',label:'Initial Resolutions...',group:'other',level:1,isDir:false},
-  // meetings children
-  {id:'meetings/kramer-salon.md',   label:'kramer-salon.md',      group:'markdown', level:1, isDir:false},
-  // clients children
-  {id:'clients/Order_Management_System.md',label:'Order_Management_Sys...',group:'markdown',level:1,isDir:false},
-  // docs children
-  {id:'docs/overview.md',  label:'overview.md',  group:'markdown', level:1, isDir:false},
-  {id:'docs/ai_native.md', label:'ai_native.md', group:'markdown', level:1, isDir:false},
-  // index children
-  {id:'index/repos.md',        label:'repos.md',        group:'markdown', level:1, isDir:false},
-  {id:'index/features.md',     label:'features.md',     group:'markdown', level:1, isDir:false},
-  {id:'index/intelligence.md', label:'intelligence.md', group:'markdown', level:1, isDir:false},
-  // templates children
-  {id:'templates/CLAUDE.md',    label:'CLAUDE.md',    group:'markdown', level:1, isDir:false},
-  {id:'templates/KNOWLEDGE.md', label:'KNOWLEDGE.md', group:'markdown', level:1, isDir:false},
-  // memory children
-  {id:'memory/user.md',     label:'user.md',     group:'markdown', level:1, isDir:false},
-  {id:'memory/feedback.md', label:'feedback.md', group:'markdown', level:1, isDir:false},
-  {id:'memory/project.md',  label:'project.md',  group:'markdown', level:1, isDir:false},
-  {id:'memory/MEMORY.md',   label:'MEMORY.md',   group:'markdown', level:1, isDir:false},
-  // financial children
-  {id:'financial/bookkeeping.csv', label:'bookkeeping.csv', group:'other', level:1, isDir:false},
-  {id:'financial/cogs.csv',        label:'cogs.csv',        group:'other', level:1, isDir:false},
-  {id:'financial/revenue.csv',     label:'revenue.csv',     group:'other', level:1, isDir:false},
+  {id:'AGENTS.md',  label:'AGENTS.md',  type:'markdown', lv:0},
+  {id:'CLAUDE.md',  label:'CLAUDE.md',  type:'markdown', lv:0},
+  // top-level folders (10)
+  {id:'Security',   label:'Security',   type:'folder',   lv:0, isGod:true},
+  {id:'operations', label:'operations', type:'folder',   lv:0},
+  {id:'legal',      label:'legal',      type:'folder',   lv:0},
+  {id:'meetings',   label:'meetings',   type:'folder',   lv:0},
+  {id:'clients',    label:'clients',    type:'folder',   lv:0},
+  {id:'docs',       label:'docs',       type:'folder',   lv:0},
+  {id:'index',      label:'index',      type:'folder',   lv:0},
+  {id:'templates',  label:'templates',  type:'folder',   lv:0},
+  {id:'financial',  label:'financial',  type:'folder',   lv:0},
+  {id:'memory',     label:'memory',     type:'folder',   lv:0},
+  // Security children — python files
+  {id:'Security/audit.py',          label:'audit.py',          type:'python',   lv:1, par:'Security'},
+  {id:'Security/report.py',         label:'report.py',         type:'python',   lv:1, par:'Security'},
+  {id:'Security/__init__.py',       label:'__init__.py',       type:'python',   lv:1, par:'Security'},
+  {id:'Security/tests.py',          label:'tests.py',          type:'python',   lv:1, par:'Security'},
+  {id:'Security/auth.py',           label:'auth.py',           type:'python',   lv:1, par:'Security'},
+  {id:'Security/idor.py',           label:'idor.py',           type:'python',   lv:1, par:'Security'},
+  {id:'Security/backups.py',        label:'backups.py',        type:'python',   lv:1, par:'Security'},
+  {id:'Security/payments.py',       label:'payments.py',       type:'python',   lv:1, par:'Security'},
+  {id:'Security/secrets.py',        label:'secrets.py',        type:'python',   lv:1, par:'Security'},
+  {id:'Security/error_tracking.py', label:'error_tracking.py', type:'python',   lv:1, par:'Security'},
+  // Security sub-folders (2)
+  {id:'Security/Docs',              label:'Docs',              type:'folder',   lv:1, par:'Security'},
+  {id:'Security/Docs/checks',       label:'checks',            type:'folder',   lv:2, par:'Security/Docs'},
+  // Security/Docs files
+  {id:'Security/Docs/overview.md',              label:'overview.md',        type:'markdown', lv:2, par:'Security/Docs'},
+  {id:'Security/Docs/checks/1-secrets.md',      label:'1-secrets.md',       type:'markdown', lv:3, par:'Security/Docs/checks'},
+  {id:'Security/Docs/checks/2-auth.md',         label:'2-auth.md',          type:'markdown', lv:3, par:'Security/Docs/checks'},
+  {id:'Security/Docs/checks/3-idor.md',         label:'3-idor.md',          type:'markdown', lv:3, par:'Security/Docs/checks'},
+  {id:'Security/Docs/checks/4-error-tracking.md',label:'4-error-tracking.md',type:'markdown',lv:3,par:'Security/Docs/checks'},
+  {id:'Security/Docs/checks/5-backups.md',      label:'5-backups.md',       type:'markdown', lv:3, par:'Security/Docs/checks'},
+  // Class extracted from audit.py
+  {id:'SecurityAudit',   label:'SecurityAudit',   type:'class',    lv:2, par:'Security/audit.py'},
+  // Functions (14)
+  {id:'run_audit',        label:'run_audit',        type:'function', lv:2, par:'Security/audit.py'},
+  {id:'generate_report',  label:'generate_report',  type:'function', lv:2, par:'Security/report.py'},
+  {id:'format_output',    label:'format_output',    type:'function', lv:2, par:'Security/report.py'},
+  {id:'verify_auth',      label:'verify_auth',      type:'function', lv:2, par:'Security/auth.py'},
+  {id:'check_session',    label:'check_session',    type:'function', lv:2, par:'Security/auth.py'},
+  {id:'test_idor',        label:'test_idor',        type:'function', lv:2, par:'Security/idor.py'},
+  {id:'validate_access',  label:'validate_access',  type:'function', lv:2, par:'Security/idor.py'},
+  {id:'check_secrets',    label:'check_secrets',    type:'function', lv:2, par:'Security/secrets.py'},
+  {id:'rotate_secrets',   label:'rotate_secrets',   type:'function', lv:2, par:'Security/secrets.py'},
+  {id:'check_backups',    label:'check_backups',    type:'function', lv:2, par:'Security/backups.py'},
+  {id:'monitor_payments', label:'monitor_payments', type:'function', lv:2, par:'Security/payments.py'},
+  {id:'track_errors',     label:'track_errors',     type:'function', lv:2, par:'Security/error_tracking.py'},
+  {id:'init_scanner',     label:'init_scanner',     type:'function', lv:2, par:'Security/audit.py'},
+  {id:'parse_config',     label:'parse_config',     type:'function', lv:2, par:'Security/__init__.py'},
+  // operations (4 markdown)
+  {id:'operations/projects_tasks.md',label:'projects_tasks.md',type:'markdown',lv:1,par:'operations'},
+  {id:'operations/AGENTS.md',        label:'AGENTS.md',        type:'markdown',lv:1,par:'operations'},
+  {id:'operations/CLAUDE.md',        label:'CLAUDE.md',        type:'markdown',lv:1,par:'operations'},
+  {id:'operations/_template.md',     label:'_template.md',     type:'markdown',lv:1,par:'operations'},
+  // legal — 4 sub-folders
+  {id:'legal/IRS',                   label:'IRS',                   type:'folder',  lv:1,par:'legal'},
+  {id:'legal/PSP',                   label:'PSP',                   type:'folder',  lv:1,par:'legal'},
+  {id:'legal/Utility Bills',         label:'Utility Bills',         type:'folder',  lv:1,par:'legal'},
+  {id:'legal/Incorporation Documents',label:'Incorporation Documents',type:'folder',lv:1,par:'legal'},
+  {id:'legal/index.md',              label:'index.md',              type:'markdown',lv:1,par:'legal'},
+  {id:'legal/_template.md',          label:'_template.md',          type:'markdown',lv:1,par:'legal'},
+  {id:'legal/Aldebaran_Labs_Off.pdf',label:'Aldebaran_Labs_Off...',type:'other',   lv:1,par:'legal'},
+  {id:'legal/AldbebaranLabsLLC.pdf', label:'AldbebaranLabsLLC...',  type:'other',   lv:1,par:'legal'},
+  {id:'legal/stripe_backup_code.txt',label:'stripe_backup_code.txt',type:'other',  lv:1,par:'legal'},
+  {id:'legal/Free Basic Operating.doc',label:'Free Basic Operating...',type:'other',lv:1,par:'legal'},
+  {id:'legal/Initial Resolutions.doc',label:'Initial Resolutions...',type:'other', lv:1,par:'legal'},
+  // meetings, clients
+  {id:'meetings/kramer-salon.md',           label:'kramer-salon.md',          type:'markdown',lv:1,par:'meetings'},
+  {id:'clients/Order_Management_System.md', label:'Order_Management_Sys...',  type:'markdown',lv:1,par:'clients'},
+  // docs
+  {id:'docs/overview.md',   label:'overview.md',   type:'markdown',lv:1,par:'docs'},
+  {id:'docs/ai_native.md',  label:'ai_native.md',  type:'markdown',lv:1,par:'docs'},
+  // index
+  {id:'index/repos.md',        label:'repos.md',        type:'markdown',lv:1,par:'index'},
+  {id:'index/features.md',     label:'features.md',     type:'markdown',lv:1,par:'index'},
+  {id:'index/intelligence.md', label:'intelligence.md', type:'markdown',lv:1,par:'index'},
+  // templates
+  {id:'templates/CLAUDE.md',    label:'CLAUDE.md',    type:'markdown',lv:1,par:'templates'},
+  {id:'templates/KNOWLEDGE.md', label:'KNOWLEDGE.md', type:'markdown',lv:1,par:'templates'},
+  // memory
+  {id:'memory/user.md',     label:'user.md',     type:'markdown',lv:1,par:'memory'},
+  {id:'memory/feedback.md', label:'feedback.md', type:'markdown',lv:1,par:'memory'},
+  {id:'memory/project.md',  label:'project.md',  type:'markdown',lv:1,par:'memory'},
+  // financial
+  {id:'financial/bookkeeping.csv',label:'bookkeeping.csv',type:'other',lv:1,par:'financial'},
+  {id:'financial/cogs.csv',       label:'cogs.csv',       type:'other',lv:1,par:'financial'},
+  {id:'financial/revenue.csv',    label:'revenue.csv',    type:'other',lv:1,par:'financial'},
 ];
 
-const RAW_EDGES = [
-  // containment: Security
-  {from:'Security', to:'Security/checks', type:'contains'},
-  {from:'Security', to:'Security/audit.py', type:'contains'},
-  {from:'Security', to:'Security/report.py', type:'contains'},
-  {from:'Security', to:'Security/__init__.py', type:'contains'},
-  {from:'Security', to:'Security/tests.py', type:'contains'},
-  {from:'Security', to:'Security/auth.py', type:'contains'},
-  {from:'Security', to:'Security/idor.py', type:'contains'},
-  {from:'Security', to:'Security/backups.py', type:'contains'},
-  {from:'Security', to:'Security/payments.py', type:'contains'},
-  {from:'Security', to:'Security/secrets.py', type:'contains'},
-  {from:'Security', to:'Security/error_tracking.py', type:'contains'},
-  // containment: checks
-  {from:'Security/checks', to:'Security/checks/1-secrets.md', type:'contains'},
-  {from:'Security/checks', to:'Security/checks/2-auth.md', type:'contains'},
-  {from:'Security/checks', to:'Security/checks/3-idor.md', type:'contains'},
-  {from:'Security/checks', to:'Security/checks/4-error-tracking.md', type:'contains'},
-  {from:'Security/checks', to:'Security/checks/5-backups.md', type:'contains'},
-  // containment: operations
-  {from:'operations', to:'operations/projects_tasks.md', type:'contains'},
-  {from:'operations', to:'operations/AGENTS.md', type:'contains'},
-  {from:'operations', to:'operations/CLAUDE.md', type:'contains'},
-  {from:'operations', to:'operations/_template.md', type:'contains'},
-  // containment: legal
-  {from:'legal', to:'legal/IRS', type:'contains'},
-  {from:'legal', to:'legal/PSP', type:'contains'},
-  {from:'legal', to:'legal/Utility Bills', type:'contains'},
-  {from:'legal', to:'legal/Incorporation Documents', type:'contains'},
-  {from:'legal', to:'legal/index.md', type:'contains'},
-  {from:'legal', to:'legal/_template.md', type:'contains'},
-  {from:'legal', to:'legal/Aldebaran_Labs_Off.pdf', type:'contains'},
-  {from:'legal', to:'legal/AldbebaranLabsLLC9009.pdf', type:'contains'},
-  {from:'legal', to:'legal/stripe_backup_code.txt', type:'contains'},
-  {from:'legal', to:'legal/Free Basic Operating.doc', type:'contains'},
-  {from:'legal', to:'legal/Initial Resolutions.doc', type:'contains'},
-  // containment: meetings, clients, docs, index, templates, memory, financial
-  {from:'meetings',  to:'meetings/kramer-salon.md', type:'contains'},
-  {from:'clients',   to:'clients/Order_Management_System.md', type:'contains'},
-  {from:'docs',      to:'docs/overview.md', type:'contains'},
-  {from:'docs',      to:'docs/ai_native.md', type:'contains'},
-  {from:'index',     to:'index/repos.md', type:'contains'},
-  {from:'index',     to:'index/features.md', type:'contains'},
-  {from:'index',     to:'index/intelligence.md', type:'contains'},
-  {from:'templates', to:'templates/CLAUDE.md', type:'contains'},
-  {from:'templates', to:'templates/KNOWLEDGE.md', type:'contains'},
-  {from:'memory',    to:'memory/user.md', type:'contains'},
-  {from:'memory',    to:'memory/feedback.md', type:'contains'},
-  {from:'memory',    to:'memory/project.md', type:'contains'},
-  {from:'memory',    to:'memory/MEMORY.md', type:'contains'},
-  {from:'financial', to:'financial/bookkeeping.csv', type:'contains'},
-  {from:'financial', to:'financial/cogs.csv', type:'contains'},
-  {from:'financial', to:'financial/revenue.csv', type:'contains'},
-  // import/reference edges
-  {from:'AGENTS.md', to:'operations/AGENTS.md', type:'imports'},
-  {from:'CLAUDE.md', to:'docs/overview.md', type:'imports'},
-];
+// ── Build type counts & edge pairs ────────────────────────────────────────────
+const typeCounts = {};
+NODES.forEach(n => typeCounts[n.type] = (typeCounts[n.type]||0) + 1);
 
-// Invisible center anchor — all level-0 nodes pull toward it, making it the hub
-RAW_NODES.push({id:'__ROOT__', label:'', group:'other', level:-1, isDir:true, __hidden:true});
-RAW_NODES.filter(n => n.level === 0).forEach(n => RAW_EDGES.push({from:'__ROOT__', to:n.id, type:'root'}));
-
-// 120 deterministic cross-edges — stitches all subtrees into one connected web
-;(()=>{
-  const r=(s=>{let v=s%2147483647;return()=>{v=v*16807%2147483647;return(v-1)/2147483646}})(7919);
-  const ids = RAW_NODES.filter(n=>!n.__hidden).map(n=>n.id);
-  for(let i=0;i<120;i++){
-    const a=ids[Math.floor(r()*ids.length)], b=ids[Math.floor(r()*ids.length)];
-    if(a!==b) RAW_EDGES.push({from:a, to:b, type:'semantic'});
-  }
-})();
-
-// ── state ─────────────────────────────────────────────────────────────────────
-let graph, nodeMap = {}, hiddenTypes = new Set(), selectedNodeId = null;
-nodeMap = Object.fromEntries(RAW_NODES.map(n => [n.id, n]));
-
-// ── node sprite renderer ──────────────────────────────────────────────────────
-const _sm = {};
-function nodeSprite(node) {
-  if (node.__hidden) {
-    const s = new THREE.Sprite(new THREE.SpriteMaterial({transparent:true,opacity:0}));
-    s.scale.set(1,1,1);
-    return s;
-  }
-  const hex = (GC[node.group]||GC.other).border;
-  if (!_sm[hex]) {
-    const cv = document.createElement('canvas'); cv.width = cv.height = 32;
-    const cx = cv.getContext('2d'), n = parseInt(hex.slice(1),16);
-    const rv=(n>>16)&255, gv=(n>>8)&255, bv=n&255;
-    const gr = cx.createRadialGradient(16,16,0,16,16,16);
-    gr.addColorStop(0,   `rgba(${rv},${gv},${bv},1)`);
-    gr.addColorStop(0.35,`rgba(${rv},${gv},${bv},0.6)`);
-    gr.addColorStop(1,   `rgba(${rv},${gv},${bv},0)`);
-    cx.fillStyle = gr; cx.fillRect(0,0,32,32);
-    _sm[hex] = new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),transparent:true,depthWrite:false});
-  }
-  const sp = new THREE.Sprite(_sm[hex]);
-  sp.scale.set(node.isDir?12:6, node.isDir?12:6, 1);
-  return sp;
-}
-const getColor = n => n.id === selectedNodeId ? '#ffffff' : (GC[n.group] || GC.other).border;
-
-// ── sidebar ───────────────────────────────────────────────────────────────────
-const VISIBLE_NODES = RAW_NODES.filter(n => !n.__hidden);
-function buildSidebar() {
-  renderList(VISIBLE_NODES);
-  document.getElementById('fsearch').addEventListener('input', e => {
-    const q = e.target.value.toLowerCase();
-    renderList(q ? VISIBLE_NODES.filter(n => n.label.toLowerCase().includes(q)) : VISIBLE_NODES);
-  });
-}
-function renderList(nodes) {
-  const list = document.getElementById('flist');
-  const frag = document.createDocumentFragment();
-  nodes.slice(0,300).forEach(n => {
-    const c = GC[n.group] || GC.other;
-    const el = document.createElement('div');
-    el.className = 'fi';
-    el.style.paddingLeft = `${12 + n.level * 9}px`;
-    el.innerHTML = `<div class="fd" style="background:${c.border}"></div>${esc(n.label)}`;
-    el.addEventListener('click', () => focusNode(n.id));
-    frag.appendChild(el);
-  });
-  list.innerHTML = '';
-  list.appendChild(frag);
-}
-function buildLegend() {
-  const types = [...new Set(VISIBLE_NODES.map(n => n.group))].sort();
-  const leg = document.getElementById('legend');
-  leg.innerHTML = '';
-  types.forEach(type => {
-    const c = GC[type] || GC.other;
-    const count = VISIBLE_NODES.filter(n => n.group === type).length;
-    const row = document.createElement('div'); row.className = 'li';
-    const pill = document.createElement('button'); pill.className = 'pill';
-    pill.textContent = `${ICONS[type]||'•'} ${type}`;
-    pill.style.cssText = `color:${c.text};border-color:${c.border};background:${c.bg}`;
-    pill.addEventListener('click', () => {
-      hiddenTypes.has(type) ? hiddenTypes.delete(type) : hiddenTypes.add(type);
-      pill.classList.toggle('off');
-      applyFilters();
-    });
-    const cnt = document.createElement('span'); cnt.className = 'lc'; cnt.textContent = count;
-    row.appendChild(pill); row.appendChild(cnt); leg.appendChild(row);
-  });
-}
-
-function hexToRgba(hex, a) {
-  const n = parseInt(hex.replace('#',''), 16);
-  return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`;
-}
-
-// ── graph ─────────────────────────────────────────────────────────────────────
-function renderGraph() {
-  const gc = document.getElementById('gc');
-  const stab = document.getElementById('stab');
-  stab.style.display = 'flex';
-
-  graph = ForceGraph3D()(gc)
-    .width(gc.offsetWidth).height(gc.offsetHeight)
-    .backgroundColor('#0d0d10')
-    .graphData({
-      nodes: RAW_NODES.map(n => ({...n})),
-      links: RAW_EDGES.map(e => ({ source: e.from, target: e.to, type: e.type }))
-    })
-    .nodeLabel(n => n.__hidden ? '' : n.id)
-    .nodeThreeObject(nodeSprite)
-    .nodeThreeObjectExtend(false)
-    .linkColor(l => {
-      if (l.type === 'imports') return 'rgba(179,134,0,0.9)';
-      if (l.type === 'root')    return 'rgba(255,255,255,0.06)';
-      if (l.type === 'semantic') return 'rgba(120,140,220,0.15)';
-      const sid = typeof l.source === 'object' ? l.source.id : l.source;
-      return hexToRgba((GC[nodeMap[sid]?.group] || GC.other).border, 0.2);
-    })
-    .linkWidth(l => l.type === 'imports' ? 1.5 : 0.4)
-    .linkDirectionalArrowLength(l => l.type === 'imports' ? 5 : 0)
-    .linkDirectionalArrowRelPos(1)
-    .linkCurvature(l => l.type === 'imports' ? 0.5 : 0.35)
-    .enableNodeDrag(true)
-    .onNodeClick(node => {
-      if (node.__hidden) return;
-      selectedNodeId = node.id;
-      showDetail(node.id);
-    })
-    .onBackgroundClick(() => {
-      selectedNodeId = null;
-      closeDetail();
-    })
-    .onEngineStop(() => { stab.style.display = 'none'; });
-
-  // Pin root anchor at origin so all subtrees orbit the center
-  const rootNode = graph.graphData().nodes.find(n => n.id === '__ROOT__');
-  if (rootNode) { rootNode.fx = 0; rootNode.fy = 0; rootNode.fz = 0; }
-
-  // Weak repulsion + very short links + strong center → one cohesive blob
-  graph.d3Force('charge').strength(-6);
-  graph.d3Force('link').distance(l => l.type==='root' ? 8 : 4).strength(l => l.type==='root' ? 2.5 : 1.2);
-  graph.d3Force('center').strength(2.0);
-
-  new ResizeObserver(() => graph.width(gc.offsetWidth).height(gc.offsetHeight)).observe(gc);
-  const visibleNodes = RAW_NODES.filter(n => !n.__hidden).length;
-  const visibleEdges = RAW_EDGES.filter(e => e.type !== 'root').length;
-  document.getElementById('stats').textContent = `${visibleNodes} nodes · ${visibleEdges} edges`;
-}
-
-// ── layout switching ──────────────────────────────────────────────────────────
-function setupLayoutBtns() {
-  document.querySelectorAll('.lbtn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.lbtn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      switchLayout(btn.dataset.l);
-    });
-  });
-}
-function switchLayout(mode) {
-  if (!graph) return;
-  document.getElementById('stab').style.display = 'flex';
-  graph.dagMode(mode === 'force' ? null : mode === 'hierarchy' ? 'td' : 'radialout');
-  graph.d3ReheatSimulation();
-}
-
-// ── filters ───────────────────────────────────────────────────────────────────
-function applyFilters() {
-  graph.nodeVisibility(n => !hiddenTypes.has(n.group));
-  graph.linkVisibility(l => {
-    const sid = typeof l.source === 'object' ? l.source.id : l.source;
-    const tid = typeof l.target === 'object' ? l.target.id : l.target;
-    return !hiddenTypes.has(nodeMap[sid]?.group) && !hiddenTypes.has(nodeMap[tid]?.group);
-  });
-}
-
-// ── detail panel ──────────────────────────────────────────────────────────────
-function focusNode(id) {
-  if (!graph) return;
-  const node = graph.graphData().nodes.find(n => n.id === id);
-  if (!node) return;
-  graph.cameraPosition({ x: node.x, y: node.y, z: (node.z||0) + 160 }, node, 600);
-  selectedNodeId = id;
-  graph.nodeColor(getColor);
-  showDetail(id);
-}
-// ── detail panel ──────────────────────────────────────────────────────────────
-function showDetail(id) {
-  const n = nodeMap[id];
-  if (!n) return;
-  const c = GC[n.group] || GC.other;
-  const outE = RAW_EDGES.filter(e => e.from === id);
-  const inE  = RAW_EDGES.filter(e => e.to   === id);
-  document.getElementById('dn').textContent = n.label;
-  document.getElementById('dn').style.color = c.text;
-  const makeLinks = (edges, dir) => {
-    const target = dir==='out' ? 'to' : 'from';
-    const arrow  = dir==='out'
-      ? `<span class="la" style="color:#b38600">→</span>`
-      : `<span class="la" style="color:#10b981">←</span>`;
-    return edges.slice(0,25).map(e => {
-      const label = esc(e[target].split('/').pop());
-      return `<div class="lk" data-node="${esc(e[target])}">${arrow}${label}</div>`;
-    }).join('') + (edges.length>25 ? `<div class="more">…${edges.length-25} more</div>` : '');
-  };
-  document.getElementById('db').innerHTML = `
-    <div class="ds"><div class="dl">Path</div><div class="dpath">${esc(n.id)}</div></div>
-    <div class="ds"><div class="dl">Type</div><div class="dv">${ICONS[n.group]||'•'} ${esc(n.group)}</div></div>
-    ${outE.length ? `<div class="ds"><div class="dl">Contains / Links (${outE.length})</div>${makeLinks(outE,'out')}</div>` : ''}
-    ${inE.length  ? `<div class="ds"><div class="dl">Referenced by (${inE.length})</div>${makeLinks(inE,'in')}</div>` : ''}
-    ${!outE.length&&!inE.length ? `<div class="dv" style="color:#334155">No connections</div>` : ''}
-  `;
-  document.getElementById('dp').classList.add('open');
-  document.getElementById('db').querySelectorAll('.lk[data-node]').forEach(el => {
-    el.addEventListener('click', () => focusNode(el.dataset.node));
-  });
-}
-
-function closeDetail() {
-  document.getElementById('dp').classList.remove('open');
-}
-
-document.getElementById('dc').addEventListener('click', () => {
-  selectedNodeId = null;
-  graph?.nodeColor(getColor);
-  closeDetail();
+const nodeMap = Object.fromEntries(NODES.map(n => [n.id, n]));
+const EDGES = [];
+NODES.forEach(n => {
+  const pid = n.par;
+  if (pid && nodeMap[pid]) EDGES.push([pid, n.id]);
 });
 
+// Update stats
+const statsEl = document.getElementById('stats');
+statsEl.textContent = `${NODES.length} nodes · ${EDGES.length} edges · Aldebaran Labs`;
+
+// ── Seeded RNG ────────────────────────────────────────────────────────────────
+function mkRng(seed) {
+  let s = seed >>> 0;
+  return () => { s = (Math.imul(1664525, s) + 1013904223) >>> 0; return s / 4294967296; };
+}
+
+function gauss(r) {
+  const u = r() + 1e-9, v = r();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+
+// ── Galaxy layout ─────────────────────────────────────────────────────────────
+const BASE_R = { class:8, folder:12, function:5, markdown:3, other:3, python:6 };
+let W, H, stars = [];
+
+function layoutGalaxy() {
+  const canvas = document.getElementById('gc');
+  W = canvas.width  = canvas.offsetWidth;
+  H = canvas.height = canvas.offsetHeight;
+  const cx = W * 0.52, cy = H * 0.50;
+  const rng = mkRng(7919);
+
+  // Spread factor per type (0 = center, 1 = outer edge)
+  const spread = { class:0.45, folder:0.35, function:0.68, markdown:0.78, other:0.82, python:0.58 };
+
+  NODES.forEach(n => {
+    if (n.isGod) { n.gx = cx; n.gy = cy; return; }
+    const s = (W * 0.30) * (spread[n.type] || 0.7);
+    n.gx = cx + gauss(rng) * s * 0.85;
+    n.gy = cy + gauss(rng) * s * 0.52; // compressed Y = galaxy disk tilt
+    n.baseR = BASE_R[n.type] || 4;
+  });
+  NODES.find(n => n.isGod).baseR = 14;
+
+  // Stars
+  stars = [];
+  const sr = mkRng(4321);
+  for (let i = 0; i < 500; i++)
+    stars.push({ x:sr()*W, y:sr()*H, s:sr()<0.08?1.5:1, o:0.25+sr()*0.65, ph:sr()*Math.PI*2 });
+}
+
+// ── Draw ──────────────────────────────────────────────────────────────────────
+let frame = 0, galaxyMode = true;
+
+function draw() {
+  frame++;
+  const canvas = document.getElementById('gc');
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, W, H);
+
+  // Stars
+  stars.forEach(s => {
+    ctx.fillStyle = `rgba(255,255,255,${s.o * (0.55 + 0.45 * Math.sin(s.ph + frame * 0.008))})`;
+    ctx.fillRect(Math.round(s.x), Math.round(s.y), s.s, s.s);
+  });
+
+  if (galaxyMode) {
+    // Edges
+    ctx.save();
+    EDGES.forEach(([a, b]) => {
+      const na = nodeMap[a], nb = nodeMap[b];
+      if (!na || !nb || na.gx == null || nb.gx == null) return;
+      ctx.beginPath();
+      ctx.moveTo(na.gx, na.gy);
+      ctx.lineTo(nb.gx, nb.gy);
+      ctx.strokeStyle = `rgba(${na.type==='folder'?'245,160,32':na.type==='python'?'68,136,255':'180,160,255'},0.10)`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    });
+    ctx.restore();
+
+    // Nodes — sorted back-to-front
+    const order = ['other','markdown','function','python','class','folder'];
+    [...NODES].sort((a,b) => {
+      if (a.isGod) return 1; if (b.isGod) return -1;
+      return order.indexOf(a.type) - order.indexOf(b.type);
+    }).forEach(n => {
+      if (n.gx == null) return;
+      const c = TC[n.type];
+      const r = n.baseR;
+      const pulse = n.isGod ? (1 + 0.04 * Math.sin(frame * 0.025)) : 1;
+      ctx.save();
+
+      if (n.isGod) {
+        // Wide diffuse halo
+        const rg = ctx.createRadialGradient(n.gx, n.gy, 0, n.gx, n.gy, r * 9 * pulse);
+        rg.addColorStop(0,   'rgba(160,210,255,0.55)');
+        rg.addColorStop(0.25,'rgba(100,170,255,0.25)');
+        rg.addColorStop(0.6, 'rgba(60,120,240,0.08)');
+        rg.addColorStop(1,   'rgba(30,80,200,0)');
+        ctx.beginPath();
+        ctx.arc(n.gx, n.gy, r * 9 * pulse, 0, Math.PI*2);
+        ctx.fillStyle = rg;
+        ctx.fill();
+        ctx.shadowBlur = 35;
+        ctx.shadowColor = '#80c0ff';
+        ctx.beginPath();
+        ctx.arc(n.gx, n.gy, r * pulse, 0, Math.PI*2);
+        ctx.fillStyle = '#c0e0ff';
+        ctx.fill();
+      } else {
+        // Outer glow
+        ctx.shadowBlur = n.type==='folder' ? 20 : n.type==='class' ? 16 : n.type==='python' ? 12 : 8;
+        ctx.shadowColor = c.dot;
+        ctx.beginPath();
+        ctx.arc(n.gx, n.gy, r, 0, Math.PI*2);
+        ctx.fillStyle = c.dot;
+        ctx.fill();
+      }
+
+      // Bright core (all nodes)
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.arc(n.gx, n.gy, Math.max(r * 0.4 * pulse, 1.2), 0, Math.PI*2);
+      ctx.fillStyle = n.isGod ? '#ffffff' : 'rgba(255,255,255,0.75)';
+      ctx.fill();
+      ctx.restore();
+    });
+  } else {
+    // Nexus mode — flat dots + lines, no glow
+    EDGES.forEach(([a, b]) => {
+      const na = nodeMap[a], nb = nodeMap[b];
+      if (!na || !nb || na.gx == null || nb.gx == null) return;
+      ctx.beginPath();
+      ctx.moveTo(na.gx, na.gy); ctx.lineTo(nb.gx, nb.gy);
+      ctx.strokeStyle = 'rgba(180,160,255,0.18)';
+      ctx.lineWidth = 0.7;
+      ctx.stroke();
+    });
+    NODES.forEach(n => {
+      if (n.gx == null) return;
+      const c = TC[n.type];
+      ctx.beginPath();
+      ctx.arc(n.gx, n.gy, n.baseR * 0.7, 0, Math.PI*2);
+      ctx.fillStyle = n.isGod ? '#c0e0ff' : c.dot;
+      ctx.fill();
+    });
+  }
+
+  requestAnimationFrame(draw);
+}
+
+// ── Sidebar ───────────────────────────────────────────────────────────────────
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function buildSidebar() {
+  const list = document.getElementById('flist');
+  NODES.forEach((n, i) => {
+    const c = TC[n.type];
+    const el = document.createElement('div');
+    el.className = 'fi' + (n.isGod ? ' hi' : '');
+    el.style.paddingLeft = (10 + n.lv * 10) + 'px';
+    el.innerHTML = `<span class="fd" style="background:${c.dot}"></span>${esc(n.label)}`;
+    el.addEventListener('click', () => {
+      list.querySelectorAll('.fi.hi').forEach(e => e.classList.remove('hi'));
+      el.classList.add('hi');
+    });
+    list.appendChild(el);
+    el._node = n;
+  });
+
+  document.getElementById('fsearch').addEventListener('input', e => {
+    const q = e.target.value.toLowerCase();
+    list.querySelectorAll('.fi').forEach(el => {
+      el.style.display = q && !el._node.label.toLowerCase().includes(q) ? 'none' : '';
+    });
+  });
+}
+
+function buildLegend() {
+  const leg = document.getElementById('legend');
+  ['class','folder','function','markdown','other','python'].forEach(type => {
+    if (!typeCounts[type]) return;
+    const c = TC[type];
+    const row = document.createElement('div');
+    row.className = 'li';
+    const pill = document.createElement('button');
+    pill.className = 'pill';
+    pill.style.cssText = `color:${c.dot};border-color:${c.border};background:${c.bg}`;
+    pill.textContent = TC[type].icon + type;
+    const cnt = document.createElement('span');
+    cnt.className = 'lc';
+    cnt.textContent = typeCounts[type];
+    row.appendChild(pill); row.appendChild(cnt);
+    leg.appendChild(row);
+  });
+}
+
+// ── Mode toggle ───────────────────────────────────────────────────────────────
+document.getElementById('btn-nexus').addEventListener('click', () => {
+  galaxyMode = false;
+  document.getElementById('btn-nexus').classList.add('active');
+  document.getElementById('btn-galaxy').classList.remove('active');
+});
+document.getElementById('btn-galaxy').addEventListener('click', () => {
+  galaxyMode = true;
+  document.getElementById('btn-galaxy').classList.add('active');
+  document.getElementById('btn-nexus').classList.remove('active');
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+window.addEventListener('resize', layoutGalaxy);
 buildSidebar();
 buildLegend();
-renderGraph();
-setupLayoutBtns();
+layoutGalaxy();
+draw();
 </script>
 </body>
 </html>
