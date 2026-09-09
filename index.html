@@ -1356,7 +1356,7 @@
       box-sizing: border-box;
       font-family: var(--sans);
       font-size: 1rem;
-      padding: 14px 52px 14px 46px;
+      padding: 14px 52px 14px 16px;
       border: 1px solid var(--border);
       border-radius: 10px;
       resize: none;
@@ -1364,6 +1364,8 @@
       color: var(--primary);
       outline: none;
       line-height: 1.5;
+      max-height: 120px;
+      overflow-y: auto;
       transition: border-color 0.15s;
     }
     #chat-input:focus { border-color: var(--accent); }
@@ -1371,12 +1373,13 @@
     #chat-send {
       position: absolute;
       right: 10px;
-      bottom: 10px;
-      width: 32px;
-      height: 32px;
-      background: var(--accent);
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
+      background: #000;
       border: none;
-      border-radius: 8px;
+      border-radius: 50%;
       padding: 0;
       color: #fff;
       cursor: pointer;
@@ -1387,19 +1390,6 @@
     }
     #chat-send:hover:not(:disabled) { opacity: 0.82; }
     #chat-send:disabled { opacity: 0.35; cursor: not-allowed; }
-    .chat-attach-btn {
-      position: absolute;
-      left: 12px;
-      bottom: 10px;
-      background: none;
-      border: none;
-      padding: 0;
-      color: var(--muted);
-      opacity: 0.45;
-      cursor: not-allowed;
-      display: flex;
-      align-items: center;
-    }
     @media (max-width: 700px) {
       #chat { padding: 60px 20px; }
       .chat-header h2 { font-size: 1.5rem; }
@@ -1555,10 +1545,7 @@
       <div id="chat-thread"></div>
       <div class="chat-input-row">
         <div class="chat-input-wrap">
-          <textarea id="chat-input" placeholder="Describe your business or ask us anything…" rows="2"></textarea>
-          <button class="chat-attach-btn" title="Attach file (coming soon)" disabled aria-label="Attach file">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
-          </button>
+          <textarea id="chat-input" placeholder="Describe your business or ask us anything…" rows="1"></textarea>
           <button id="chat-send" aria-label="Send">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
           </button>
@@ -2028,6 +2015,29 @@
         return div;
       }
 
+      // ponytail: strip stray markdown the model slips in despite the system prompt — cheap regex pass, not a full markdown parser
+      function stripMarkdown(text) {
+        return text
+          .replace(/\*\*(.*?)\*\*/g, '$1')
+          .replace(/\*(.*?)\*/g, '$1')
+          .replace(/^#{1,6}\s+/gm, '')
+          .replace(/^[-•]\s+/gm, '')
+          .replace(/`/g, '')
+          .replace(/[*#]/g, '');
+      }
+
+      // fake typewriter: reveals the already-fetched reply in fast chunks, GPT/Claude streaming feel without an SSE backend
+      function typeReply(bubble, text) {
+        var i = 0;
+        var chunk = 2;
+        var iv = setInterval(function () {
+          i += chunk;
+          bubble.textContent = text.slice(0, i);
+          thread.scrollTop = thread.scrollHeight;
+          if (i >= text.length) clearInterval(iv);
+        }, 15);
+      }
+
       async function send() {
         var text = input.value.trim();
         if (!text || sendBtn.disabled) return;
@@ -2035,7 +2045,6 @@
         input.value = '';
         input.style.height = '';
         sendBtn.disabled = true;
-        sendBtn.textContent = 'Sending…';
 
         if (!revealed) {
           revealed = true;
@@ -2055,15 +2064,15 @@
           });
           var data = await res.json();
           var reply = (res.ok && data.reply) ? data.reply : 'Something went wrong — email us at hello@the-bull.ai';
+          reply = stripMarkdown(reply);
           history.push({ role: 'assistant', content: reply });
           loading.className = 'chat-msg assistant';
-          loading.querySelector('.msg-bubble').textContent = reply;
+          typeReply(loading.querySelector('.msg-bubble'), reply);
         } catch (_) {
           loading.className = 'chat-msg assistant';
           loading.querySelector('.msg-bubble').textContent = 'Network error — email us at hello@the-bull.ai';
         } finally {
           sendBtn.disabled = false;
-          sendBtn.textContent = 'Send';
         }
         thread.scrollTop = thread.scrollHeight;
       }
