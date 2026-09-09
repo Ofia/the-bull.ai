@@ -1391,6 +1391,45 @@
     }
     #chat-send:hover:not(:disabled) { opacity: 0.82; }
     #chat-send:disabled { opacity: 0.35; cursor: not-allowed; }
+    .chat-capture {
+      display: none;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .chat-capture.visible { display: flex; }
+    .chat-capture input {
+      flex: 1;
+      min-width: 160px;
+      box-sizing: border-box;
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--primary);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .chat-capture input:focus { border-color: var(--accent); }
+    .chat-capture button {
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: var(--sans);
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .chat-capture button:hover:not(:disabled) { opacity: 0.82; }
+    .chat-capture button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .chat-capture-feedback { flex-basis: 100%; font-size: 13px; }
+    .chat-capture-feedback.success { color: #16a34a; }
+    .chat-capture-feedback.error { color: #dc2626; }
     @media (max-width: 700px) {
       #chat { padding: 60px 20px; }
       .chat-header h2 { font-size: 1.5rem; }
@@ -1544,13 +1583,19 @@
         <p>Tell us about your business — we'll show you exactly how we can eliminate your administrative load.</p>
       </div>
       <div id="chat-thread"></div>
-      <div class="chat-input-row">
+      <div class="chat-input-row" id="chat-input-row">
         <div class="chat-input-wrap">
           <textarea id="chat-input" placeholder="Describe your business or ask us anything…" rows="1"></textarea>
           <button id="chat-send" aria-label="Send">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
           </button>
         </div>
+      </div>
+      <div class="chat-capture" id="chat-capture">
+        <input id="chat-capture-name" type="text" placeholder="Your name" required />
+        <input id="chat-capture-email" type="email" placeholder="you@example.com" required />
+        <button id="chat-capture-send" type="button">Send</button>
+        <div class="chat-capture-feedback" id="chat-capture-feedback"></div>
       </div>
     </div>
   </section>
@@ -1998,11 +2043,20 @@
     // ── CHAT ──
     (function () {
       var CHAT_API = 'https://the-bull-chat-api.vercel.app/api/chat';
+      var LEAD_FORM = 'https://formspree.io/f/xdajykjg';
+      var MAX_REPLIES = 3;
       var thread = document.getElementById('chat-thread');
       var input  = document.getElementById('chat-input');
       var sendBtn = document.getElementById('chat-send');
+      var chatInputRow = document.getElementById('chat-input-row');
+      var capture = document.getElementById('chat-capture');
+      var captureName = document.getElementById('chat-capture-name');
+      var captureEmail = document.getElementById('chat-capture-email');
+      var captureSend = document.getElementById('chat-capture-send');
+      var captureFeedback = document.getElementById('chat-capture-feedback');
       var history = [];
       var revealed = false;
+      var assistantReplies = 0;
 
       function appendMsg(role, text) {
         var div = document.createElement('div');
@@ -2028,20 +2082,77 @@
       }
 
       // fake typewriter: reveals the already-fetched reply in fast chunks, GPT/Claude streaming feel without an SSE backend
-      function typeReply(bubble, text) {
+      function typeReply(bubble, text, onDone) {
         var i = 0;
         var chunk = 2;
         var iv = setInterval(function () {
           i += chunk;
           bubble.textContent = text.slice(0, i);
           thread.scrollTop = thread.scrollHeight;
-          if (i >= text.length) clearInterval(iv);
+          if (i >= text.length) {
+            clearInterval(iv);
+            if (onDone) onDone();
+          }
         }, 15);
+      }
+
+      function showCapture() {
+        chatInputRow.style.display = 'none';
+        capture.classList.add('visible');
+        captureName.focus();
+      }
+
+      function buildTranscript() {
+        return history.map(function (m) {
+          return (m.role === 'user' ? 'Visitor: ' : 'Assistant: ') + m.content;
+        }).join('\n\n');
+      }
+
+      async function sendLead() {
+        var name = captureName.value.trim();
+        var email = captureEmail.value.trim();
+        if (!name || !email || !captureEmail.checkValidity()) {
+          captureFeedback.textContent = 'Enter your name and a valid email.';
+          captureFeedback.className = 'chat-capture-feedback error';
+          return;
+        }
+
+        captureSend.disabled = true;
+        captureSend.textContent = 'Sending…';
+        captureFeedback.textContent = '';
+        captureFeedback.className = 'chat-capture-feedback';
+
+        try {
+          var res = await fetch(LEAD_FORM, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+              name: name,
+              email: email,
+              _subject: 'New chat lead from the-bull.ai',
+              message: buildTranscript()
+            })
+          });
+          if (!res.ok) throw new Error();
+
+          captureName.disabled = true;
+          captureEmail.disabled = true;
+          captureSend.style.display = 'none';
+          captureFeedback.textContent = 'Thanks — our team will follow up at ' + email + ' shortly.';
+          captureFeedback.className = 'chat-capture-feedback success';
+        } catch (_) {
+          captureFeedback.textContent = 'Something went wrong — email us directly at hello@the-bull.ai';
+          captureFeedback.className = 'chat-capture-feedback error';
+          captureSend.disabled = false;
+          captureSend.textContent = 'Send';
+        }
       }
 
       async function send() {
         var text = input.value.trim();
         if (!text || sendBtn.disabled) return;
+
+        var isFinal = assistantReplies + 1 >= MAX_REPLIES;
 
         input.value = '';
         input.style.height = '';
@@ -2061,19 +2172,26 @@
           var res = await fetch(CHAT_API, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ messages: history })
+            body: JSON.stringify({ messages: history, final: isFinal })
           });
           var data = await res.json();
-          var reply = (res.ok && data.reply) ? data.reply : 'Something went wrong — email us at hello@the-bull.ai';
-          reply = stripMarkdown(reply);
-          history.push({ role: 'assistant', content: reply });
-          loading.className = 'chat-msg assistant';
-          typeReply(loading.querySelector('.msg-bubble'), reply);
+          if (res.ok && data.reply) {
+            var reply = stripMarkdown(data.reply);
+            history.push({ role: 'assistant', content: reply });
+            assistantReplies++;
+            loading.className = 'chat-msg assistant';
+            typeReply(loading.querySelector('.msg-bubble'), reply, isFinal ? showCapture : undefined);
+          } else {
+            isFinal = false;
+            loading.className = 'chat-msg assistant';
+            loading.querySelector('.msg-bubble').textContent = 'Something went wrong — email us at hello@the-bull.ai';
+          }
         } catch (_) {
+          isFinal = false;
           loading.className = 'chat-msg assistant';
           loading.querySelector('.msg-bubble').textContent = 'Network error — email us at hello@the-bull.ai';
         } finally {
-          sendBtn.disabled = false;
+          if (!isFinal) sendBtn.disabled = false;
         }
         thread.scrollTop = thread.scrollHeight;
       }
@@ -2081,6 +2199,12 @@
       sendBtn.addEventListener('click', send);
       input.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+      });
+      captureSend.addEventListener('click', sendLead);
+      [captureName, captureEmail].forEach(function (el) {
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') { e.preventDefault(); sendLead(); }
+        });
       });
       // auto-grow textarea
       input.addEventListener('input', function () {

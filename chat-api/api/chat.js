@@ -51,6 +51,10 @@ Plain professional prose only. No markdown: no asterisks, no bold or italics, no
 
 TONE: Direct, confident, no filler phrases. Speak to operators and business owners who think in systems. Short declarative sentences. No buzzwords. If you don't know a specific detail about the user's industry, say so and ask — then map their answer to what The Bull actually does.`;
 
+const FINAL_TURN_ADDENDUM = `
+
+THIS IS THE FINAL REPLY IN THIS CONVERSATION — the visitor has hit the reply limit. Give one clear, concrete takeaway: the single most useful idea for how The Bull would help THEIR specific business, based on what they've told you. Do not ask another exploratory question. Close by telling them, in one short sentence, that you'd like their name and email so our team can follow up directly with specifics — do not ask them to type it in chat, a form will appear for that right after your message.`;
+
 module.exports = async function handler(req, res) {
   // ponytail: open CORS, restrict to the-bull.ai domains before launch
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -60,7 +64,7 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { messages } = req.body || {};
+  const { messages, final } = req.body || {};
   if (!Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'messages array required' });
   }
@@ -76,7 +80,7 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 300,
-        system: SYSTEM_PROMPT,
+        system: final ? SYSTEM_PROMPT + FINAL_TURN_ADDENDUM : SYSTEM_PROMPT,
         messages: messages.slice(-10)
       })
     });
