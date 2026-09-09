@@ -2211,6 +2211,16 @@
         this.style.height = '';
         this.style.height = Math.min(this.scrollHeight, 120) + 'px';
       });
+
+      // placeholder wraps to a clipped 2nd line on narrow screens since the box is a fixed 1-row height — swap to a shorter one
+      var placeholderFull = input.placeholder;
+      var placeholderShort = 'Describe your business…';
+      var mobileQuery = window.matchMedia('(max-width: 700px)');
+      function updatePlaceholder() {
+        input.placeholder = mobileQuery.matches ? placeholderShort : placeholderFull;
+      }
+      updatePlaceholder();
+      mobileQuery.addEventListener('change', updatePlaceholder);
     })();
   </script>
 
