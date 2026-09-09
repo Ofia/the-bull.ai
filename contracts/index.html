@@ -53,23 +53,11 @@
       overflow-x: hidden;
     }
 
-    /* ── CANVAS ── */
-    #bg-canvas {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    #quote { position: relative; overflow: hidden; }
-
     /* Everything sits above the canvas */
     nav, section, footer, .node-strip {
       position: relative;
       z-index: 1;
     }
-
-    #quote .quote-inner { position: relative; z-index: 1; }
 
     /* ── NAV ── */
     nav {
@@ -249,29 +237,6 @@
       justify-content: center;
       text-align: center;
       padding: 120px 48px 80px;
-    }
-
-    .hero-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--primary);
-      background: rgba(255,255,255,0.85);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 5px 14px 5px 6px;
-      margin-bottom: 36px;
-      backdrop-filter: blur(8px);
-    }
-
-    .pill-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      animation: blink 2s infinite;
     }
 
     @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
@@ -602,45 +567,6 @@
       background: #fff;
     }
 
-    /* ── QUOTE ── */
-    #quote {
-      padding: 100px 48px;
-      background-image: radial-gradient(circle, rgba(0,0,0,0.055) 1px, transparent 1px);
-      background-size: 22px 22px;
-      text-align: center;
-    }
-
-    .quote-inner {
-      max-width: 860px;
-      margin: 0 auto;
-    }
-
-    .quote-text {
-      font-family: var(--display);
-      font-size: clamp(22px, 4vw, 44px);
-      font-weight: 600;
-      letter-spacing: -0.025em;
-      line-height: 1.15;
-    }
-
-    .q1 { color: rgba(13,13,13,0.88); }
-    .q2 { color: rgba(13,13,13,0.32); }
-    .q3 { color: rgba(13,13,13,0.16); }
-
-    .quote-attr {
-      margin-top: 48px;
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .quote-attr strong {
-      display: block;
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 4px;
-    }
-
     /* ── FOOTER ── */
     footer {
       border-top: 1px solid var(--border);
@@ -964,8 +890,7 @@
     .coming-soon-pill {
       font-family: var(--mono); font-size: 9px; font-weight: 700;
       letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--muted); background: rgba(13,13,13,0.07);
-      padding: 2px 9px; border-radius: 100px;
+      color: var(--muted);
     }
     .privacy-coming-soon-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
@@ -1115,7 +1040,6 @@
       #who { padding: 72px 20px; }
       #privacy { padding: 72px 20px; }
       #ai { padding: 72px 20px; }
-      #quote { padding: 80px 20px; }
       footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
 
       .steps-grid { grid-template-columns: 1fr; }
@@ -1210,10 +1134,6 @@
 
   <!-- ── HERO ── -->
   <section id="hero">
-    <div class="hero-pill">
-      <div class="pill-dot"></div>
-      Legal process intelligence
-    </div>
     <h1>Every clause.<br/>Every party.<br/>Zero admin.</h1>
     <p class="hero-sub">
       The Bull Contracts turns dense legal agreements into live, trackable process graphs —
@@ -1478,22 +1398,6 @@
     </div>
   </section>
 
-  <!-- ── QUOTE ── -->
-  <section id="quote">
-    <canvas id="bg-canvas"></canvas>
-    <div class="quote-inner">
-      <div class="quote-text">
-        <span class="q1">"Turned 3 hours of contract review</span><br/>
-        <span class="q2">into 3 minutes of dashboard</span><br/>
-        <span class="q3">monitoring."</span>
-      </div>
-      <div class="quote-attr">
-        <strong>David Hartmann</strong>
-        Managing Partner · Hartmann & Associates
-      </div>
-    </div>
-  </section>
-
   <!-- ── FOOTER ── -->
   <footer>
     <a href="/" class="footer-logo">
@@ -1599,87 +1503,6 @@
         mobileNav.classList.remove('open');
       });
     });
-  </script>
-
-  <!-- ── CANVAS NODE ANIMATION (white bg version) ── -->
-  <script>
-    const canvas = document.getElementById('bg-canvas');
-    const ctx    = canvas.getContext('2d');
-
-    const NODE_COLORS = ['#1c1c1c'];
-    const NODE_COUNT  = 43;
-    const LINK_DIST   = 160;
-    const SPEED       = 0.26;
-
-    let W, H, nodes;
-
-    function resize() {
-      const section = canvas.parentElement;
-      W = canvas.width  = section.offsetWidth;
-      H = canvas.height = section.offsetHeight;
-    }
-
-    function mkNode() {
-      return {
-        x:   Math.random() * W,
-        y:   Math.random() * H,
-        vx:  (Math.random() - 0.5) * SPEED,
-        vy:  (Math.random() - 0.5) * SPEED,
-        r:   1 + Math.random() * 1.5,
-        col: NODE_COLORS[Math.floor(Math.random() * NODE_COLORS.length)],
-      };
-    }
-
-    function init() {
-      resize();
-      nodes = Array.from({ length: NODE_COUNT }, mkNode);
-    }
-
-    function step() {
-      ctx.clearRect(0, 0, W, H);
-
-      // move
-      for (const n of nodes) {
-        n.x += n.vx;
-        n.y += n.vy;
-        if (n.x < -40)  n.x = W + 40;
-        if (n.x > W+40) n.x = -40;
-        if (n.y < -40)  n.y = H + 40;
-        if (n.y > H+40) n.y = -40;
-      }
-
-      // links — dark lines, low opacity on white bg
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const a = nodes[i], b = nodes[j];
-          const dx = a.x - b.x, dy = a.y - b.y;
-          const dist = Math.sqrt(dx*dx + dy*dy);
-          if (dist < LINK_DIST) {
-            const alpha = (1 - dist / LINK_DIST) * 0.12;
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(13,13,13,${alpha})`;
-            ctx.lineWidth = 0.8;
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-          }
-        }
-      }
-
-      // nodes — plain black dots
-      for (const n of nodes) {
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(28,28,28,0.35)';
-        ctx.fill();
-      }
-
-      requestAnimationFrame(step);
-    }
-
-    window.addEventListener('resize', resize);
-    init();
-    step();
   </script>
 
   <!-- ── CONTACT MODAL ── -->

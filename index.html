@@ -226,20 +226,6 @@
       color: var(--muted);
     }
 
-    .soon-pill {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      background: var(--accent-bg);
-      color: var(--accent);
-      padding: 2px 6px;
-      border-radius: 4px;
-      margin-left: 5px;
-      vertical-align: middle;
-    }
-
     /* Nav right */
     .nav-right {
       display: flex;
@@ -354,40 +340,6 @@
     #hero {
       padding: 96px 48px 72px;
       text-align: center;
-    }
-
-    .hero-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--primary);
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 5px 14px 5px 6px;
-      margin-bottom: 36px;
-      text-decoration: none;
-      transition: border-color 0.12s;
-    }
-
-    .hero-pill:hover { border-color: rgba(13,13,13,0.2); }
-
-    .pill-badge {
-      background: var(--primary);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 100px;
-    }
-
-    .pill-arrow {
-      color: var(--muted);
-      font-size: 13px;
     }
 
     h1 {
@@ -1050,45 +1002,6 @@
       color: var(--accent);
     }
 
-    /* ── QUOTE ── */
-    #quote {
-      padding: 120px 48px;
-      background-image: radial-gradient(circle, rgba(0,0,0,0.055) 1px, transparent 1px);
-      background-size: 22px 22px;
-      text-align: center;
-    }
-
-    .quote-inner {
-      max-width: 880px;
-      margin: 0 auto;
-    }
-
-    .quote-text {
-      font-family: var(--display);
-      font-size: clamp(24px, 4vw, 48px);
-      font-weight: 600;
-      letter-spacing: -0.025em;
-      line-height: 1.15;
-    }
-
-    .q1 { color: rgba(13,13,13,0.88); }
-    .q2 { color: rgba(13,13,13,0.32); }
-    .q3 { color: rgba(13,13,13,0.16); }
-
-    .quote-attr {
-      margin-top: 52px;
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .quote-attr strong {
-      display: block;
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 4px;
-    }
-
     /* ── FOOTER ── */
     footer {
       border-top: 1px solid var(--border);
@@ -1358,7 +1271,6 @@
       #brain { padding: 72px 20px; }
       .brain-flow { grid-template-columns: 1fr; }
       #products { padding: 72px 20px; }
-      #quote { padding: 80px 20px; }
 
       footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
       .footer-links { gap: 16px; }
@@ -1621,11 +1533,6 @@
 
   <!-- ── HERO ── -->
   <section id="hero">
-    <a href="/contracts" class="hero-pill">
-      <span class="pill-badge">New</span>
-      The Bull Contracts is now live
-      <span class="pill-arrow">→</span>
-    </a>
     <h1>Power up your<br/>company with AI.</h1>
     <p class="hero-sub">
       We build custom AI-powered software for legal, financial, and operational teams
@@ -1978,21 +1885,6 @@
           <span class="p-arrow">↗</span>
         </a>
 
-      </div>
-    </div>
-  </section>
-
-  <!-- ── QUOTE ── -->
-  <section id="quote">
-    <div class="quote-inner">
-      <div class="quote-text">
-        <span class="q1">"The moment we onboarded,</span><br/>
-        <span class="q2">the admin work disappeared.</span><br/>
-        <span class="q3">We haven't looked back."</span>
-      </div>
-      <div class="quote-attr">
-        <strong>Sarah Reiner</strong>
-        General Counsel · Meridian Development Group
       </div>
     </div>
   </section>
