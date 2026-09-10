@@ -422,18 +422,7 @@
     .carousel-slide { display: none; flex: 1; overflow: hidden; }
     .carousel-slide.active { display: flex; }
     .carousel-slide > img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
-    .carousel-nav { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 16px; }
-    .carousel-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); border: none; cursor: pointer; padding: 0; flex-shrink: 0; transition: background 0.18s; }
-    .carousel-dot.active { background: var(--primary); }
-
-    /* hover arrows */
-    .carousel-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 20; background: rgba(255,255,255,0.88); border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transition: opacity 0.18s; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .carousel-arrow svg { width: 16px; height: 16px; stroke: var(--primary); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    .carousel-arrow.prev { left: 12px; }
-    .carousel-arrow.next { right: 12px; }
     .mockup-frame { position: relative; }
-    .mockup-frame:hover .carousel-arrow { opacity: 1; }
-    .carousel-arrow:hover { background: #fff; border-color: #c0c0ba; }
 
     /* ── PROPERTIES 3D SLIDE ── */
     .prop-slide { position: relative; background: #f7f7f5; }
@@ -1614,15 +1603,9 @@
         <div class="chrome-dot" style="background:#FFBD2E"></div>
         <div class="chrome-dot" style="background:#00CA4E"></div>
       </div>
-      <button class="carousel-arrow prev" id="carousel-prev" aria-label="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
-      <button class="carousel-arrow next" id="carousel-next" aria-label="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
       <div class="mockup-body">
-        <!-- slide 1: Business Brain (live mockup) -->
-        <div class="carousel-slide active">
-          <iframe src="/brain/" title="Business Brain" style="width:100%;height:100%;border:none;display:block;flex:1;"></iframe>
-        </div>
-        <!-- slide 2: Properties 3D (live mockup) -->
-        <div class="carousel-slide prop-slide">
+        <!-- Properties 3D (live, interactive) -->
+        <div class="carousel-slide active prop-slide">
           <div class="archi-topbar">
             <div class="archi-logo-block">
               <div class="archi-logo-text">The Bull Properties</div>
@@ -1710,32 +1693,7 @@
             </div>
           </div>
         </div>
-        <!-- slide 3: Properties TRON -->
-        <div class="carousel-slide">
-          <img src="assets/mockups/properties-tron.png" alt="Properties – 3D property view">
-        </div>
-        <!-- slide 3: Contracts -->
-        <div class="carousel-slide">
-          <img src="assets/mockups/contracts-overview.png" alt="Contracts – dashboard overview">
-        </div>
-        <!-- slide 4: Developer -->
-        <div class="carousel-slide">
-          <iframe src="/developer/mockup.html" style="width:100%;height:100%;border:none;display:block;flex:1;" loading="lazy" title="Developer – Live Mockup" scrolling="no"></iframe>
-        </div>
-        <!-- slide 5: Salon -->
-        <div class="carousel-slide">
-          <img src="assets/mockups/salon-superboard.png" alt="Salon – superboard">
-        </div>
       </div>
-    </div>
-    <!-- carousel nav dots -->
-    <div class="carousel-nav">
-      <button class="carousel-dot active" data-slide="0" aria-label="Core Data"></button>
-      <button class="carousel-dot" data-slide="1" aria-label="Properties 3D"></button>
-      <button class="carousel-dot" data-slide="2" aria-label="Properties TRON"></button>
-      <button class="carousel-dot" data-slide="3" aria-label="Contracts"></button>
-      <button class="carousel-dot" data-slide="4" aria-label="Developer"></button>
-      <button class="carousel-dot" data-slide="5" aria-label="Salon"></button>
     </div>
   </div>
 
@@ -2224,31 +2182,6 @@
     })();
   </script>
 
-
-  <!-- ── CAROUSEL ── -->
-  <script>
-  // ── CAROUSEL ──
-  (function() {
-    var slides = document.querySelectorAll('.carousel-slide');
-    var dots = document.querySelectorAll('.carousel-dot');
-    var current = 0;
-
-    function goTo(n) {
-      slides[current].classList.remove('active');
-      dots[current].classList.remove('active');
-      current = (n + slides.length) % slides.length;
-      slides[current].classList.add('active');
-      dots[current].classList.add('active');
-    }
-
-    dots.forEach(function(dot) {
-      dot.addEventListener('click', function() { goTo(+dot.dataset.slide); });
-    });
-
-    document.getElementById('carousel-prev').addEventListener('click', function() { goTo(current - 1); });
-    document.getElementById('carousel-next').addEventListener('click', function() { goTo(current + 1); });
-  })();
-  </script>
 
   <!-- Three.js for Properties 3D carousel slide -->
   <script type="importmap">

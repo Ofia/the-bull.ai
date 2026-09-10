@@ -190,31 +190,6 @@
     }
     .hero-btn-ghost:hover { background: var(--bg2); }
 
-    /* ── MOCKUP ── */
-    .mockup-wrap {
-      max-width: 1080px;
-      margin: 0 auto 100px;
-      padding: 0 48px;
-    }
-
-    .mockup-frame {
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: 0 24px 80px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.05);
-    }
-
-    .mockup-chrome {
-      display: flex; align-items: center; gap: 6px;
-      background: #1e1c18; padding: 10px 14px; flex-shrink: 0;
-    }
-
-    .chrome-dot { width: 11px; height: 11px; border-radius: 50%; }
-
-    .mockup-body { height: 540px; overflow: hidden; }
-
-    .mockup-body iframe { width: 100%; height: 100%; border: none; display: block; }
-
     /* ── SECTIONS ── */
     .eyebrow {
       font-family: var(--mono);
@@ -398,8 +373,6 @@
       .nav-center, .nav-right { display: none; }
       .nav-hamburger { display: flex; }
       #hero { padding: 80px 20px 60px; }
-      .mockup-wrap { padding: 0 20px; }
-      .mockup-body { height: 320px; }
       #how, #features, #cta { padding: 72px 20px; }
       footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
       .footer-links { flex-wrap: wrap; gap: 16px; }
@@ -452,20 +425,6 @@
       <a href="#how" class="hero-btn-ghost">See how it works</a>
     </div>
   </section>
-
-  <!-- ── MOCKUP ── -->
-  <div class="mockup-wrap">
-    <div class="mockup-frame">
-      <div class="mockup-chrome">
-        <div class="chrome-dot" style="background:#FF5F5A"></div>
-        <div class="chrome-dot" style="background:#FFBD2E"></div>
-        <div class="chrome-dot" style="background:#00CA4E"></div>
-      </div>
-      <div class="mockup-body">
-        <iframe src="/brain/" title="Business Brain — Live Demo" loading="lazy"></iframe>
-      </div>
-    </div>
-  </div>
 
   <!-- ── HOW IT WORKS ── -->
   <section id="how">

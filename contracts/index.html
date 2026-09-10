@@ -415,18 +415,6 @@
       line-height: 1.7;
     }
 
-    .process-shot {
-      position: relative;
-      margin-top: 32px;
-      height: 440px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 20px 48px rgba(15,20,25,0.08);
-    }
-
-    .process-shot:hover .carousel-arrow { opacity: 1; }
-
     /* ── WHO IT'S FOR ── */
     #who {
       background: var(--bg2);
@@ -635,38 +623,6 @@
     .modal-feedback { font-size: 13px; margin-top: 12px; text-align: center; }
     .modal-feedback.success { color: #16a34a; }
     .modal-feedback.error   { color: #dc2626; }
-
-    /* ── APP MOCKUP ── */
-    .cm-wrap { max-width: 1080px; margin: 56px auto 0; padding: 0 48px; }
-
-    .cm-frame {
-      position: relative;
-      border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06), 0 32px 80px rgba(0,0,0,0.07);
-    }
-
-    .cm-chrome {
-      background: #f3f3f1; padding: 11px 16px;
-      display: flex; align-items: center; gap: 6px;
-      border-bottom: 1px solid var(--border);
-    }
-    .cm-dot { width: 11px; height: 11px; border-radius: 50%; }
-
-    .cm-body { height: 560px; background: #f5f5f3; font-family: var(--sans); overflow: hidden; }
-
-    /* ── carousel ── */
-    .carousel-slide { display: none; width: 100%; height: 100%; }
-    .carousel-slide.active { display: flex; }
-    .carousel-slide > img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
-    .carousel-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 20; background: rgba(255,255,255,0.88); border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transition: opacity 0.18s; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .carousel-arrow svg { width: 16px; height: 16px; stroke: #1c1c1c; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    .carousel-arrow.prev { left: 12px; }
-    .carousel-arrow.next { right: 12px; }
-    .cm-frame:hover .carousel-arrow { opacity: 1; }
-    .carousel-arrow:hover { background: #fff; border-color: #c0c0ba; }
-    .carousel-nav { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 16px; }
-    .carousel-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); border: none; cursor: pointer; padding: 0; flex-shrink: 0; transition: background 0.18s; }
-    .carousel-dot.active { background: var(--accent); }
 
     /* TopBar */
     .cm-topbar {
@@ -1156,20 +1112,6 @@
     <div class="node-item"><div class="node-dot" style="background:#3a9e6e"></div>document</div>
   </div>
 
-  <!-- ── APP MOCKUP: LAUNCH VIDEO ── -->
-  <div class="cm-wrap">
-    <div class="cm-frame">
-      <div class="cm-chrome">
-        <div class="cm-dot" style="background:#ff5f57"></div>
-        <div class="cm-dot" style="background:#febc2e"></div>
-        <div class="cm-dot" style="background:#28c840"></div>
-      </div>
-      <div class="cm-body">
-        <iframe src="../assets/videos/The%20Bull%20Contracts%20Video.html" title="The Bull Contracts — launch video" style="width:100%;height:100%;border:none;display:block;" loading="lazy"></iframe>
-      </div>
-    </div>
-  </div>
-
   <!-- ── HOW IT WORKS ── -->
   <section id="how">
     <div class="eyebrow">Process</div>
@@ -1198,54 +1140,7 @@
         <div class="step-desc">Deadline approaching? The platform emails the right party. Payment overdue? The lawyer gets an alert. Zero manual follow-up.</div>
       </div>
     </div>
-
-    <div class="process-shot">
-      <div class="carousel-slide active">
-        <img src="../assets/mockups/contracts-overview.png" alt="Contracts – dashboard overview">
-      </div>
-      <div class="carousel-slide">
-        <img src="../assets/mockups/contracts-carousel-overview.png" alt="Contracts – contract overview">
-      </div>
-      <div class="carousel-slide">
-        <img src="../assets/mockups/contracts-carousel-obligations.png" alt="Contracts – obligations">
-      </div>
-      <div class="carousel-slide">
-        <img src="../assets/mockups/contracts-carousel-nexus.png" alt="Contracts – nexus graph">
-      </div>
-      <button class="carousel-arrow prev" id="process-carousel-prev" aria-label="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
-      <button class="carousel-arrow next" id="process-carousel-next" aria-label="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
-    </div>
-    <div class="carousel-nav">
-      <button class="carousel-dot active" data-slide="0" aria-label="Dashboard overview"></button>
-      <button class="carousel-dot" data-slide="1" aria-label="Contract overview"></button>
-      <button class="carousel-dot" data-slide="2" aria-label="Obligations"></button>
-      <button class="carousel-dot" data-slide="3" aria-label="Nexus"></button>
-    </div>
   </section>
-
-  <script>
-  (function() {
-    var root = document.querySelector('.process-shot');
-    var slides = root.querySelectorAll('.carousel-slide');
-    var dots = document.querySelectorAll('#how .carousel-dot');
-    var current = 0;
-
-    function goTo(n) {
-      slides[current].classList.remove('active');
-      dots[current].classList.remove('active');
-      current = (n + slides.length) % slides.length;
-      slides[current].classList.add('active');
-      dots[current].classList.add('active');
-    }
-
-    dots.forEach(function(dot) {
-      dot.addEventListener('click', function() { goTo(+dot.dataset.slide); });
-    });
-
-    document.getElementById('process-carousel-prev').addEventListener('click', function() { goTo(current - 1); });
-    document.getElementById('process-carousel-next').addEventListener('click', function() { goTo(current + 1); });
-  })();
-  </script>
 
   <!-- ── WHO IT'S FOR ── -->
   <section id="who">
