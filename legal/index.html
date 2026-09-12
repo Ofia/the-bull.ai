@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Bull Legal — AI Contract Management Software</title>
-  <meta name="description" content="Track obligations, deadlines, and payments across every contract. AI-powered ingestion, automated reminders, and zero administrative overhead. Built for legal and operations teams." />
+  <title>The Bull Legal — Legal Practice Management Software</title>
+  <meta name="description" content="AI-powered contract tracking, case management, and client records for lawyers and legal teams — starting with the contract, extending across your whole practice." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://www.the-bull.ai/legal/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.the-bull.ai/legal/" />
-  <meta property="og:title" content="The Bull Legal — AI Contract Management Software" />
-  <meta property="og:description" content="Track obligations, deadlines, and payments across every contract. AI-powered ingestion, automated reminders, and zero administrative overhead." />
+  <meta property="og:title" content="The Bull Legal — Legal Practice Management Software" />
+  <meta property="og:description" content="AI-powered contract tracking, case management, and client records for lawyers and legal teams." />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="The Bull Legal — AI Contract Management" />
-  <meta name="twitter:description" content="AI-powered contract tracking and legal process management." />
+  <meta name="twitter:title" content="The Bull Legal — Legal Practice Management" />
+  <meta name="twitter:description" content="AI-powered contract tracking and practice management for lawyers." />
   <link rel="icon" type="image/svg+xml" href="/icon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -481,6 +481,21 @@
       line-height: 1.65;
     }
 
+    .card-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-subtle);
+      margin-top: 14px;
+    }
+
+    /* ── BEYOND THE CONTRACT ── */
+    #beyond {
+      padding: 100px 48px;
+    }
+
     /* ── AI SECTION ── */
     #ai {
       padding: 100px 48px;
@@ -511,23 +526,12 @@
       margin-bottom: 44px;
     }
 
-    .ai-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
-    }
-
-    .ai-tag {
+    .ai-list {
       font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.06em;
       color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      padding: 5px 12px;
-      background: #fff;
+      line-height: 2;
     }
 
     /* ── FOOTER ── */
@@ -851,12 +855,7 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 5px 14px;
       margin-bottom: 28px;
-      background: rgba(255,255,255,0.8);
-      backdrop-filter: blur(8px);
     }
 
     .decentral-h2 {
@@ -938,18 +937,11 @@
 
     .decentral-roadmap {
       margin-top: 36px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
       font-family: var(--mono);
       font-size: 10px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 6px 14px;
-      background: rgba(255,255,255,0.8);
     }
 
     /* ── RESPONSIVE ── */
@@ -969,6 +961,7 @@
       .node-strip { padding: 16px 20px; gap: 16px; }
       #how { padding: 72px 20px; }
       #who { padding: 72px 20px; }
+      #beyond { padding: 72px 20px; }
       #privacy { padding: 72px 20px; }
       #ai { padding: 72px 20px; }
       footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
@@ -1065,10 +1058,10 @@
 
   <!-- ── HERO ── -->
   <section id="hero">
-    <h1>Every clause.<br/>Every party.<br/>Zero admin.</h1>
+    <h1>Your practice.<br/>One system.</h1>
     <p class="hero-sub">
-      The Bull Legal turns dense legal agreements into live, trackable process graphs —
-      automated by AI, monitored in real time.
+      The Bull starts with the contract — every clause, party, and deadline extracted and
+      tracked automatically — then extends across your practice: client cases, payments, and records.
     </p>
     <div class="hero-actions">
       <a href="pricing.html" class="hero-btn-black">Start free →</a>
@@ -1089,9 +1082,9 @@
 
   <!-- ── HOW IT WORKS ── -->
   <section id="how">
-    <div class="eyebrow">Process</div>
+    <div class="eyebrow">Where every matter starts</div>
     <h2 class="section-h2">Contract in.<br/>Clarity out.</h2>
-    <p class="section-p">Upload any agreement. The AI reads it, maps every obligation, and hands the legal team a live dashboard — not a PDF.</p>
+    <p class="section-p">Upload any agreement. The AI reads it, maps every obligation, and hands your team a live dashboard — not a PDF. It's the foundation the rest of the practice is built on.</p>
 
     <div class="steps-grid">
       <div class="step-card">
@@ -1121,8 +1114,8 @@
   <section id="who">
     <div class="who-inner">
       <div class="eyebrow">Audience</div>
-      <h2 class="section-h2">Built for legal teams at scale.</h2>
-      <p class="section-p">Anyone managing more contracts than a spreadsheet can hold.</p>
+      <h2 class="section-h2">Built for the lawyer's whole practice.</h2>
+      <p class="section-p">Not one deal type — every matter your practice handles, in one system.</p>
 
       <div class="cards-grid">
         <div class="card">
@@ -1130,7 +1123,7 @@
             <svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
           </div>
           <div class="card-title">Law Firms</div>
-          <div class="card-desc">Manage hundreds of client contracts in parallel. Never miss a filing deadline or a payment window again.</div>
+          <div class="card-desc">Run every matter — contracts, family law, and everything between — without a spreadsheet per client.</div>
         </div>
         <div class="card">
           <div class="card-icon">
@@ -1141,17 +1134,61 @@
         </div>
         <div class="card">
           <div class="card-icon">
-            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M20 21v-7a4 4 0 00-4-4h-1M4 21v-7a4 4 0 014-4h1"/><circle cx="9" cy="6" r="3"/><circle cx="15" cy="6" r="3"/></svg>
           </div>
-          <div class="card-title">Real Estate</div>
-          <div class="card-desc">Track buyer contracts, lease schedules, and vendor agreements across an entire portfolio without a single spreadsheet.</div>
+          <div class="card-title">Family Law</div>
+          <div class="card-desc">Track support payments between parties over time, keep case notes from every client conversation, and manage court documents — all in one case file.</div>
         </div>
         <div class="card">
           <div class="card-icon">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
           </div>
-          <div class="card-title">Any Legal Ops Team</div>
-          <div class="card-desc">If your team spends hours chasing approvals, sending reminders, and updating status fields — this removes all of that.</div>
+          <div class="card-title">Real Estate</div>
+          <div class="card-desc">Purchase agreements, lease schedules, and vendor contracts across a portfolio — still fully supported, as one practice area among many.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BEYOND THE CONTRACT ── -->
+  <section id="beyond">
+    <div class="who-inner">
+      <div class="eyebrow">What's next</div>
+      <h2 class="section-h2">Beyond the contract.</h2>
+      <p class="section-p">The contract is where it starts. Here's where the rest of the practice is headed.</p>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <div class="card-title">Payment Ledger</div>
+          <div class="card-desc">Ongoing payments between parties over time — support, alimony, installment plans — not just one-time obligations.</div>
+          <div class="card-tag">In progress</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4z"/></svg>
+          </div>
+          <div class="card-title">Client Case Notes</div>
+          <div class="card-desc">Everything the lawyer learns directly from a client, organized by matter and searchable across the practice.</div>
+          <div class="card-tag">In progress</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="card-title">Client Document Vault</div>
+          <div class="card-desc">Court decisions, filings, and case documents — stored and organized by client.</div>
+          <div class="card-tag">In progress</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <div class="card-title">Practice Finance</div>
+          <div class="card-desc">The lawyer's own expenses and accountant-ready reports, alongside the cases being run.</div>
+          <div class="card-tag">In progress</div>
         </div>
       </div>
     </div>
@@ -1247,20 +1284,12 @@
   <!-- ── AI SECTION ── -->
   <section id="ai">
     <div class="ai-inner">
-      <h2 class="ai-title">The AI reads the contract.<br/>So you don't have to.</h2>
+      <h2 class="ai-title">The AI does the reading.<br/>You do the practicing law.</h2>
       <p class="ai-sub">
-        Every node in the graph is AI-extracted. Every confirmation email is AI-scanned.
-        Every overdue flag is AI-triggered. The legal team makes judgment calls — the machine does everything else.
+        Every clause is AI-extracted. Every confirmation email is AI-scanned. Every overdue flag is
+        AI-triggered. The same AI layer is built to extend across the practice as new capabilities come online.
       </p>
-      <div class="ai-tags">
-        <span class="ai-tag">Contract extraction</span>
-        <span class="ai-tag">Email scanning</span>
-        <span class="ai-tag">Auto status updates</span>
-        <span class="ai-tag">RAG-powered Q&A</span>
-        <span class="ai-tag">Deadline automation</span>
-        <span class="ai-tag">Party notifications</span>
-        <span class="ai-tag">Dispute detection</span>
-      </div>
+      <div class="ai-list">Contract extraction · Email scanning · Auto status updates · RAG-powered Q&amp;A · Deadline automation · Party notifications · Dispute detection</div>
     </div>
   </section>
 
