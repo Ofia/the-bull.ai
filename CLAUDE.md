@@ -22,7 +22,7 @@ index.html          ← homepage
 privacy.html
 favicon.png
 CNAME               ← www.the-bull.ai
-contracts/          ← /contracts product page (payment.html, pricing.html)
+legal/              ← /legal product page (payment.html, pricing.html)
 properties/         ← /properties product page
 salon/              ← /salon product page (Coming Soon)
 developer/          ← /developer product page (Coming Soon)
