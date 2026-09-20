@@ -336,6 +336,35 @@
       flex-shrink: 0;
     }
 
+    /* ── AI CAPABILITIES TICKER ── */
+    .ai-ticker {
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(8px);
+      padding: 12px 0;
+    }
+
+    .ai-ticker-track {
+      display: flex;
+      width: max-content;
+      animation: ai-ticker-scroll 28s linear infinite;
+    }
+
+    .ai-ticker-track span {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      white-space: nowrap;
+      padding-right: 4px;
+    }
+
+    @keyframes ai-ticker-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
     /* ── HOW IT WORKS ── */
     #how {
       padding: 100px 48px;
@@ -535,57 +564,36 @@
       line-height: 1.65;
     }
 
-    .card-tag {
-      font-family: var(--mono);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--color-subtle);
-      margin-top: 14px;
-    }
-
     /* ── BEYOND THE CONTRACT ── */
     #beyond {
       padding: 100px 48px;
     }
 
-    /* ── AI SECTION ── */
-    #ai {
-      padding: 100px 48px;
+    .tool-sync-strip {
+      margin-top: 48px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
       text-align: center;
     }
 
-    .ai-inner {
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    .ai-title {
-      font-family: var(--display);
-      font-size: clamp(28px, 4vw, 52px);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      line-height: 1.08;
-      color: var(--color-heading);
-      margin-bottom: 18px;
-    }
-
-    .ai-sub {
-      font-size: 16px;
+    .tool-sync-title {
+      font-size: 14px;
       font-weight: 500;
       color: var(--color-secondary);
-      line-height: 1.375;
-      letter-spacing: -0.16px;
-      margin-bottom: 44px;
+      margin-bottom: 20px;
     }
 
-    .ai-list {
+    .tool-sync-logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
       font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-      line-height: 2;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--color-subtle);
     }
 
     /* ── FOOTER ── */
@@ -1087,7 +1095,6 @@
     <div class="nav-center">
       <a href="#how"     class="nav-link">How it works</a>
       <a href="#who"     class="nav-link">Who it's for</a>
-      <a href="#ai"      class="nav-link">AI features</a>
       <a href="pricing.html" class="nav-link">Pricing</a>
     </div>
 
@@ -1105,7 +1112,6 @@
   <div class="mobile-nav" id="mobile-nav">
     <a href="#how"        class="mobile-nav-link">How it works</a>
     <a href="#who"        class="mobile-nav-link">Who it's for</a>
-    <a href="#ai"         class="mobile-nav-link">AI features</a>
     <a href="pricing.html" class="mobile-nav-link">Pricing</a>
     <a href="pricing.html" class="mobile-nav-cta">Start free</a>
   </div>
@@ -1134,48 +1140,40 @@
     <div class="node-item"><div class="node-dot" style="background:#3a9e6e"></div>document</div>
   </div>
 
+  <!-- ── AI CAPABILITIES TICKER ── -->
+  <div class="ai-ticker">
+    <div class="ai-ticker-track">
+      <span>Contract extraction · Email scanning · Auto status updates · RAG-powered Q&amp;A · Deadline automation · Party notifications · Dispute detection&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</span>
+      <span>Contract extraction · Email scanning · Auto status updates · RAG-powered Q&amp;A · Deadline automation · Party notifications · Dispute detection&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</span>
+    </div>
+  </div>
+
   <!-- ── HOW IT WORKS ── -->
   <section id="how">
     <div class="eyebrow">Where every matter starts</div>
     <h2 class="section-h2">Contract in.<br/>Clarity out.</h2>
-    <p class="section-p">Upload any agreement. The AI reads it, maps every obligation, and hands your team a live dashboard — not a PDF. It's the foundation the rest of the practice is built on.</p>
+    <p class="section-p">Upload any agreement. The AI reads it, maps every obligation, and hands your team a live dashboard. It's the foundation the rest of the practice is built on.</p>
 
     <div class="steps-grid">
       <div class="step-card">
         <div class="step-num">01 — Ingest</div>
         <div class="step-title">Upload the contract</div>
         <div class="step-desc">PDF, DOCX, or plain text. The system ingests it and begins extraction immediately.</div>
-        <ul class="step-audience">
-          <li><strong>Lawyers</strong> — engagement letters, client contracts, and court documents.</li>
-          <li><strong>Asset managers</strong> — leases, amendments, and vendor agreements.</li>
-        </ul>
       </div>
       <div class="step-card">
         <div class="step-num">02 — Extract</div>
         <div class="step-title">AI maps every node</div>
         <div class="step-desc">Claude identifies all parties, payments, deadlines, terms, and documents — then turns them into a live process graph.</div>
-        <ul class="step-audience">
-          <li><strong>Lawyers</strong> — filing deadlines, payment terms, and key clauses.</li>
-          <li><strong>Asset managers</strong> — renewal notice windows, rent escalations, CAM obligations, vendor SLA response times.</li>
-        </ul>
       </div>
       <div class="step-card">
         <div class="step-num">03 — Track</div>
         <div class="step-title">Status updates automatically</div>
-        <div class="step-desc">Incoming emails, uploads, and confirmations are scanned. Nodes flip from pending → confirmed without anyone touching a keyboard.</div>
-        <ul class="step-audience">
-          <li><strong>Lawyers</strong> — client and court confirmations update the matter automatically.</li>
-          <li><strong>Asset managers</strong> — tenant and vendor confirmations update the lease or contract automatically.</li>
-        </ul>
+        <div class="step-desc">The contract becomes a live dashboard — payments, deadlines, and terms tracked as tasks, with statuses updating automatically as emails and confirmations come in.</div>
       </div>
       <div class="step-card">
         <div class="step-num">04 — Act</div>
         <div class="step-title">Reminders fire on their own</div>
-        <div class="step-desc">Deadline approaching? The platform emails the right party. Payment overdue? The responsible party gets an alert. Zero manual follow-up.</div>
-        <ul class="step-audience">
-          <li><strong>Lawyers</strong> — court dates, filing deadlines, client deliverables, payment milestones.</li>
-          <li><strong>Asset managers</strong> — renewal/option notices, rent reviews, insurance/COI renewals, vendor SLA checks.</li>
-        </ul>
+        <div class="step-desc">Deadline reminders, overdue alerts, and status notifications fire automatically — no manual follow-up. One dashboard to see what's due, what's late, and who owns it.</div>
       </div>
     </div>
   </section>
@@ -1219,7 +1217,6 @@
   <!-- ── CASE & MATTER MANAGEMENT ── -->
   <section id="matters">
     <div class="who-inner">
-      <div class="eyebrow">Not just contracts</div>
       <h2 class="section-h2">Case &amp; matter management, built in.</h2>
       <p class="section-p">
         The Bull isn't only a contract tool — it's a lightweight matter manager for solos and small teams.
@@ -1235,10 +1232,6 @@
   <!-- ── BEYOND THE CONTRACT ── -->
   <section id="beyond">
     <div class="who-inner">
-      <div class="eyebrow">What's next</div>
-      <h2 class="section-h2">Beyond the contract.</h2>
-      <p class="section-p">The contract is where it starts. Here's where the rest of the practice is headed.</p>
-
       <div class="cards-grid">
         <div class="card">
           <div class="card-icon">
@@ -1246,7 +1239,6 @@
           </div>
           <div class="card-title">Payment Ledger</div>
           <div class="card-desc">Ongoing payments between parties over time — support, alimony, installment plans — not just one-time obligations.</div>
-          <div class="card-tag">In progress</div>
         </div>
         <div class="card">
           <div class="card-icon">
@@ -1254,7 +1246,6 @@
           </div>
           <div class="card-title">Client Case Notes</div>
           <div class="card-desc">Everything the lawyer learns directly from a client, organized by matter and searchable across the practice.</div>
-          <div class="card-tag">In progress</div>
         </div>
         <div class="card">
           <div class="card-icon">
@@ -1262,7 +1253,6 @@
           </div>
           <div class="card-title">Client Document Vault</div>
           <div class="card-desc">Court decisions, filings, and case documents — stored and organized by client.</div>
-          <div class="card-tag">In progress</div>
         </div>
         <div class="card">
           <div class="card-icon">
@@ -1270,15 +1260,17 @@
           </div>
           <div class="card-title">Practice Finance</div>
           <div class="card-desc">The lawyer's own expenses and accountant-ready reports, alongside the cases being run.</div>
-          <div class="card-tag">In progress</div>
         </div>
-        <div class="card">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-          </div>
-          <div class="card-title">Task Tool Sync</div>
-          <div class="card-desc">Push contract and lease obligations straight into Asana, Monday, or ClickUp as tasks with owners and due dates — so the whole team sees them without leaving their board.</div>
-          <div class="card-tag">In progress</div>
+      </div>
+
+      <div class="tool-sync-strip">
+        <div class="tool-sync-title">Push obligations straight into the tools your team already uses</div>
+        <div class="tool-sync-logos">
+          <span>Asana</span>
+          <span>ClickUp</span>
+          <span>Jira</span>
+          <span>Monday</span>
+          <span>Google Drive</span>
         </div>
       </div>
     </div>
@@ -1368,18 +1360,6 @@
       </div>
 
       <div class="decentral-roadmap">On-chain transaction sealing & smart contract obligations — coming soon</div>
-    </div>
-  </section>
-
-  <!-- ── AI SECTION ── -->
-  <section id="ai">
-    <div class="ai-inner">
-      <h2 class="ai-title">The AI does the reading.<br/>You do the practicing law.</h2>
-      <p class="ai-sub">
-        Every clause is AI-extracted. Every confirmation email is AI-scanned. Every overdue flag is
-        AI-triggered. The same AI layer is built to extend across the practice as new capabilities come online.
-      </p>
-      <div class="ai-list">Contract extraction · Email scanning · Auto status updates · RAG-powered Q&amp;A · Deadline automation · Party notifications · Dispute detection</div>
     </div>
   </section>
 
